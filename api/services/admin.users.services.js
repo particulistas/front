@@ -6,7 +6,7 @@ const token = getToken(); // Obtiene el token
 
 const headers = {
     'Access-Control-Allow-Origin': '*',
-    'Content-Type': 'application/json',
+    'Accept': 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
     'Authorization': `Bearer ${token}`,
   };
