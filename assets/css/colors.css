@@ -1,0 +1,87 @@
+:root {
+    --p-07ACB4: #07ACB4;
+    --p-27ABB1: #27ABB1;
+    --p-E786F0: #E786F0;
+    --p-4A4A4A: #4A4A4A;
+    --p-fff : #fff;
+}
+
+/*
+    ***
+    07ACB4
+    ***
+*/
+.color-07ACB4{
+    color: var(--p-07ACB4);
+}
+
+.hover-bg-07ACB4:hover{
+    background-color: var(--p-07ACB4);
+}
+
+.btn-outline-07ACB4{
+    color: var(--p-07ACB4);
+    border-color: var(--p-07ACB4);
+}
+.btn-outline-07ACB4:hover{
+    color: var(--p-fff);
+    background-color: var(--p-07ACB4);
+}
+
+/*
+    ***
+    27ABB1
+    ***
+*/
+.color-27ABB1{
+    color: var(--p-27ABB1);
+}
+
+/*
+    ***
+    E786F0
+    ***
+*/
+.btn-outline-E786F0{
+    color: var(--p-E786F0);
+    border-color: var(--p-E786F0);
+}
+.btn-outline-E786F0:hover{
+    color: var(--p-fff);
+    background-color: var(--p-E786F0);
+}
+
+.hover-E786F0:hover{
+    color: var(--p-E786F0);
+}
+/*
+    ***
+    4A4A4A
+    ***
+*/
+
+.color-4A4A4A{
+    color: var(--p-4A4A4A);
+}
+
+
+/*
+    ***
+    sizes
+    ***
+*/
+.btn-border-2{
+    border-width: 2px;
+    border-style: solid;
+}
+
+
+/*
+    ***
+    otros
+    ***
+*/
+
+.hover-chield-icon-white:hover > img{
+    filter: brightness(0) invert(1);
+}

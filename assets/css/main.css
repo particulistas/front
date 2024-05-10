@@ -1,3 +1,8 @@
-p{
-    font-size: 70px;
+@import './colors';
+
+*> :not(i){
+    font-family: "Roboto", sans-serif;
+}
+p,a{
+    font-family: "Roboto", sans-serif;
 }
