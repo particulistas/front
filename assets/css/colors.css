@@ -3,6 +3,7 @@
     --p-27ABB1: #27ABB1;
     --p-E786F0: #E786F0;
     --p-4A4A4A: #4A4A4A;
+    --p-666 : #666;
     --p-fff : #fff;
 }
 
@@ -15,6 +16,13 @@
     color: var(--p-07ACB4);
 }
 
+.border-07ACB4{
+    border-color: var(--p-07ACB4);
+}
+
+.bg-07ACB4{
+    background-color: var(--p-07ACB4);
+}
 .hover-bg-07ACB4:hover{
     background-color: var(--p-07ACB4);
 }
@@ -63,8 +71,15 @@
 .color-4A4A4A{
     color: var(--p-4A4A4A);
 }
+/*
+    ***
+    666
+    ***
+*/
 
-
+.color-666{
+    color: var(--p-666);
+}
 /*
     ***
     sizes

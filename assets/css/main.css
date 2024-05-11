@@ -6,3 +6,10 @@
 p,a{
     font-family: "Roboto", sans-serif;
 }
+input, textarea, select, button {
+    outline: none; /* Elimina el outline */
+    box-shadow: none; /* Elimina cualquier sombra que pueda actuar como outline */
+  }
+  
+
+  
