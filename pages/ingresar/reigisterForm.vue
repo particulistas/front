@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-2 gap-y-[28px] gap-x-5">
+    <div class="grid lg:grid-cols-2 gap-y-[20px] lg:gap-y-[28px] lg:gap-x-5">
         <div class="text-left">
             <label class="mb-1 color-666 font-medium text-[20px]">Nombre*</label>
             <InputText placeholder="Nombre" v-model="name" :isError="errorsKey.includes('name')"/>
@@ -13,8 +13,8 @@
             <InputEmail placeholder="E-mail" v-model="email" :isError="errorsKey.includes('email')"/>
         </div>
         <div class="text-left">
-            <label class="mb-1 color-666 font-medium text-[20px]">Teléfono* {{phone}}</label>
-            <InputPhone v-model="phone" :isError="errorsKey.includes('phone')"/>
+            <label class="mb-1 color-666 font-medium text-[20px]">Teléfono*</label>
+            <InputPhone v-model="phone" :isError="errorsKey.includes('phone')" placeholder="000 0000 00"/>
         </div>
         <div class="text-left">
             <label class="mb-1 color-666 font-medium text-[20px]">Contraseña*</label>
@@ -26,20 +26,20 @@
         </div>
     </div>
     <!-- i agree -->
-    <div class="mt-[28px] w-[292px] mx-auto">
+    <div class="mt-[48px] lg:mt-[28px] w-[296px] mx-auto">
         <div class="flex items-center">
             <InputCheckbox v-model="agreeTerms" />
-            <p class="text-sm p-2 whitespace-no-wrap text-left leading-4">
+            <p class="text-sm p-2 whitespace-no-wrap text-left leading-4 color-666">
                 Acepto 
-                <a href="" class="color-07ACB4 hover-E786F0 font-semibold">términos</a> y 
-                <a href="" class="color-07ACB4 hover-E786F0 font-semibold">condiciones</a> de uso*
+                <a href="" class="color-07ACB4 text-sm hover-E786F0 font-semibold">términos</a> y 
+                <a href="" class="color-07ACB4 text-sm hover-E786F0 font-semibold">condiciones</a> de uso*
             </p>
         </div>
         <div class="flex items-center mt-1">
             <InputCheckbox v-model="agreePolitics" />
-            <p class="text-sm p-2 whitespace-no-wrap text-left leading-4">
+            <p class="text-sm p-2 whitespace-no-wrap text-left leading-4 color-666">
                 Acepto 
-                <a href="" class="color-07ACB4 hover-E786F0 font-semibold">Acepto Política de notificaciones y comunicaciones</a>*
+                <a href="" class="color-07ACB4 text-sm hover-E786F0 font-semibold">Acepto Política de notificaciones y comunicaciones</a>*
             </p>
         </div>
     </div>
@@ -63,7 +63,6 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-import GeneralInput from '../components/GeneralInput.vue';
 import InputText  from '../components/InputText.vue';
 import InputEmail  from '../components/InputEmail.vue';
 import InputPhone from '../components/InputPhone.vue'

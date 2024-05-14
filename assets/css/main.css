@@ -10,6 +10,10 @@ input, textarea, select, button {
     outline: none; /* Elimina el outline */
     box-shadow: none; /* Elimina cualquier sombra que pueda actuar como outline */
   }
+
+.placeholder-negative::placeholder {
+    color: #EC3030;
+}
   
 
   

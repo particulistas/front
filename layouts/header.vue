@@ -1,5 +1,5 @@
 <template>
-    <header class="bg-white hidden md:flex px-10 pb-3 items-start">
+    <header class="bg-white hidden lg:flex px-10 pb-3 items-start">
 
         <div class="flex items-center pt-5 pb-2 ml-[-10px]">
             <button class="hover-chield-icon-white hover-bg-07ACB4 rounded-[6px] p-2.5">

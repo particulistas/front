@@ -1,5 +1,5 @@
 <template>
-    <footer class="py-8 bg-white">
+    <footer class="py-8 bg-white hidden lg:block">
         <div class="w-[730px] h-full mx-auto grid grid-cols-3 gap-[54px]">
             <div>
                 <img src="/assets/fulllogoslogan.svg" alt="fulllogo particulistas"/>
