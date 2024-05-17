@@ -50,6 +50,10 @@
     E786F0
     ***
 */
+.bg-E786F0{
+    background-color: var(--p-E786F0);
+}
+
 .btn-outline-E786F0{
     color: var(--p-E786F0);
     border-color: var(--p-E786F0);

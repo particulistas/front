@@ -29,8 +29,8 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-import InputEmail  from '../components/InputEmail.vue'
-import InputPassword from '../components/InputPassword.vue'
+import InputEmail  from '../../components/InputEmail.vue'
+import InputPassword from '../../components/InputPassword.vue'
 
 
 const email = ref(null)

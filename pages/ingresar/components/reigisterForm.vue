@@ -63,11 +63,11 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-import InputText  from '../components/InputText.vue';
-import InputEmail  from '../components/InputEmail.vue';
-import InputPhone from '../components/InputPhone.vue'
-import InputCheckbox from '../components/InputCheckbox.vue'
-import InputPassword from '../components/InputPassword.vue'
+import InputText  from '../../components/InputText.vue';
+import InputEmail  from '../../components/InputEmail.vue';
+import InputPhone from '../../components/InputPhone.vue'
+import InputCheckbox from '../../components/InputCheckbox.vue'
+import InputPassword from '../../components/InputPassword.vue'
 
 const name = ref(null)
 const email = ref(null)

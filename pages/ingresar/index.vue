@@ -8,7 +8,7 @@
                   {{ showRegister ? 'Registrate' : 'Iniciar sesión'}}
                   <img class="absolute right-3 lg:right-2 top-[17px] lg:top-3" src="/assets/icons/times.svg" alt="registro_times">
               </p>
-              <div class="bg-white pt-12 lg:pt-[26px] rounded-t-[18px] px-6 lg:px-0">
+              <div class="bg-white pt-12 lg:pt-[26px] rounded-t-[18px] px-4 lg:px-0">
                 <img class="mx-auto" src="/assets/imgs/registro1.svg" alt="registro">
                 <div class="border border-07ACB4 rounded-[10px] inline-flex mt-14 lg:mt-6 overflow-hidden">
                   <button 
@@ -40,8 +40,8 @@
 <script setup>
 import { ref } from 'vue';
 import Layout from '~/layouts/default.vue'
-import reigisterForm from './ingresar/reigisterForm.vue';
-import loginForm from './ingresar/loginForm.vue';
+import reigisterForm from './components/reigisterForm.vue';
+import loginForm from './components/loginForm.vue';
 
 import { useMainStore } from '~/stores/mainStore';
 
