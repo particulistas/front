@@ -34,11 +34,12 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue']);
 
 // Clases predeterminadas
-const defaultClasses = 'h-8 border border-gray-300 rounded-md text-sm w-full focus:outline-none p-2';
-const errorClasses = 'border-[#EC3030] text-[#EC3030]'; // Clases para el estado de error
+const defaultClasses = 'h-8 border rounded-md text-sm w-full focus:outline-none p-2';
+const errorClasses = 'border-[#EC3030] text-[#EC3030] placeholder-negative';
+const initClasses = 'border-gray-300 color-666';
 
 const inputClasses = computed(() => {
-  return `${defaultClasses} ${props.isError ? errorClasses : ''}`;
+  return `${defaultClasses} ${props.isError ? errorClasses : initClasses}`;
 });
 
 // Estado para controlar la visibilidad de la contraseña

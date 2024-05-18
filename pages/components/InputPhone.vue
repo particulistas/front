@@ -42,7 +42,7 @@
   
   const emit = defineEmits(['update:modelValue']);
   
-  const countryCodes = ref(['+34', '+1', '+44', '+91']); // Agrega más códigos según necesites
+  const countryCodes = ref(['+34']); // Agrega más códigos según necesites
   const selectedCode = ref('+34'); // Código inicial
   const phoneNumber = ref('');
   

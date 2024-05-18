@@ -43,10 +43,6 @@ import Layout from '~/layouts/default.vue'
 import reigisterForm from './components/reigisterForm.vue';
 import loginForm from './components/loginForm.vue';
 
-import { useMainStore } from '~/stores/mainStore';
-
-const mainStore = useMainStore();
-
 const showRegister = ref(true)
 const showLogin = ref(false)
 </script>

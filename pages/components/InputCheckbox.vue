@@ -6,7 +6,15 @@
         v-model="checked"
         @change="toggleCheckbox"
       />
-      <label :class="['cursor-pointer border border-07ACB4 bg-gray-100 hover:bg-gray-200 overflow-hidden w-5 h-5', checkboxSize]" @click="toggleCheckbox">
+      <label 
+        :class="[
+          'cursor-pointer border overflow-hidden w-5 h-5',
+          { 'border-07ACB4 bg-gray-100 hover:bg-gray-200' : !isError}, 
+          { 'border-[#EC3030]' : isError}, 
+          checkboxSize
+        ]" 
+        @click="toggleCheckbox"
+      >
         <img
           v-if="checked"
           :src="checkedImage"
@@ -23,6 +31,7 @@
   const props = defineProps({
     modelValue: Boolean, // V-model binding
     checkedImage: { type: String, default: '/assets/icons/check07ACB4.svg'},
+    isError: Boolean,  
     checkboxSize: {
       type: String,
       default: 'w-6 h-6' // Default size, can be overridden by parent

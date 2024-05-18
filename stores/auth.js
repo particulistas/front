@@ -7,10 +7,10 @@ import {
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: localStorage.getItem('authToken') || null,
-    name: localStorage.getItem('authName') || null,
-    email: localStorage.getItem('authEmail') || null,
-    id: localStorage.getItem('authId') || null,
+    token: process.client ? localStorage.getItem('authToken') || null : null,
+    name: process.client ? localStorage.getItem('authName') || null : null,
+    email: process.client ? localStorage.getItem('authEmail') || null : null,
+    id: process.client ? localStorage.getItem('authId') || null : null,
     baseUrl: useRuntimeConfig().public.BASE_URL,
   }),
   actions: {
@@ -25,7 +25,7 @@ export const useAuthStore = defineStore('auth', {
         if (error.value) {
           throw new Error(error.value)
         }
-        
+        console.log('register',data.value)
         this.setToken(data.value)
       } catch (err) {
         console.error(err.message)
