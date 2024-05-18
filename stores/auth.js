@@ -14,29 +14,33 @@ export const useAuthStore = defineStore('auth', {
     baseUrl: useRuntimeConfig().public.BASE_URL,
   }),
   actions: {
-    async register(name, email, password, password_confirmation) {
+    async register(firstname, lastname, email, phone, password, password_confirmation) {
       const apiUrl = useRuntimeConfig().public.BASE_URL; //obtengo la url base
       try {
-        const { data, error } = await useFetch(apiUrl + '/signup', {
-          method: 'POST',
-          body: { name, email, password, password_confirmation }
-        })
+          const response = await useFetch(apiUrl + '/signup', {
+              method: 'POST',
+              body: { firstname, lastname, email, phone, password, password_confirmation }
+          });
 
-        if (error.value) {
-          throw new Error(error.value)
-        }
-        console.log('register',data.value)
-        this.setToken(data.value)
+          // console.log('response data',response.data)
+          // console.log('response error',response.error)
+          if (response.data.value?.success) {
+            this.setToken(response.data.value?.token?.token, response.data.value?.user);   
+          }
+          return response
       } catch (err) {
-        console.error(err.message)
-        // Manejo de errores
+          console.error('Error in registration:', err);
+          throw err; 
       }
-    },
-    setToken(data) {
-      this.token = data.token?.token;
-      this.name = data.user?.name;
-      this.email = data.user?.email;
-      this.id = data.user?.id;
+  },
+  
+
+    
+    setToken(token, user) {
+      this.token = token;
+      this.name = user?.name;
+      this.email = user?.email;
+      this.id = user?.id;
       localStorage.setItem('authToken', this.token)
       localStorage.setItem('authName', this.name)
       localStorage.setItem('authEmail', this.email)

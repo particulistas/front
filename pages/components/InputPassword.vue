@@ -14,7 +14,7 @@
       class="absolute right-2 top-2 cursor-pointer w-4 h-4"
       @click="togglePasswordVisibility"
     />
-    <p v-if="isError" class="mt-2 text-xs text-[#EC3030] absolute bottom-[-20px]">
+    <p v-if="isError && showTextError" class="mt-2 text-xs text-[#EC3030] absolute bottom-[-20px]">
       {{ errorMessage }}
     </p>
   </div>
@@ -28,6 +28,7 @@ const props = defineProps({
   placeholder: String,
   disabled: Boolean,
   isError: Boolean,  
+  showTextError: Boolean,
   errorMessage: { type: String, default: 'Campo requerido' }
 });
 

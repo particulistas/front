@@ -7,7 +7,7 @@
         :placeholder="placeholder"
         :disabled="disabled"
       />
-      <p v-if="isError" class="mt-2 text-xs text-[#EC3030] absolute bottom-[-20px]">
+      <p v-if="isError && showTextError" class="mt-2 text-xs text-[#EC3030] absolute bottom-[-20px]">
         {{ errorMessage }}
       </p>
     </div>
@@ -20,6 +20,7 @@
     modelValue: String,
     placeholder: String,
     disabled: Boolean,
+    showTextError: Boolean,
     isError: Boolean,  
     errorMessage: { type: String, default: 'Campo requerido'}
   });

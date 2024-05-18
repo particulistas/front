@@ -8,7 +8,7 @@
       :disabled="disabled"
       type="email"
     />
-    <p v-if="isError || hasError" class="mt-2 text-xs text-[#EC3030] absolute bottom-[-20px]">
+    <p v-if="(isError || hasError) && showTextError" class="mt-2 text-xs text-[#EC3030] absolute bottom-[-20px]">
       {{ textError }}
     </p>
   </div>
@@ -22,7 +22,8 @@ const props = defineProps({
   placeholder: String,
   disabled: Boolean,
   isError: Boolean,
-  errorMessage: String
+  errorMessage: String,
+  showTextError: Boolean,
 });
 
 const emit = defineEmits(['update:modelValue', 'isError']);
