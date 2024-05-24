@@ -36,6 +36,17 @@
     background-color: var(--p-07ACB4);
 }
 
+.btn-primary{
+    color: var(--p-fff);
+    background-color: var(--p-07ACB4);
+    box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.15);
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+.btn-primary:hover{
+    color: var(--p-07ACB4);
+    background-color: var(--p-fff);
+}
+
 /*
     ***
     27ABB1

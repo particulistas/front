@@ -1,10 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: [
-    '@nuxtjs/tailwindcss',
-    '@pinia/nuxt',
-  ],
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt','nuxt-swiper'],
   postcss: {
     plugins: {
       'postcss-nesting': {}, //
@@ -27,4 +24,7 @@ export default defineNuxtConfig({
     baseUrl: process.env.BASE_URL, // Usar en el lado del servidor
     imageUrl: process.env.IMAGE_URL, // Usar en el lado del servidor
   },
+  plugins: [
+    '~/plugins/windowWidth.js'
+  ],  
 })
