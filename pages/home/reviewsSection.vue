@@ -47,18 +47,23 @@
             <div class="home-reviews-container-pagination h-[10px]"></div> -->
         </section>
         <div class="text-center mt-[52px]">
-            <button class="btn-primary py-3 px-[48px] lg:px-6 rounded-[16px] text-[20px] lg:text-[38px] font-medium">
+            <button @click="openModal = true" class="btn-primary py-3 px-[48px] lg:px-6 rounded-[16px] text-[20px] lg:text-[38px] font-medium">
                 Envíanos tu opinión
             </button>
         </div>
+        <reviewModal />
     </div>
 </template>
 <script setup>
+import { ref, provide } from 'vue'
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import reviewModal from './reviewModal.vue'
 import 'swiper/css';
 
 const nuxtApp = useNuxtApp();
 const windowWidth = nuxtApp.$windowWidth;
+const openModal = ref(false)
+provide('openModal',openModal)
 
 const breakpoints = {
       '1024': {
