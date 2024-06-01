@@ -7,7 +7,7 @@
             <WithUsSection />
         </div>
         <div class="px-4 lg:px-0 bg-white">
-          <!-- <Services /> -->
+          <Services />
           <ReviewsSection />
           <NoticesSection />
         </div>
@@ -20,7 +20,7 @@ import Layout from '~/layouts/default.vue'
 import HeroSection from './home/heroSection.vue'
 import SearchSection from './home/searchSection.vue'
 import WithUsSection from './home/withUsSection.vue'
-// import Services from './home/servicesSection.vue'
+import Services from './home/servicesSection.vue'
 import ReviewsSection from './home/reviewsSection.vue'
 import NoticesSection from './home/noticesSection.vue'
 
