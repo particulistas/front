@@ -1,7 +1,7 @@
 <template>
     <section class="mt-[65px]">
         <p class="text-[24px] md:text-[32px] font-bold lg:p-2.5 text-center text-[#888]">¿Por qué pagar por todo cuando necesitas una parte?</p>
-        <div class="rounded-[12px] mt-6 bg-gradient-to-r from-[#07ACB4] to-[#08CCD3] lg:bg-white">
+        <div class="rounded-[12px] mt-6 bg-gradient-to-r from-[#07ACB4] to-[#08CCD3] lg:bg-white lg:from-[#fff]">
             <div class="lg:w-[845px] mx-auto">
                 <div class="md:mt-[34px] flex gap-[28px] lg:gap-5 justify-center">
                     <div class="rounded-[24px] lg:shadow-lg lg:bg-gradient-to-r from-[#07ACB4] to-[#08CCD3] py-8 w-[80px] lg:w-auto">

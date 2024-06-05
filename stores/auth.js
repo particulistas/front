@@ -22,8 +22,7 @@ export const useAuthStore = defineStore('auth', {
               body: { firstname, lastname, email, phone, password, password_confirmation }
           });
 
-          // console.log('response data',response.data)
-          // console.log('response error',response.error)
+          console.log('response data',response)
           if (response.data.value?.success) {
             this.setToken(response.data.value?.token?.token, response.data.value?.user);   
           }
@@ -38,6 +37,7 @@ export const useAuthStore = defineStore('auth', {
     
     setToken(token, user) {
       this.token = token;
+      this.remember_token = user?.remember_token;
       this.name = user?.name;
       this.email = user?.email;
       this.id = user?.id;
@@ -45,16 +45,19 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('authName', this.name)
       localStorage.setItem('authEmail', this.email)
       localStorage.setItem('authId', this.id)
+      localStorage.setItem('authRememberToken', this.remember_token)
     },
     logout() {
       this.token = null;
       this.name = null;
       this.email = null;
       this.id = null;
+      this.remember_token = null;
       localStorage.removeItem('authToken')
       localStorage.removeItem('authName')
       localStorage.removeItem('authEmail')
       localStorage.removeItem('authId')
+      localStorage.removeItem('authRememberToken')
     },
     async login(email, password) {
       try {

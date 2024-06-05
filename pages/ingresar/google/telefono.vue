@@ -9,10 +9,11 @@
                 </p>
                 <div class="bg-white pt-6 rounded-t-[18px] lg:rounded-t-none">
                     <img class="w-[280px] h-[222px] mx-auto" src="/assets/imgs/agregar-telefono.svg" alt="agregar-telefono">
-                    <div class="w-[336px] mx-auto p-2.5">
-                        <p class="text-[28px] font-medium mt-8 color-666 text-left leading-8">Este portal es solo para particulares.</p>
-                        <p class="text-[20px] mt-6 color-666 text-left leading-6">La participación de inmobiliarias y agencias queda estrictamente prohibida. </p>
-                        <p class="text-[20px] mt-6 color-666 text-left leading-6">Por eso es importante conocer tu número de teléfono para confirmar que eres un particular.</p>
+                    <div class="w-[336px] md:w-[442px] mx-auto p-2.5 md:p-0">
+                        <p class="text-[28px] md:text-[24px] md:text-center font-medium mt-8 color-666 text-left leading-8">Este portal es solo para particulares.</p>
+                        <div class="w-[90%] mx-auto border-b border-gray-300 my-3 hidden md:block"></div>
+                        <p class="text-[20px] mt-6 color-666 text-left leading-6 md:px-2.5">La participación de inmobiliarias y agencias queda estrictamente prohibida. </p>
+                        <p class="text-[20px] mt-6 color-666 text-left leading-6 md:px-2.5">Por eso es importante conocer tu número de teléfono para confirmar que eres un particular.</p>
                     </div>
                     <div class="w-[311px] mx-auto mt-8">
                         <label class="text-[20px] color-666 font-medium mb-1 text-left block">Teléfono* </label>

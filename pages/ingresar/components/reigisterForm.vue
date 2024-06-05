@@ -75,20 +75,23 @@
     </div>
     
     <div class="mt-8 pb-20 text-center w-[292px] mx-auto">
-        <button 
-            class="bg-[#EC3030] hover:bg-white hover:text-[#EC3030] text-white font-bold text-[24px] py-3 px-[48px] rounded-[6px] shadow-md w-full"
+        <nuxt-link 
+            to="ingresar/google/telefono"
+            class="block bg-[#EC3030] hover:bg-white hover:text-[#EC3030] text-white font-bold text-[24px] py-3 px-[48px] rounded-[6px] shadow-md w-full"
         >
             Google
-        </button>
+        </nuxt-link>
     </div>
+    <emptyAgreementModal />
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import InputText  from '../../components/InputText.vue';
 import InputEmail  from '../../components/InputEmail.vue';
 import InputPhone from '../../components/InputPhone.vue'
 import InputCheckbox from '../../components/InputCheckbox.vue'
 import InputPassword from '../../components/InputPassword.vue'
+import emptyAgreementModal from '~/pages/ingresar/components/emptyAgreementModal.vue'
 
 import { useAuthStore } from '~/stores/auth';
 import { useRouter } from 'vue-router';
@@ -103,6 +106,7 @@ const phone = ref(null)
 const pass = ref(null)
 const passConfirm  = ref(null)
 const formProcess = ref(false)
+const openNotify = ref(true)
 
 const agreeTerms = ref(false)
 const agreePolitics = ref(false)
@@ -111,19 +115,17 @@ const errorsKey = ref([])
 
 const submit = async () =>{
     formProcess.value = true
-    if(!errorsKey.length){
+    validAgreeBox();
+    if(!errorsKey.value.length){
         try {
             let { data, error} = await authStore.register(name.value, lastname.value, email.value, phone.value, pass.value, passConfirm.value)
             if(error.value?.statusCode == 422){
-                validationErrors.value = error.value.data;
+                validationErrors.value = error.value.data.errors;
                 console.log('error.value.data',error.value.data)
                 errorsKey.value = Object.keys(validationErrors.value);
-                !agreeTerms.value  ? errorsKey.value.push('agreeTerms') : '';
-                !agreePolitics.value ? errorsKey.value.push('agreePolitics') : '';
             }else{
                 validationErrors.value = null;
             }
-
             if (data.value?.success) {
                 router.push('/ingresar/confirmar-registro');
             }
@@ -131,6 +133,17 @@ const submit = async () =>{
         } catch (err) {
             console.log('Errores al enviar form:', err);
         }
+    }else{
+        formProcess.value = false
+    }
+}
+
+const validAgreeBox = () =>{
+    if(!agreeTerms.value || !agreePolitics.value){
+        openNotify.value = true;
+        !agreeTerms.value ? errorsKey.value.push('agreeTerms') : '';
+        !agreePolitics.value ? errorsKey.value.push('agreePolitics') : '';
+        return;
     }
 }
 
@@ -153,10 +166,8 @@ const replaceKeys = (string, key) =>{
 }
 
 const removeError = (field) =>{
-    console.log('field',field)
     errorsKey.value = errorsKey.value.filter(item => item !== field)
-    console.log('errorsKey.value',errorsKey.value)
 }
 
-
+provide('openNotify',openNotify)
 </script>

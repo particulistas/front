@@ -42,7 +42,7 @@ import { ref } from 'vue'
 
 const openMenu = ref(false)
 </script>
-<style>
+<style scoped>
 .open{
     left: 0;
     transition: all 0.5s ease;

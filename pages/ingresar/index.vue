@@ -6,7 +6,9 @@
           <div class="lg:mx-auto lg:w-[642px] text-center">
               <p class="bg-[#155D61] relative text-white text-center text-[24px] font-medium p-2.5 lg:p-1">
                   {{ showRegister ? 'Registrate' : 'Iniciar sesión'}}
-                  <img class="absolute right-3 lg:right-2 top-[17px] lg:top-3" src="/assets/icons/times.svg" alt="registro_times">
+                  <nuxt-link to="/" class="absolute right-3 lg:right-2 top-[17px] lg:top-3 block">
+                    <img class="" src="/assets/icons/times.svg" alt="registro_times">
+                  </nuxt-link>
               </p>
               <div class="bg-white pt-12 lg:pt-[26px] rounded-t-[18px] px-4 lg:px-0">
                 <img class="mx-auto" src="/assets/imgs/registro1.svg" alt="registro">
