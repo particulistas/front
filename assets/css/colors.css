@@ -57,6 +57,10 @@
     color: var(--p-fff);
     background-color: var(--p-07ACB4);
 }
+.btn-primary-inverse:hover > .primary-icon{
+    filter: brightness(0) invert(1);
+}
+
 
 /*
     ***

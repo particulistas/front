@@ -106,7 +106,7 @@ const phone = ref(null)
 const pass = ref(null)
 const passConfirm  = ref(null)
 const formProcess = ref(false)
-const openNotify = ref(true)
+const openNotify = ref(false)
 
 const agreeTerms = ref(false)
 const agreePolitics = ref(false)

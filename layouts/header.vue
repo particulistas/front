@@ -5,7 +5,9 @@
             <button @click="toggleMenu" class="hover-chield-icon-white hover-bg-07ACB4 rounded-[6px] p-1 lg:p-2.5">
                 <img  class="w-6 h-[18px] lg:w-auto lg:h-auto" src="/assets/icons/Burger menu.svg" alt="Burger menu particulistas"/>
             </button>
-            <img  class="w-[97px] h-[22px] lg:w-auto lg:h-auto ml-1 lg:ml-2.5 cursor-pointer" src="/assets/fulllogo.svg" alt="fulllogo particulistas"/>
+            <nuxt-link to="/" class="ml-1 lg:ml-2.5">
+                <img  class="w-[97px] h-[22px] lg:w-auto lg:h-auto" src="/assets/fulllogo.svg" alt="fulllogo particulistas"/>
+            </nuxt-link>
         </div>
 
         <!-- icons desktop -->
