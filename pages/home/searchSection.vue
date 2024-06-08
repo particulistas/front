@@ -1,6 +1,6 @@
 <template>
-    <section class="bg-[#F3F3F3]">
-        <div class="bg-[#155D61] pl-4 lg:pl-[72px] pr-4 lg:pr-10 py-3 lg:rounded-t-[24px] rounded-b-xl lg:rounded-b-[24px] lg:w-[1083px] mx-[-16px] lg:mx-auto mt-5 lg:mt-0">
+    <section class="lg:bg-[#F3F3F3]">
+        <div class="bg-[#155D61] pl-4 lg:pl-[72px] pr-4 lg:pr-10 py-4 lg:rounded-t-[24px] rounded-b-xl lg:rounded-b-[24px] lg:w-[1083px] mx-[-16px] lg:mx-auto mt-5 lg:mt-0">
             <div class="lg:flex lg:items-center">
                 <p class="text-white lg:text-[24px] font-bold mr-6 hidden lg:inline-block">Viviendas</p>
                 <div>
@@ -20,7 +20,7 @@
                             src="/assets/icons/search-888888.svg" alt="home-hero search icon"
                         >
                         <input 
-                            class="w-full h-[37px] lg:h-[62px] bg-white rounded-lg lg:rounded-[16px] p-6" 
+                            class="w-full h-[37px] lg:h-[62px] bg-white rounded-[12px] lg:rounded-[16px] p-6" 
                             type="text"
                             v-model="inputSearch"
                             @click="openRecent = true"
@@ -29,14 +29,14 @@
 
                         <!-- recent searches -->
                         <div v-if="openRecent" class="bg-white rounded-b-[16px] absolute top-[37px] lg:top-[50px] w-full shadow-par overflow-hidden">
-                            <nuxt-link class="w-full btn-primary-inverse flex px-5 py-2 text-[20px] font-medium items-center cursor-pointer">
+                            <nuxt-link to="/inmuebles" class="w-full btn-primary-inverse flex px-5 py-2 text-[20px] font-medium items-center cursor-pointer">
                                 <img 
                                     class="primary-icon w-[32px] h-[36px] mr-3" 
                                     src="/assets/icons/point-house.svg" alt="search icon"
                                 >
                                 Buscar por mapa
                             </nuxt-link>
-                            <nuxt-link class="w-full btn-primary-inverse flex px-5 py-2 text-[20px] font-medium items-center cursor-pointer">
+                            <nuxt-link to="/inmuebles" class="w-full btn-primary-inverse flex px-5 py-2 text-[20px] font-medium items-center cursor-pointer">
                                 <img 
                                     class="primary-icon w-[32px] h-[36px] mr-3" 
                                     src="/assets/icons/search-house.svg" alt="search icon"
@@ -55,7 +55,7 @@
                                     Piso en calle Jacinto, 5, Marazuela- El Torreón, Las Rozas de Madrid
                                 </nuxt-link>
                             </div>
-                            <nuxt-link class="w-full block text-center text-base font-bold color-07ACB4 hover-E786F0 py-2 cursor-pointer">
+                            <nuxt-link to="/inmuebles" class="w-full block text-center text-base font-bold color-07ACB4 hover-E786F0 py-2 cursor-pointer">
                                 Ver todos
                             </nuxt-link>
                         </div>
@@ -73,7 +73,7 @@
                             </nuxt-link>
                         </div>
                     </div>
-                    <img class="w-[224px] lg:w-auto h-[48px] lg:h-auto  mx-auto" src="/assets/imgs/home-hero-el-refugio-de-los-particulares.svg" alt="home-hero-el-refugio-de-los-particulares">
+                    <img v-if="$route.path == '/'" class="w-[224px] lg:w-auto h-[48px] lg:h-auto  mx-auto" src="/assets/imgs/home-hero-el-refugio-de-los-particulares.svg" alt="home-hero-el-refugio-de-los-particulares">
                 </div>
             </div>
         </div>

@@ -42,6 +42,7 @@
     box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.15);
     transition: color 0.3s ease, background-color 0.3s ease;
 }
+
 .btn-primary:hover{
     color: var(--p-07ACB4);
     background-color: var(--p-fff);
@@ -53,12 +54,21 @@
     box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.15);
     transition: color 0.3s ease, background-color 0.3s ease;
 }
+
+.primary-active,
 .btn-primary-inverse:hover{
     color: var(--p-fff);
     background-color: var(--p-07ACB4);
 }
+
+.icon-container-hover:hover > .icon-white,
+.icon-container > .icon-white,
+.primary-active > .primary-icon,
 .btn-primary-inverse:hover > .primary-icon{
     filter: brightness(0) invert(1);
+}
+.btn-primary-inverse:hover > .primary-text{
+    color: var(--p-fff);
 }
 
 

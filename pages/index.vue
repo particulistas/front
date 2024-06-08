@@ -1,18 +1,16 @@
 <template>
-    <div>
-      <Layout>
-        <div class="px-4 lg:px-0 bg-[#F3F3F3]">
-            <HeroSection />
-            <SearchSection />
-            <WithUsSection />
-        </div>
-        <div class="px-4 lg:px-0 bg-white">
-          <Services />
-          <ReviewsSection />
-          <NoticesSection />
-        </div>
-      </Layout>
-    </div>
+    <Layout>
+      <div class="px-4 lg:px-0 bg-[#F3F3F3]">
+          <HeroSection />
+          <SearchSection />
+          <WithUsSection />
+      </div>
+      <div class="px-4 lg:px-0 bg-white">
+        <Services />
+        <ReviewsSection />
+        <NoticesSection />
+      </div>
+    </Layout>
 </template>
 <script setup>
 import { ref } from 'vue';
