@@ -1,13 +1,16 @@
 <template>
-    <div class="w-[310px] flex-shrink-0">
-        <div class="relative">
-            <div class="absolute rounded-t-[12px] bg-[#D4CB50] flex justify-center gap-[6px] items-center w-full top-0 left-0 z-20">
-                <img class="w-[18px] h-[18px]" src="/assets/icons/revisado-jud.svg" alt="revisado juridicamente icono">
-                <p class="py-1 text-sm text-white">Revisado juridicamente</p>
-            </div>
-            <img class="w-full h-[201px] object-cover rounded-[12px]" src="https://fundacioncompartir.org/sites/default/files/estos-son-algunos-de-los-edificios-construidos-en-madera.jpg" alt="">
-        </div>
-        <div class="mt-[14px] flex items-center justify-between">
+    <div 
+        class="flex-shrink-0"
+        :class="{
+            'lg:w-full': openMap,
+            'lg:w-[310px]': !openMap && styleCard == 'expandido',
+            'w-[82px]': styleCard == 'contraido',
+        }"
+    >
+        
+        <imageSlider />
+
+        <div v-if="styleCard == 'expandido'" class="mt-[14px] flex items-center justify-between">
             <div class="flex gap-1">
                 <button 
                     class="rounded-[4px] from-[#07ACB4] to-[#08CCD3] box-border w-[47px] h-[47px]"
@@ -53,9 +56,13 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
+import imageSlider from './imageSlider.vue'
 
 const sectionSelected = ref('images')
 const likeCard = ref(false)
 const likeHover = ref(false)
+
+const openMap = inject('openMap')
+const styleCard = inject('styleCard')
 </script>
