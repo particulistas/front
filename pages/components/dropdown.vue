@@ -1,6 +1,6 @@
 <template>
     <div :class="dropdownClass" ref="dropdown">
-        <button :class="`min-w-[100px] lg:min-w-[200px] ${buttonClass} ${isOpen ? openClass : ''}`" @click="toggleDropdown">
+        <button :class="`min-w-[100px] ${buttonClass} ${isOpen ? openClass : ''}`" @click="toggleDropdown">
             {{ displayText }}
             <img :class="`${iconRightClasess}`" :src="iconRight" alt="dropdown icon">
         </button>

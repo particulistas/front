@@ -7,7 +7,10 @@
             </div>
             <div class="w-[327px] my-[10px] mx-auto">
                 <div class="flex w-full justify-between">
-                    <button class="flex items-center py-2.5 px-2 lg:px-3 btn-primary-inverse shadow-none rounded-[8px]">
+                    <button 
+                        class="flex items-center py-2.5 px-2 lg:px-3 btn-primary-inverse shadow-none rounded-[8px]"
+                        @click="openFilters = true"
+                    >
                         <img class="primary-icon w-[33px] h-[36px] lg:w-[45px] lg:h-[48px]" src="/assets/icons/filter-house.svg" alt="filter icon">
                         <p class="primary-text ml-1.5 lg:ml-3 color-07ACB4 text-[20px] lg:text-[24px] font-bold">Filtros</p>
                     </button>
@@ -78,37 +81,22 @@
             </div>
         </section>
     
-        <Modal :open="openStyleModal" classes="bg-white max-w-[211px] rounded-[6px] pb-2" @clickOut="openStyleModal = false">
-            <h1 class="text-[20px] font-bold color-07ACB4 px-6 pt-4 pb-3">Estilo</h1>
-            <button 
-                class="w-full h-12 text-[20px] font-bold flex justify-center items-center"
-                @click="styleCard = 'contraido'"
-                :class="styleCard == 'contraido' ? 'primary-active' : 'color-07ACB4'"
-            >
-                <img class="w-8 h-9 mr-2 primary-icon" src="/assets/icons/estilo-contraido.svg" alt="point map icon">
-                Contraido
-            </button>
-            <button 
-                class="w-full h-12 text-[20px] font-bold flex justify-center items-center"
-                :class="styleCard == 'expandido' ? 'primary-active' : 'color-07ACB4'"
-                @click="styleCard = 'expandido'"
-            >
-                <img class="w-8 h-9 mr-2 primary-icon" src="/assets/icons/estilo-expandido.svg" alt="expandido map icon">
-                Expandido
-            </button>
-        </Modal>
+        <StyleModal />
+        <FiltersModal />
     </Layout>
 </template>
 <script setup>
 import { ref, provide } from 'vue';
 import Layout from '~/layouts/default.vue'
 import SearchSection from '~/pages/home/searchSection.vue'
-import Modal from '~/pages/components/modal.vue'
 import Dropdown from '~/pages/components/dropdown.vue'
 import Card from './components/propertyCard.vue'
+import StyleModal from './components/StyleModal.vue'
+import FiltersModal from './components/FiltersModal.vue'
 
 const openStyleModal = ref(false)
 const openMap = ref(false)
+const openFilters = ref(false)
 const styleCard = ref('expandido')
 const order = ref('1')
 const iconDropdown = ref('dropdown-azul')
@@ -132,6 +120,8 @@ const openDropdown = (open) =>{
 
 provide('openMap',openMap)
 provide('styleCard',styleCard)
+provide('openStyleModal',openStyleModal)
+provide('openFilters',openFilters)
 </script>
 <style scoped>
 .shadow-none{
