@@ -36,7 +36,10 @@
             <img  class="w-4 h-4" src="/assets/icons/bell.svg" alt="bell icon"/>
         </div>
         <div class="flex gap-1.5 lg:gap-4 ml-auto lg:ml-[28px] items-center pt-3 lg:pt-5 lg:pb-2">
-            <button class="btn-outline-E786F0 btn-border-2 rounded-lg lg:rounded-full px-3 lg:px-4 py-1 lg:py-[6px] text-sm lg:text-[20px] font-medium leading-4">
+            <button
+                class="btn-outline-E786F0 btn-border-2 rounded-lg lg:rounded-full px-3 lg:px-4 py-1 lg:py-[6px] text-sm lg:text-[20px] font-medium leading-4"
+                @click="publish"
+            >
                 Publica
             </button>
             <nuxt-link to="/ingresar" class="btn-outline-07ACB4 btn-border-2 rounded-lg lg:rounded-full px-3 lg:px-4 py-1 lg:py-[6px] text-sm lg:text-[20px] font-medium leading-4">
@@ -46,17 +49,60 @@
     </header>
     <FixedNav />
     <sideMenu />
+
+    <Modal :open="openPublishModal" classes="bg-[#155D61] w-full max-w-[100%] p-0 rounded-none" @clickOut="openPublishModal = false">
+        <!-- head -->
+        <div class="flex px-4 py-3 icon-container lg:hidden">
+            <h1 class="text-white text-[28px] text-center font-medium flex-grow">Crea tu anuncio</h1>
+            <img 
+                class="ml-auto" 
+                src="/assets/icons/real-times.svg" 
+                alt="close icon"
+                @click="openPublishModal = false"
+            >
+        </div>
+
+        <div class="bg-white rounded-t-[24px] px-5 max-h-[90vh] overflow-y-auto pb-10">
+            <Stepsbar />
+            <div class="pb-5 border-b border-gray-300">
+                <h1 class="text-[20px] font-medium text-center color-666">Datos principales</h1>
+            </div>
+            <div class="mt-6">
+                <Form />
+            </div>
+        </div>
+    </Modal>
 </template>
 <script setup>
 import { ref, provide } from 'vue'
+import { useRouter } from 'vue-router'
+
 import FixedNav from './fixedNav.vue'
 import sideMenu from './sideMenu.vue'
+import Modal from '~/pages/components/slidingModal.vue'
+import Stepsbar from '~/pages/inmuebles/components/Publish/StepsSidebarMobile.vue'
+import Form from '~/pages/inmuebles/components/Publish/Form.vue'
+
+const router = useRouter()
+const nuxtApp = useNuxtApp();
+const windowWidth = nuxtApp.$windowWidth;
 
 const isSideMenuOpen = ref(false)
+const openPublishModal = ref(true)
 
 function toggleMenu() {
     isSideMenuOpen.value = !isSideMenuOpen.value;
 }
 
+function publish() {
+    if(windowWidth > 1020){
+        router.push('/inmuebles/publicar')
+    }else{
+        openPublishModal.value = true;
+    }
+}
+
+
 provide('isSideMenuOpen',isSideMenuOpen)
+provide('openPublishModal',openPublishModal)
 </script>

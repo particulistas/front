@@ -1,0 +1,20 @@
+<template>
+<Layout>
+    <div class="px-4 lg:px-20 py-10">
+        <div class="lg:flex">
+            <StepsSidebar />
+            <Form />
+        </div>
+    </div>
+</Layout>
+</template>
+<script setup>
+import { ref, provide } from 'vue';
+import Layout from '~/layouts/default.vue'
+import StepsSidebar from './components/Publish/StepsSidebarDesktop.vue'
+import Form from './components/Publish/Form.vue'
+
+</script>
+<style scoped>
+</style>
+    

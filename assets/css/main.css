@@ -49,3 +49,14 @@ a{
     background-color: rgba(136, 136, 136, 0.7); /* Color del thumb al pasar el mouse */
   }
   
+  /* Para ocultar las flechas en Chrome, Safari, Edge */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Para Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
