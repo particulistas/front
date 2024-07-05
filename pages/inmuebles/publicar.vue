@@ -3,7 +3,8 @@
     <div class="px-4 lg:px-20 py-10">
         <div class="lg:flex">
             <StepsSidebar />
-            <Form />
+            <!-- <FirstStep /> -->
+            <SecondStep />
         </div>
     </div>
 </Layout>
@@ -12,7 +13,8 @@
 import { ref, provide } from 'vue';
 import Layout from '~/layouts/default.vue'
 import StepsSidebar from './components/Publish/StepsSidebarDesktop.vue'
-import Form from './components/Publish/Form.vue'
+import FirstStep from './components/Publish/FirstStep.vue'
+import SecondStep from './components/Publish/SecondStep.vue'
 
 </script>
 <style scoped>

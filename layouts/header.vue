@@ -68,7 +68,7 @@
                 <h1 class="text-[20px] font-medium text-center color-666">Datos principales</h1>
             </div>
             <div class="mt-6">
-                <Form />
+                <FirstStep />
             </div>
         </div>
     </Modal>
@@ -81,14 +81,14 @@ import FixedNav from './fixedNav.vue'
 import sideMenu from './sideMenu.vue'
 import Modal from '~/pages/components/slidingModal.vue'
 import Stepsbar from '~/pages/inmuebles/components/Publish/StepsSidebarMobile.vue'
-import Form from '~/pages/inmuebles/components/Publish/Form.vue'
+import FirstStep from '~/pages/inmuebles/components/Publish/FirstStep.vue'
 
 const router = useRouter()
 const nuxtApp = useNuxtApp();
 const windowWidth = nuxtApp.$windowWidth;
 
 const isSideMenuOpen = ref(false)
-const openPublishModal = ref(true)
+const openPublishModal = ref(false)
 
 function toggleMenu() {
     isSideMenuOpen.value = !isSideMenuOpen.value;
