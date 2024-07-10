@@ -80,6 +80,10 @@
 .color-27ABB1{
     color: var(--p-27ABB1);
 }
+.icon-container:hover > .hover-icon-27ABB1,
+.icon-27ABB1{
+    filter: brightness(0) saturate(100%) invert(54%) sepia(36%) saturate(1357%) hue-rotate(138deg) brightness(91%) contrast(90%);
+}
 
 /*
     ***

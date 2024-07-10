@@ -4,7 +4,9 @@
         <div class="lg:flex">
             <StepsSidebar />
             <!-- <FirstStep /> -->
-            <SecondStep />
+            <!-- <SecondStep /> -->
+            <!-- <ThirdStep /> -->
+            <FourthStep />
         </div>
     </div>
 </Layout>
@@ -15,7 +17,8 @@ import Layout from '~/layouts/default.vue'
 import StepsSidebar from './components/Publish/StepsSidebarDesktop.vue'
 import FirstStep from './components/Publish/FirstStep.vue'
 import SecondStep from './components/Publish/SecondStep.vue'
-
+import ThirdStep from './components/Publish/ThirdStep.vue'
+import FourthStep from './components/Publish/FourthStep.vue'
 </script>
 <style scoped>
 </style>
