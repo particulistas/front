@@ -1,6 +1,6 @@
 <template>
     <div class="lg:px-6 lg:pt-10 flex-grow">
-        <h1 class="text-[28px] font-medium color-666 text-center">Listos para publicar </h1>
+        <h1 class="text-[28px] font-medium color-666 text-center hidden lg:block">Listos para publicar </h1>
 
         <div class="mt-10 lg:grid lg:gap-20 lg:grid-cols-2">
             <div class="lg:w-[377px]">
@@ -19,7 +19,7 @@
                     <div class="mt-4 flex gap-2">
                         <button 
                             v-for="item in  ['Solo llamadas','Solo WhatsApp','Ambos']"
-                            class="text-base font-medium border border-[#27ABB1] rounded-[8px] px-2 hover:bg-[#27ABB1] hover:text-white"
+                            class="text-base font-medium border border-[#27ABB1] rounded-[8px] px-1.5 lg:px-2 hover:bg-[#27ABB1] hover:text-white"
                             :class="item == serviceMovil ? 'bg-[#27ABB1] text-white' : 'color-666'"
                             @click="serviceMovil = item"
                         >
@@ -35,7 +35,7 @@
                 </div>
             </div>
 
-            <div class="lg:w-[326px]">
+            <div class="lg:w-[326px] border-t border-gray-400 lg:border-t-none mt-8 lg-mt-0 pt-8 lg:pt-0">
                 <h2 class="text-[20px] font-medium color-666 text-center">¿Tu anuncio está listo?</h2>
                 <div class="text-center mt-6">
                     <button class="flex items-center gap-2 text-base font-medium text-white w-[206px] h-[70px] rounded-[8px] bg-[#27ABB1] hover:text-[#27ABB1] justify-center icon-container hover:bg-white shadow-par mx-auto">

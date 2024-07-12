@@ -3,10 +3,10 @@
     <div class="px-4 lg:px-20 py-10">
         <div class="lg:flex">
             <StepsSidebar />
-            <!-- <FirstStep /> -->
+            <FirstStep />
             <!-- <SecondStep /> -->
             <!-- <ThirdStep /> -->
-            <FourthStep />
+            <!-- <FourthStep /> -->
         </div>
     </div>
 </Layout>

@@ -13,12 +13,12 @@
         </div>        
 
         <!-- map -->
-        <div class="mt-10 bg-red-200 py-40 h-[480px]">
+        <div class="mt-10 bg-red-200 py-40 h-[480px] mx-[-20px] lg:mx-0">
             <h1 class="text-5xl text-center">Mapa</h1>
         </div>
 
         <!-- address description -->
-        <div class="px-6 mt-10 lg:grid lg:gap-20 lg:grid-cols-2">
+        <div class="lg:px-6 mt-10 lg:grid lg:gap-20 lg:grid-cols-2">
             <div class="lg:w-[340px]">
                 <p class="text-base font-medium color-666 mb-1">La dirección es:</p>
                 <div>
@@ -34,7 +34,7 @@
                     <p class="ml-2 text-base font-medium color-666">Ocultar el número de la vía en el anuncio</p>
                 </div>
             </div>
-            <div>
+            <div class="mt-8 lg:mt-0">
                 <div class="flex items-center">
                     <p class="text-base font-medium mr-2 color-666">N° de planta</p>
                     <input class="h-7 rounded-[8px] border border-black p-2 w-[131px]" type="text">
@@ -50,19 +50,19 @@
             </div>
         </div>
 
-        <div class="border-t mt-14 text-center"></div>
+        <div class="border-t border-gray-400 mt-14 text-center"></div>
 
         <!-- description -->
-        <div class="px-6 mt-6">
+        <div class="lg:px-6 mt-6">
             <p class="text-[20px] font-medium color-666 mb-2">Descripción del inmueble*</p>
             <textarea class="border border-gray-300 p-3 h-[144px] w-full rounded-[8px] text-base"></textarea>
             <p class="text-sm font-light italic text-right">0 / X000 Caracteres</p>
         </div>
 
         <!-- images -->
-         <div class="px-6 mt-6 flex lg:gap-x-20 flex-wrap">
+         <div class="lg:px-6 mt-6 flex lg:gap-x-20 flex-wrap">
             <UploadFiles />
-            <div class="w-[316px] pt-10">
+            <div class="w-[316px] pt-10 hidden lg:inline-block">
                 <p class="text-base text-center color-666">Sube <b>hasta 35 fotos</b>  y <b>4 videos</b> </p>
                 <p class="text-base color-666 mt-4"><b>Fotos</b> de 32 megas cada una en formato gif, jpeg o png</p>
                 <p class="text-base color-666"><b>Vídeos</b> de 100 megas cada uno en formato  avi, mov, wmv, mpeg, rm, mp4, flv, m2t o 3gp</p>
@@ -70,7 +70,7 @@
         </div>
 
         <!-- questions -->
-        <div class="mt-10 bg-[#F7F9F9] h-[84px] w-full p-7 cursor-pointer flex justify-between" @click="openModal = true">
+        <div class="mt-10 bg-[#F7F9F9] h-[84px] w-full p-7 cursor-pointer flex justify-between hidden lg:block" @click="openModal = true">
             <h1 class="text-[20px] font-medium text-[#27ABB1]">¿Problemas? ¡Te ayudamos!</h1>
             <img class="w-6 h-6" src="/assets/icons/simbolo-mas.svg" alt="icon seccion">
         </div>

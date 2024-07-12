@@ -1,11 +1,11 @@
 <template>
     <div class="lg:px-6 lg:pt-10 flex-grow">
      
-        <h1 class="text-[28px] font-medium color-666 opacity-50 text-center">(Esta sección es opcional)</h1>
+        <h1 class="text-[20px] lg:text-[28px] font-medium color-666 opacity-50 text-center">(Esta sección es opcional)</h1>
         <!-- images -->
          <div class="mt-10 flex lg:gap-x-20 flex-wrap">
             <UploadPlane />
-            <div class="w-[421px] bg-[#F5F5F5] rounded-[12px] pt-4 pb-16">
+            <div class="mt-8 lg:mt-0 lg:w-[421px] lg:bg-[#F5F5F5] rounded-[12px] pt-8 lg:pt-4 pb-16 border-t border-gray-400 lg:border-t-none">
                 <h2 class="text-[20px] font-medium color-666 text-center">Certificado energético</h2>
                 <div class="mt-6 flex gap-4 px-8">
                     <button 
@@ -18,7 +18,7 @@
                     </button>
                 </div>
                 <p class="text-base text-center px-6 mt-6 color-666">Selecciona los perfiles de consumo (kW) y emisiones (CO2) que correspondan con el certificado del inmueble.</p>
-                <div class="mt-6">
+                <div class="mt-6 mx-[-20px] lg:mx-0">
                     <table>
                         <thead>
                             <th></th>

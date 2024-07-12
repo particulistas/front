@@ -68,7 +68,10 @@
                 <h1 class="text-[20px] font-medium text-center color-666">Datos principales</h1>
             </div>
             <div class="mt-6">
-                <FirstStep />
+                <!-- <FirstStep /> -->
+                <!-- <SecondStep /> -->
+                <!-- <ThirdStep /> -->
+                <FourthStep />
             </div>
         </div>
     </Modal>
@@ -82,6 +85,9 @@ import sideMenu from './sideMenu.vue'
 import Modal from '~/pages/components/slidingModal.vue'
 import Stepsbar from '~/pages/inmuebles/components/Publish/StepsSidebarMobile.vue'
 import FirstStep from '~/pages/inmuebles/components/Publish/FirstStep.vue'
+import SecondStep from '~/pages/inmuebles/components/Publish/SecondStep.vue'
+import ThirdStep from '~/pages/inmuebles/components/Publish/ThirdStep.vue'
+import FourthStep from '~/pages/inmuebles/components/Publish/FourthStep.vue'
 
 const router = useRouter()
 const nuxtApp = useNuxtApp();
