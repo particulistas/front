@@ -1,0 +1,15 @@
+{
+    "name": "alejandro.chacon/front",
+    "autoload": {
+        "psr-4": {
+            "AlejandroChacon\\Front\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Alejandro Chacon",
+            "email": "alejandrojchacon@gmail.com"
+        }
+    ],
+    "require": {}
+}
