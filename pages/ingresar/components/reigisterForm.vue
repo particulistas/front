@@ -127,7 +127,9 @@ const submit = async () =>{
                 validationErrors.value = null;
             }
             if (data.value?.success) {
-                router.push('/ingresar/confirmar-registro');
+               // router.push('/ingresar/confirmar-registro');
+                router.push({ path: '/ingresar/confirmar-registro', query: { email: email.value } });
+               // router.push({ path: '/ingresar/confirmar-registro', params: { email: encodeURIComponent(email.value ) }  });
             }
             formProcess.value = false
         } catch (err) {

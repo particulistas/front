@@ -2,7 +2,7 @@
     <Modal :open="openNotify" classes="bg-[#155D61] rounded-none md:rounded-b-[24px] overflow-hidden md:max-w-[393px]" @clickOut="closeModal">
         <div class="h-[70px] relative py-[18px]">
             <h1 class="text-center text-[28px] font-medium text-white leading-8">Registrate</h1>
-            <img class="cursor-pointer absolute top-0 bottom-0 my-auto right-4 w-6 h-6" src="/assets/icons/times.svg" alt="registro_times">
+            <img class="cursor-pointer absolute top-0 bottom-0 my-auto right-4 w-6 h-6" src="/assets/icons/times.svg" alt="registro_times" @click="closeModal">
         </div>
         <div class="bg-[#D4CB50] rounded-t-[24px] py-8">
             <img class="mx-auto" src="/assets/icons/checkWhite.svg" alt="checkWhite icon">
@@ -10,7 +10,7 @@
         </div>
         <div class="bg-white py-5 text-center">
             <p class="text-base color-666 text-center w-[324px] mx-auto leading-4">Una vez realizado el registro podrás modificar los aspectos pertinentes en tu espacio personal </p>
-            <button class="btn-primary py-3 px-[48px] rounded-[8px] text-[20px] font-bold my-5">
+            <button class="btn-primary py-3 px-[48px] rounded-[8px] text-[20px] font-bold my-5"  @click="closeModal">
                 Aceptar
             </button>
         </div>

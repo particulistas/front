@@ -2,17 +2,27 @@ import { defineStore } from 'pinia'
 import { useFetch } from '#app'
 
 import {
-  loginService
+  loginService,
+  resendMailVerifiedService,
+  recoveryPasswordService,
+  verifiedMailService
 } from '~/api/services/admin.auth.services'
 
 export const useAuthStore = defineStore('auth', {
-  state: () => ({
+   state: () => ({
     token: process.client ? localStorage.getItem('authToken') || null : null,
     name: process.client ? localStorage.getItem('authName') || null : null,
     email: process.client ? localStorage.getItem('authEmail') || null : null,
     id: process.client ? localStorage.getItem('authId') || null : null,
     baseUrl: useRuntimeConfig().public.BASE_URL,
-  }),
+  }), 
+ /*  state: () => ({
+    token: localStorage.getItem('authToken') || null,
+    name: localStorage.getItem('authName') || null,
+    email: localStorage.getItem('authEmail') || null,
+    id: localStorage.getItem('authId') || null,
+    baseUrl: useRuntimeConfig().public.BASE_URL,
+  }), */
   actions: {
     async register(firstname, lastname, email, phone, password, password_confirmation) {
       const apiUrl = useRuntimeConfig().public.BASE_URL; //obtengo la url base
@@ -31,11 +41,11 @@ export const useAuthStore = defineStore('auth', {
           console.error('Error in registration:', err);
           throw err; 
       }
-  },
+    },
   
 
     
-    setToken(token, user) {
+    /* setToken(token, user) {
       this.token = token;
       this.remember_token = user?.remember_token;
       this.name = user?.name;
@@ -46,6 +56,16 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('authEmail', this.email)
       localStorage.setItem('authId', this.id)
       localStorage.setItem('authRememberToken', this.remember_token)
+    }, */
+    setToken(data) {
+      this.token = data.token?.token;
+      this.name = data.user?.name;
+      this.email = data.user?.email;
+      this.id = data.user?.id;
+      localStorage.setItem('authToken', this.token)
+      localStorage.setItem('authName', this.name)
+      localStorage.setItem('authEmail', this.email)
+      localStorage.setItem('authId', this.id)
     },
     logout() {
       this.token = null;
@@ -69,6 +89,33 @@ export const useAuthStore = defineStore('auth', {
       } catch (err) {
         console.error(err.message)
               }
+    },
+
+    async resendMailVerified(email){
+      try{
+        const response = await resendMailVerifiedService(this.baseUrl,email)
+        return response;
+      }catch(error){
+        console.error(error.message)
+      }
+    },
+
+    async recoveryPassword(email){
+      try{
+        const response = await recoveryPasswordService(this.baseUrl,email)
+        return response;
+      }catch(error){
+        console.error(error.message)
+      }
+    },
+
+    async verifiedMail(token){
+      try{
+        const response = await verifiedMailService(this.baseUrl,token)
+        return response;
+      }catch(error){
+        console.error(error.message)
+      }
     },
 
   }
