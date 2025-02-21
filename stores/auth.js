@@ -59,13 +59,16 @@ export const useAuthStore = defineStore('auth', {
     }, */
     setToken(data) {
       this.token = data.token?.token;
-      this.name = data.user?.name;
+      //this.name = data.profile?.firstname +' '+ data.profile?.lastname ;
+      this.name = data.user?.name ;
       this.email = data.user?.email;
       this.id = data.user?.id;
+      this.avatar = data.profile?.avatar;
       localStorage.setItem('authToken', this.token)
       localStorage.setItem('authName', this.name)
       localStorage.setItem('authEmail', this.email)
       localStorage.setItem('authId', this.id)
+      localStorage.setItem('avatar', this.avatar)
     },
     logout() {
       this.token = null;
@@ -77,6 +80,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('authName')
       localStorage.removeItem('authEmail')
       localStorage.removeItem('authId')
+      localStorage.removeItem('avatar')
       localStorage.removeItem('authRememberToken')
     },
     async login(email, password) {

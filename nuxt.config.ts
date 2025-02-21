@@ -21,16 +21,19 @@ export default defineNuxtConfig({
     public: {
       BASE_URL: process.env.BASE_URL,
       IMAGE_URL: process.env.IMAGE_URL,
+      IMAGE_URL_AVATARS: process.env.IMAGE_URL_AVATARS,
     },
   },
-  env: {
+ /*  env: {
     baseUrl: process.env.BASE_URL, // Usar en el lado del cliente
     imageUrl: process.env.IMAGE_URL, // Usar en el lado del cliente
+    IMAGE_URL_AVATARS: process.env.IMAGE_URL_AVATARS,
   },
   publicRuntimeConfig: {
     baseUrl: process.env.BASE_URL, // Usar en el lado del servidor
     imageUrl: process.env.IMAGE_URL, // Usar en el lado del servidor
-  },
+    IMAGE_URL_AVATARS: process.env.IMAGE_URL_AVATARS,
+  }, */
   plugins: [
     '~/plugins/windowWidth.js'
   ],  
