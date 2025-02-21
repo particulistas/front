@@ -41,6 +41,8 @@
     const router = useRouter();
     const store = useAuthStore();
 
+    //const email = 'alejandrojchacon@gmail.com'
+    //const password = 'usuario12345'
     const email = ref(null)
     const password = ref(null)
     const message = ref(null)
@@ -58,12 +60,13 @@
     }
 
     const login = async () =>{
-        const response = await store.login(email.value, password.value);
+        //const response = await store.login(email.value, password.value);
+        const response = await store.login('alejandrojchacon@gmail.com', 'usuario12345');
         if (response) {
             if (response.role == 'admin') {
                 router.push('https://www.youadmin.com/');
             } else if (response.role == 'client') {
-                router.push('https://www.youtube.com/');
+                router.push('miespacio/home');
             } else {
                 const redirect = router.query.redirect || '/';
                 if (redirect == '/') {

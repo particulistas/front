@@ -2,9 +2,20 @@
     <header class="bg-white flex px-4 lg:px-10 pb-2 lg:pb-3">
 
         <div class="flex items-center pt-3 lg:pt-5 lg:pb-2 lg:ml-[-10px]">
-            <button @click="toggleMenu" class="hover-chield-icon-white hover-bg-07ACB4 rounded-[6px] p-1 lg:p-2.5">
-                <img  class="w-6 h-[18px] lg:w-auto lg:h-auto" src="/assets/icons/Burger menu.svg" alt="Burger menu particulistas"/>
+            <!-- <button @click="toggleMenu" class="hover-chield-icon-white hover-bg-07ACB4 rounded-[6px] p-1 lg:p-2.5 md:hidden">
+                <img  class="w-6 h-[18px] lg:w-auto lg:h-auto" src="/assets/icons/BurgerMenu.svg" alt="Burger menu particulistas"/>
+            </button> -->
+
+            <button v-if="authId" @click="toggleMenu"   class="hover-chield-icon-white hover-bg-07ACB4 rounded-[6px] p-1 lg:p-2.5 md:hidden" >
+                <img  
+                    class="w-6 h-[18px] lg:w-auto lg:h-auto" 
+                    src="/assets/icons/BurgerMenu.svg" 
+                    alt="Burger menu particulistas"
+                />
             </button>
+
+
+
             <nuxt-link to="/" class="ml-1 lg:ml-2.5">
                 <img  class="w-[97px] h-[22px] lg:w-auto lg:h-auto" src="/assets/fulllogo.svg" alt="fulllogo particulistas"/>
             </nuxt-link>
@@ -42,13 +53,18 @@
             >
                 Publica
             </button>
-            <nuxt-link to="/ingresar" class="btn-outline-07ACB4 btn-border-2 rounded-lg lg:rounded-full px-3 lg:px-4 py-1 lg:py-[6px] text-sm lg:text-[20px] font-medium leading-4">
+            <!-- <nuxt-link to="/ingresar" class="btn-outline-07ACB4 btn-border-2 rounded-lg lg:rounded-full px-3 lg:px-4 py-1 lg:py-[6px] text-sm lg:text-[20px] font-medium leading-4">
+                Accede
+            </nuxt-link> -->
+            <nuxt-link v-if="!authId" to="/ingresar" class="btn-outline-07ACB4 btn-border-2 rounded-lg lg:rounded-full px-3 lg:px-4 py-1 lg:py-[6px] text-sm lg:text-[20px] font-medium leading-4">
                 Accede
             </nuxt-link>
+
         </div>
     </header>
     <FixedNav />
     <sideMenu />
+
 
     <Modal :open="openPublishModal" classes="bg-[#155D61] w-full max-w-[100%] p-0 rounded-none" @clickOut="openPublishModal = false">
         <!-- head -->
@@ -77,38 +93,48 @@
     </Modal>
 </template>
 <script setup>
-import { ref, provide } from 'vue'
-import { useRouter } from 'vue-router'
+    import { ref, provide } from 'vue'
+    import { useRouter } from 'vue-router'
 
-import FixedNav from './fixedNav.vue'
-import sideMenu from './sideMenu.vue'
-import Modal from '~/pages/components/slidingModal.vue'
-import Stepsbar from '~/pages/inmuebles/components/Publish/StepsSidebarMobile.vue'
-import FirstStep from '~/pages/inmuebles/components/Publish/FirstStep.vue'
-import SecondStep from '~/pages/inmuebles/components/Publish/SecondStep.vue'
-import ThirdStep from '~/pages/inmuebles/components/Publish/ThirdStep.vue'
-import FourthStep from '~/pages/inmuebles/components/Publish/FourthStep.vue'
+    import FixedNav from './fixedNav.vue'
+    import sideMenu from './sideMenu.vue'
+    import Modal from '~/pages/components/slidingModal.vue'
+    import Stepsbar from '~/pages/inmuebles/components/Publish/StepsSidebarMobile.vue'
+    import FourthStep from '~/pages/inmuebles/components/Publish/FourthStep.vue'
 
-const router = useRouter()
-const nuxtApp = useNuxtApp();
-const windowWidth = nuxtApp.$windowWidth;
+    const router = useRouter()
+    const nuxtApp = useNuxtApp();
+    const windowWidth = nuxtApp.$windowWidth;
 
-const isSideMenuOpen = ref(false)
-const openPublishModal = ref(false)
+    const isSideMenuOpen = ref(false)
+    const openPublishModal = ref(false)
 
-function toggleMenu() {
-    isSideMenuOpen.value = !isSideMenuOpen.value;
-}
-
-function publish() {
-    if(windowWidth > 1020){
-        router.push('/inmuebles/publicar')
-    }else{
-        openPublishModal.value = true;
+    function toggleMenu() {
+        isSideMenuOpen.value = !isSideMenuOpen.value;
     }
-}
+
+    function publish() {
+        if(windowWidth > 1020){
+            router.push('/inmuebles/publicar')
+        }else{
+            openPublishModal.value = true;
+        }
+    }
 
 
-provide('isSideMenuOpen',isSideMenuOpen)
-provide('openPublishModal',openPublishModal)
+    provide('isSideMenuOpen',isSideMenuOpen)
+    provide('openPublishModal',openPublishModal)
+
+    const authToken = ref('');
+    const authEmail = ref('');
+    const authName = ref('');
+    const authId = ref('');
+
+    onMounted(() => {
+        authToken.value = localStorage.getItem('authToken');
+        authEmail.value = localStorage.getItem('authEmail');
+        authName.value = localStorage.getItem('authName');
+        authId.value = localStorage.getItem('authId');
+
+    });
 </script>
