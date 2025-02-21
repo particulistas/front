@@ -19,19 +19,20 @@
       <form>
         <div class="mb-4 flex items-center gap-x-2">
           <label class="text-muted-foreground" for="username">Usuario:</label>
-          <input type="text" id="username" v-model="form.username" class="shadow-sm  rounded-lg p-2 w-full" />
+          <input type="text" id="username" v-model="user.name" class="shadow-sm  rounded-lg p-2 w-full" />
         </div>
         <div class="mb-4 shadow-sm flex items-center gap-x-2">
           <label class="text-muted-foreground whitespace-nowrap" for="phone">Teléfono:</label>
           <div class="flex flex-1 gap-x-2">
-            <input type="text" id="phone" value="+34" class="rounded-lg p-2 w-1/4 shadow-sm  focus:ring-teal-500 focus:border-teal-500" />
-            <input id="phone" v-model="form.phone" type="tel" class="rounded-lg p-2 w-3/4 shadow-sm  focus:ring-teal-500 focus:border-teal-500"  placeholder="000000000"/>
-            <!-- <InputPhone  id="phone" v-model="form.phone" type="tel" class="rounded-lg p-2 w-3/4 shadow-sm  focus:ring-teal-500 focus:border-teal-500"  placeholder="000000000"/> -->
+            <input type="text" id="code" value="+34" class="rounded-lg p-2 w-1/4 shadow-sm  focus:ring-teal-500 focus:border-teal-500" />
+            <input id="phone" v-model="user.profile.phone" type="tel" class="rounded-lg p-2 w-3/4 shadow-sm  focus:ring-teal-500 focus:border-teal-500"  placeholder="000000000"/>
+            <!-- <InputPhone  id="phone" v-model=" user.profile.phone " type="tel" class="rounded-lg p-2 w-3/4 shadow-sm  focus:ring-teal-500 focus:border-teal-500"  placeholder="000000000"/> -->
+          
           </div>
         </div>
         <div class="shadow-sm  mb-4 flex items-center gap-4">
           <label class="text-muted-foreground whitespace-nowrap" for="email">E-mail:</label>
-          <input type="email" id="email" value="" class="shadow-sm rounded-lg p-2 w-full" placeholder="nombre@mail.com"/>
+          <input type="email" id="email" v-model="user.email" class="shadow-sm rounded-lg p-2 w-full" placeholder="nombre@mail.com"/>
         </div>
         <div class="mb-4 flex justify-between items-center mt-10">
           <span class="text-muted-foreground">Cambiar contraseña</span>
@@ -87,6 +88,7 @@
   import editIcon from '/assets/icons/edit-pencil-blue.svg'
   import closeIcon from '/assets/icons/close.svg'
   import camara from '/assets/icons/camara.svg'
+  import { useUserData } from '../../stores/users'
 
   const form = ref({
     username: 'Alejandro Rodriguez',
@@ -108,14 +110,23 @@
   const authId = ref('');
   const avatar = ref('');
   const imageUrl = ref('');
+  const user = ref({
+    name: '',
+    email: '',
+    profile: {
+      phone: ''
+    }
+  });
+ 
 
-  onMounted(() => {
+  onMounted(async () => {
     authToken.value = localStorage.getItem('authToken');
     authEmail.value = localStorage.getItem('authEmail');
     authName.value = localStorage.getItem('authName');
     authId.value = localStorage.getItem('authId');
     avatar.value = localStorage.getItem('avatar');
     imageUrl.value = useRuntimeConfig().public.IMAGE_URL_AVATARS; 
+    await getUser(authId.value);
 
   });
 
@@ -143,4 +154,37 @@
     // Handle form submission
     console.log('Form submitted', form.value)
   }
+
+  /* const fetchUserData = async () => {
+    try {
+        const { data } = await axios.get('/api/user')
+        user.value = data
+        avatarUrl.value = data.profile?.avatar ? `/assets/avatars/${data.profile.avatar}` : '/default-avatar.png'
+    } catch (error) {
+        console.error('Error al cargar datos del usuario', error)
+    } */
+
+    async function getUser(id) {
+    //async getUser(id) {
+        const store = useUserData();
+          const userEdit = await store.getUser(id);
+         // user.value = userEdit;
+          user.value = {
+            ...userEdit,
+            profile: userEdit.profile || { phone: '' }
+          };
+        //  avatar.value = user.profile.avatar;
+          //const data = await response.json(); // Convertir la respuesta a JSON
+          //messages.value = data;
+          /* this.user.name = userEdit.name;
+          this.user.email = userEdit.email;
+          this.user.roles = userEdit.roles[0]?.name;
+          this.user.document = userEdit.document;
+          this.user.phone = userEdit.phone; */
+          //console.log("userEdit", userEdit.roles[0]);
+          //this.isModalActive = true
+     
+      };
+     
+
 </script>
