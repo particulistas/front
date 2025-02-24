@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
+//import { useFetch } from '#app'
 
 import {
   //getAllUsersService,
    // createUserService,
-    getUserService
-   // updateUserService,
+    getUserService,
+    updateUserService,
    // deleteUserService,
   //  getsearchUsers,
    // identifyUserService,
@@ -45,14 +46,15 @@ export const useUserData = defineStore('user', {
         console.error(error.message)
       }
     },
- /*    async updateUser(id,name,email,password,roles, document, phone){
+
+    async updateUser(id,name,code,phone,email,currentPassword,newPassword,confirmPassword,mostrarCampos){
       try{
-        const response = await updateUserService(this.baseUrl,id,name,email,password,roles,document, phone)
+        const response = await updateUserService(this.baseUrl,id,name,code,phone,email,currentPassword,newPassword,confirmPassword,mostrarCampos)
         return response;
       }catch(error){
         console.error(error.message)
       }
-    }, */
+    }, 
    /*  async deleteUser(id){
       try{
         const response = await deleteUserService(this.baseUrl,id)

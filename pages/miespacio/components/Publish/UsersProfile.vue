@@ -16,23 +16,25 @@
           <h2 class="text-2xl font-semibold text-gray-700">Datos de registro</h2>
         </div>
       <div class="max-w-md md:max-w-lg lg:max-w-xl w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
-      <form>
+      <form @submit.prevent="updateUser(user.id)">
         <div class="mb-4 flex items-center gap-x-2">
           <label class="text-muted-foreground" for="username">Usuario:</label>
-          <input type="text" id="username" v-model="user.name" class="shadow-sm  rounded-lg p-2 w-full" />
+          <input type="text" v-model="user.name" class="shadow-sm  rounded-lg p-2 w-full" required/>
         </div>
         <div class="mb-4 shadow-sm flex items-center gap-x-2">
           <label class="text-muted-foreground whitespace-nowrap" for="phone">Teléfono:</label>
           <div class="flex flex-1 gap-x-2">
-            <input type="text" id="code" value="+34" class="rounded-lg p-2 w-1/4 shadow-sm  focus:ring-teal-500 focus:border-teal-500" />
-            <input id="phone" v-model="user.profile.phone" type="tel" class="rounded-lg p-2 w-3/4 shadow-sm  focus:ring-teal-500 focus:border-teal-500"  placeholder="000000000"/>
+            <select v-model="code" class="rounded-lg p-2 w-1/4 shadow-sm focus:ring-teal-500 focus:border-teal-500" required>
+              <option value="+34">+34</option>
+          </select>
+            <input id="phone" v-model="phone" type="tel" class="rounded-lg p-2 w-3/4 shadow-sm  focus:ring-teal-500 focus:border-teal-500"  placeholder="000000000" required/>
             <!-- <InputPhone  id="phone" v-model=" user.profile.phone " type="tel" class="rounded-lg p-2 w-3/4 shadow-sm  focus:ring-teal-500 focus:border-teal-500"  placeholder="000000000"/> -->
           
           </div>
         </div>
         <div class="shadow-sm  mb-4 flex items-center gap-4">
           <label class="text-muted-foreground whitespace-nowrap" for="email">E-mail:</label>
-          <input type="email" id="email" v-model="user.email" class="shadow-sm rounded-lg p-2 w-full" placeholder="nombre@mail.com"/>
+          <input type="email" id="email" v-model="user.email" class="shadow-sm rounded-lg p-2 w-full" placeholder="nombre@mail.com" required/>
         </div>
         <div class="mb-4 flex justify-between items-center mt-10">
           <span class="text-muted-foreground">Cambiar contraseña</span>
@@ -44,16 +46,16 @@
         </div>
         <div v-if="mostrarCampos">
           <div class="shadow-sm  mb-4 flex items-center gap-4">
-            <label class="text-muted-foreground whitespace-nowrap" for="current-password">Contraseña actual:</label>
-            <input type="password" id="current-password" class="shadow-sm  rounded-lg p-2 flex-1 w-32 sm:w-auto" />
+            <label class="text-muted-foreground whitespace-nowrap" for="currentPassword">Contraseña actual:</label>
+            <input type="password" v-model="currentPassword" class="shadow-sm  rounded-lg p-2 flex-1 w-32 sm:w-auto" required/>
           </div>
           <div class="shadow-sm mb-4 flex items-center gap-4">
-            <label class="text-muted-foreground whitespace-nowrap" for="new-password">Contraseña nueva:</label>
-            <input type="password" id="new-password" class="shadow-sm rounded-lg p-2 flex-1 w-32 sm:w-auto" />
+            <label class="text-muted-foreground whitespace-nowrap" for="newPassword">Contraseña nueva:</label>
+            <input type="password" v-model="newPassword" class="shadow-sm rounded-lg p-2 flex-1 w-32 sm:w-auto" required/>
           </div>
           <div class="shadow-sm mb-4 flex items-center gap-4">
-            <label class="text-muted-foreground whitespace-nowrap" for="confirm-password">Confirmar contraseña:</label>
-            <input type="password" id="confirm-password" class="shadow-sm rounded-lg p-2 flex-1 w-32 sm:w-auto" />
+            <label class="text-muted-foreground whitespace-nowrap" for="confirmPassword">Confirmar contraseña:</label>
+            <input type="password" v-model="confirmPassword" class="shadow-sm rounded-lg p-2 flex-1 w-32 sm:w-auto" required/>
           </div>
         </div>
         <div class="flex items-center justify-center gap-x-4">
@@ -90,14 +92,16 @@
   import camara from '/assets/icons/camara.svg'
   import { useUserData } from '../../stores/users'
 
-  const form = ref({
+  import Swal from 'sweetalert2';
+
+  /* const form = ref({
     username: 'Alejandro Rodriguez',
     phone: '',
     email: 'nombre@mail.com',
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
-  })
+  }) */
 
   const mostrarCampos = ref(false)
   const showPasswordChange = ref(false)
@@ -109,22 +113,30 @@
   const authName = ref('');
   const authId = ref('');
   const avatar = ref('');
+  const code = ref('');
+  const phone = ref('');
   const imageUrl = ref('');
   const user = ref({
     name: '',
     email: '',
+   // password: '',
     profile: {
       phone: ''
-    }
+    },
   });
- 
+
+  const currentPassword = ref('');
+  const newPassword = ref('');
+  const confirmPassword = ref('');
+
+
 
   onMounted(async () => {
     authToken.value = localStorage.getItem('authToken');
     authEmail.value = localStorage.getItem('authEmail');
     authName.value = localStorage.getItem('authName');
     authId.value = localStorage.getItem('authId');
-    avatar.value = localStorage.getItem('avatar');
+    //avatar.value = localStorage.getItem('avatar');
     imageUrl.value = useRuntimeConfig().public.IMAGE_URL_AVATARS; 
     await getUser(authId.value);
 
@@ -155,36 +167,74 @@
     console.log('Form submitted', form.value)
   }
 
-  /* const fetchUserData = async () => {
-    try {
-        const { data } = await axios.get('/api/user')
-        user.value = data
-        avatarUrl.value = data.profile?.avatar ? `/assets/avatars/${data.profile.avatar}` : '/default-avatar.png'
-    } catch (error) {
-        console.error('Error al cargar datos del usuario', error)
-    } */
-
-    async function getUser(id) {
-    //async getUser(id) {
-        const store = useUserData();
-          const userEdit = await store.getUser(id);
-         // user.value = userEdit;
-          user.value = {
-            ...userEdit,
-            profile: userEdit.profile || { phone: '' }
-          };
-        //  avatar.value = user.profile.avatar;
-          //const data = await response.json(); // Convertir la respuesta a JSON
-          //messages.value = data;
-          /* this.user.name = userEdit.name;
-          this.user.email = userEdit.email;
-          this.user.roles = userEdit.roles[0]?.name;
-          this.user.document = userEdit.document;
-          this.user.phone = userEdit.phone; */
-          //console.log("userEdit", userEdit.roles[0]);
-          //this.isModalActive = true
+  async function getUser(id) {
+    const store = useUserData();
+    const userEdit = await store.getUser(id);
+    user.value = userEdit;
+   /*  user.value = {
+      ...userEdit,
+      profile: userEdit.profile || { phone: '' }
+    }; */
+       // Extraer solo el número del teléfono (lo que viene después del espacio)
+    if (userEdit.profile.phone) {
+      const phoneParts = userEdit.profile.phone.split(' ');
+      code.value = phoneParts[0]; // Toma la primera parte (antes del espacio)
+      phone.value = phoneParts[1] || ''; // Tomar la segunda parte (el número)
+    }
+    avatar.value = userEdit.profile.avatar;
      
-      };
+  };
+
+  async function updateUser(id) {
+
+    if(this.mostrarCampos){
+      if(this.newPassword != this.confirmPassword){
+                  Swal.fire({
+                    text: 'Las Contraseñas NO Coinciden',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                  });
+                  return 1;
+      }
+    }
+
+        const store = useUserData() 
+        try {
+          const response = await store.updateUser(id,this.user.name,this.code,this.phone,this.user.email,this.currentPassword,this.newPassword,this.confirmPassword,this.mostrarCampos)
+
+           // Verificar si la respuesta contiene un mensaje de error
+          if (response.message ) {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: response.message, // Mostrar el mensaje del backend
+                  confirmButtonText: 'OK',
+              });
+              return; // Detener la ejecución si el usuario no fue encontrado
+          } 
+
+
+          this.getUser(id);
+          this.mostrarCampos = false;
+          Swal.fire({
+              title: '¡Operación  Exitosa!',
+              text: 'El Usuario fue Actualizado Exitosamente',
+              icon: 'success',
+              confirmButtonText: 'OK'
+            });
+
+        } catch (error) {
+          console.error(error);
+          Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Algo salió mal!"
+              //footer: '<a href="#">Why do I have this issue?</a>'
+          });
+        }
+  };
+
+     
      
 
 </script>

@@ -56,22 +56,36 @@ export const getUserService = async (url,id) => {
     return data; // Retorna los datos de la respuesta
 };
 
-/* export const updateUserService = async (url,id,name,email,password,roles) => {
-    const body = {name,email,password,roles}
+ export const updateUserService = async (url,id,name,code,phone,email,currentPassword,newPassword,confirmPassword,mostrarCampos) => {
+   /*  const body = {name}
     
-        const response = await fetch(`${url}/users/`+id, {
+        const response = await fetch(`${url}/users/+${id}+?name=${name}`, {
             method: 'PUT',
-            body: JSON.stringify(body),
+           // body: JSON.stringify(body),
             headers: headers,
+        }); */
+
+
+        const body = JSON.stringify({ name,code,phone,email,currentPassword,newPassword,confirmPassword,mostrarCampos });
+
+        const response = await fetch(`${url}/users/${id}`, {
+            method: 'PUT',
+            body: body, 
+            headers: {
+                'Content-Type': 'application/json', // Asegura que el backend lo reciba correctamente
+                ...headers, // Agrega otros headers si los tienes
+            },
         });
-    
+
+
+
         if (!response.ok) {
             throw new Error('Error al actualizar los usuarios');
           }
     
         const data = await response.json();
         return data; // Retorna los datos de la respuesta
-}; */
+}; 
 
 /* export const deleteUserService = async (url,id) => {
     const response = await fetch(`${url}/users/`+id, {
