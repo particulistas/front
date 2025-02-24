@@ -3,11 +3,7 @@
     <div class="px-4 lg:px-20 py-10">
         <div class="lg:flex">
             <StepsSidebar2 />
-            
-            
-             <Imagen2 /> 
-             <Imagen22 /> 
-            
+            <Advertisements/>  
              
         </div>
     </div>
@@ -16,17 +12,8 @@
 <script setup>
 import { ref, provide } from 'vue';
 import Layout from '~/layouts/default.vue'
-import StepsSidebar from './components/Publish/StepsSidebarDesktop.vue'
 import StepsSidebar2 from './components/Publish/StepsSidebarDesktop2.vue'
-import Imagen2 from './components/Publish/Imagen2.vue'
-import Imagen22 from './components/Publish/Imagen22.vue'
-import FirstStep from './components/Publish/FirstStep.vue'
-import SecondStep from './components/Publish/SecondStep.vue'
-import ThirdStep from './components/Publish/ThirdStep.vue'
-import FourthStep from './components/Publish/FourthStep.vue'
-import ImageSection from './components/imageSection.vue'
-import Menu from '~/layouts/sideMenu.vue'
-import Menu2 from './components/sideMenu.vue'
+import Advertisements from './components/Publish/MyAdsFirstStep.vue'
 </script>
 <style scoped>
 </style>
