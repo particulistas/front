@@ -3,11 +3,7 @@
     <div class="px-4 lg:px-20 py-10">
         <div class="lg:flex">
             <StepsSidebar2 />
-            
-            
-             <!-- <Imagen4 />  -->
-            
-             
+            <FavoriteHome /> 
         </div>
     </div>
 </Layout>
@@ -17,7 +13,7 @@ import { ref, provide } from 'vue';
 import Layout from '~/layouts/default.vue'
 import StepsSidebar from './components/Publish/StepsSidebarDesktop.vue'
 import StepsSidebar2 from './components/Publish/StepsSidebarDesktop2.vue'
-import Imagen4 from './components/Publish/Imagen4.vue'
+import FavoriteHome from './components/Publish/MyFavorite.vue'
 import FirstStep from './components/Publish/FirstStep.vue'
 import SecondStep from './components/Publish/SecondStep.vue'
 import ThirdStep from './components/Publish/ThirdStep.vue'

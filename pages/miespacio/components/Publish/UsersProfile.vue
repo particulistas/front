@@ -9,9 +9,14 @@
           <img v-if="avatar" class="w-36 h-36 rounded-full object-cover" :src="imageUrl + avatar" alt="Imagen de Perfil">
           <img v-else class="h-16 w-16 text-white" :src="camara" alt="Imagen de Perfil">
         </div>
-        <button class="absolute bottom-0 right-0 bg-teal-500 rounded-full p-2">
+        <button class="absolute bottom-0 right-0 bg-teal-500 rounded-full p-2" @click="showModal = true">
           <img :src="editIcon" class="h-6 w-6 text-white" />
         </button>
+        <AvatarModal 
+          v-if="showModal"
+          @close="showModal = false"
+          @confirm="handleAvatarSelection"
+        />
         </div>
           <h2 class="text-2xl font-semibold text-gray-700">Datos de registro</h2>
         </div>
@@ -79,6 +84,7 @@
       </div>
     </div>
   </div>
+
 </template>
 
 <script setup>
@@ -90,18 +96,9 @@
   import editIcon from '/assets/icons/edit-pencil-blue.svg'
   import closeIcon from '/assets/icons/close.svg'
   import camara from '/assets/icons/camara.svg'
-  import { useUserData } from '../../stores/users'
 
   import Swal from 'sweetalert2';
-
-  /* const form = ref({
-    username: 'Alejandro Rodriguez',
-    phone: '',
-    email: 'nombre@mail.com',
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  }) */
+  import AvatarModal from './AvatarModal.vue'
 
   const mostrarCampos = ref(false)
   const showPasswordChange = ref(false)
@@ -119,7 +116,6 @@
   const user = ref({
     name: '',
     email: '',
-   // password: '',
     profile: {
       phone: ''
     },
@@ -129,14 +125,11 @@
   const newPassword = ref('');
   const confirmPassword = ref('');
 
-
-
   onMounted(async () => {
     authToken.value = localStorage.getItem('authToken');
     authEmail.value = localStorage.getItem('authEmail');
     authName.value = localStorage.getItem('authName');
     authId.value = localStorage.getItem('authId');
-    //avatar.value = localStorage.getItem('avatar');
     imageUrl.value = useRuntimeConfig().public.IMAGE_URL_AVATARS; 
     await getUser(authId.value);
 
@@ -146,9 +139,89 @@
     mostrarCampos.value = !mostrarCampos.value
   }
 
-  const openModal = ref(false)
-  provide('openModal',openModal)
+  const showModal = ref(false)
 
+  const handleAvatarSelection = async (selection) => {
+    const url = useRuntimeConfig().public.BASE_URL
+    if (selection.type === 'image') {
+      // Si se seleccionó una imagen, actualizar el campo avatar en la base de datos
+      try {
+        //const response = await fetch('/api/update-avatar', {
+        const response = await fetch(`${url}/update-avatar`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Especificar que el cuerpo es JSON
+          },
+          body: JSON.stringify({
+            userId: authId.value,
+            avatar: selection.value, // Nombre del archivo
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Error updating avatar');
+        }
+
+        const data = await response.json();
+
+        // Actualizar el avatar en el frontend
+        avatar.value = selection.value;
+        Swal.fire({
+          title: '¡Éxito!',
+          text: 'Avatar actualizado correctamente.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+      } catch (error) {
+        console.error('Error updating avatar:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Error al actualizar el avatar.',
+        });
+      }
+    } 
+    else if (selection.type === 'avatar') {
+      // Si se seleccionó un avatar predefinido, actualizar el campo avatar en la base de datos
+      try {
+        const fileName = selection.value.split('/').pop(); 
+        const response = await fetch(`${url}/update-avatar`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Especificar que el cuerpo es JSON
+          },
+          body: JSON.stringify({
+            userId: authId.value,
+            avatar: fileName, // URL del avatar
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Error updating avatar');
+        }
+
+        const data = await response.json();
+
+        // Actualizar el avatar en el frontend
+        avatar.value = selection.value;
+        Swal.fire({
+          title: '¡Éxito!',
+          text: 'Avatar actualizado correctamente.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+      } catch (error) {
+        console.error('Error updating avatar:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Error al actualizar el avatar.',
+        });
+      }
+    } 
+    await getUser(authId.value);
+
+  }
 
   const togglePasswordChange = () => {
       showPasswordChange.value = !showPasswordChange.value
@@ -162,19 +235,10 @@
     showHelp.value = !showHelp.value
   }
 
-  const onSubmit = () => {
-    // Handle form submission
-    console.log('Form submitted', form.value)
-  }
-
   async function getUser(id) {
     const store = useUserData();
     const userEdit = await store.getUser(id);
     user.value = userEdit;
-   /*  user.value = {
-      ...userEdit,
-      profile: userEdit.profile || { phone: '' }
-    }; */
        // Extraer solo el número del teléfono (lo que viene después del espacio)
     if (userEdit.profile.phone) {
       const phoneParts = userEdit.profile.phone.split(' ');
@@ -213,7 +277,6 @@
               return; // Detener la ejecución si el usuario no fue encontrado
           } 
 
-
           this.getUser(id);
           this.mostrarCampos = false;
           Swal.fire({
@@ -233,8 +296,5 @@
           });
         }
   };
-
-     
-     
 
 </script>
