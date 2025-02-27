@@ -66,7 +66,7 @@
             if (response.role == 'admin') {
                 router.push('https://www.youadmin.com/');
             } else if (response.role == 'client') {
-                router.push('miespacio/home');
+                router.push('miespacio/Space');
             } else {
                 const redirect = router.query.redirect || '/';
                 if (redirect == '/') {

@@ -14,7 +14,7 @@
             </div>
             <div class="mt-10">
 
-                <div class="link-menu pl-9  cursor-pointer py-2.5 flex items-center" @click="home">
+                <div class="link-menu pl-9  cursor-pointer py-2.5 flex items-center" @click="space">
                     <img class="w-5 h-5 mr-2" src="/assets/icons/sidemenu-mi-espacio.svg" alt="sidemenu-mi-espacio icon">
                     <p class="text-base font-medium text-white">Mi espacio</p>
                 </div>
@@ -25,7 +25,7 @@
                     <p class="text-base font-medium text-white">Mis Anuncios</p>
                 </div>
 
-                <div class="link-menu pl-9  cursor-pointer py-2.5 flex items-center">
+                <div class="link-menu pl-9  cursor-pointer py-2.5 flex items-center" @click="visitOrganizer">
                     <img class="w-5 h-5 mr-2" src="/assets/icons/sidemenu-visitas.svg" alt="sidemenu-visitas icon">
                     <p class="text-base font-medium text-white">Organizador de visitas</p>
                 </div>
@@ -41,13 +41,13 @@
                     <p class="text-base font-medium text-white">Mis favoritos</p>
                 </div>
 
-                <div class="link-menu pl-9  cursor-pointer py-2.5 flex items-center">
+                <div class="link-menu pl-9  cursor-pointer py-2.5 flex items-center" @click="searches">
                     <img class="w-5 h-5 mr-2" src="/assets/icons/sidemenu-busquedas.svg" alt="sidemenu-busquedas icon">
                     <p class="text-base font-medium text-white">Mis busquedas</p>
                 </div>
                 <div class="mx-6 border-b border-white mt-3"></div>
 
-                <button class="btn-config ml-4 mb-6 mt-5 flex items-center text-white text-[20px] font-medium">
+                <button class="btn-config ml-4 mb-6 mt-5 flex items-center text-white text-[20px] font-medium" @click="settings">
                     <div class="p-2 rounded-full btn-icon">
                         <img class="w-6 h-6" src="/assets/icons/configuracion.svg" alt="sidemenu-busquedas icon">
                     </div>
@@ -102,16 +102,25 @@
 
     const current = ref(1)
     function anuncios() {
-            router.push('/miespacio/misAnuncios')
+            router.push('/miespacio/Ads')
     }
-    function home() {
-        router.push('/miespacio/home')
+    function space() {
+        router.push('/miespacio/Space')
+    }
+    function visitOrganizer() {
+        router.push('/miespacio/VisitOrganizer')
     }
     function inquilino() {
-        router.push('/miespacio/inquilino')
+        router.push('/miespacio/Inquilino')
     }
     function favorito() {
-        router.push('/miespacio/favorito')
+        router.push('/miespacio/Favorito')
+    }
+    function searches() {
+        router.push('/miespacio/Searches')
+    }
+    function settings() {
+        router.push('/miespacio/Settings')
     }
 
     function logout() {

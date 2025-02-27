@@ -29,7 +29,7 @@
                 </div>
 
                 <div class="mt-6 text-center">
-                    <button class="w-[195px] h-10 bg-[#27ABB1] text-white text-base font-bold rounded-[16px] shadow-par hover:bg-white hover:text-[#27ABB1]">
+                    <button @click="saveAndContinue" class="w-[195px] h-10 bg-[#27ABB1] text-white text-base font-bold rounded-[16px] shadow-par hover:bg-white hover:text-[#27ABB1]">
                         Guardar cambios
                     </button>
                 </div>
@@ -59,11 +59,31 @@
     </div>
 </template>
 <script setup>
-import { ref, provide } from 'vue';
-import ToggleButton from './ToggleButton.vue'
+    import { ref, provide } from 'vue';
+    import ToggleButton from './ToggleButton.vue'
+    import Swal from 'sweetalert2';
 
-const varbutton = ref(false);
-const serviceMovil = ref('Ambos');
+    const varbutton = ref(false);
+    const serviceMovil = ref('Ambos');
+
+    const saveAndContinue = () => {
+        try {
+            Swal.fire({
+            title: '¡Éxito!',
+            text: 'Anunció  actualizado correctamente.',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            });
+        } 
+        catch (error) {
+           // console.error('Error updating avatar:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Error al actualizar el Anunció .',
+            });
+        }
+    };
 
 </script>
 <style scoped>

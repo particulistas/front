@@ -1,6 +1,5 @@
 <template>
     <div class="bg-[#F5F5F5] rounded-[16px] w-[421px] py-8 hidden lg:inline">
-
         <div 
             class="flex items-center w-full pl-[74px]"
             v-for="(step, index) in  ['Datos principales','Descripción y fotos','Datos opcionales','Listos para públicar']"
@@ -12,18 +11,18 @@
                 <div 
                     class=" rounded-full m-auto"
                     :class="{
-                        'bg-[#ffffff00]': current == index+1,
-                        'bg-white': current !== index+1,
+                        'bg-[#ffffff00]': currentStep === index+1,
+                        'bg-white': currentStep !== index+1,
                     }"
                 >
                     <h1 
                         class="text-[36px] font-bold w-[66px] h-[66px] py-1.5 text-center"
                         :class="{
-                            'text-white': current == index+1,
-                            'text-[#27ABB1]': current !== index+1,
+                            'text-white': currentStep === index+1,
+                            'text-[#27ABB1]': currentStep !== index+1,
                         }"
                     >
-                        <img v-if="index+1 == 4" class="mx-auto my-2.5" src="/assets/icons/check-blue.svg" alt="">
+                        <img v-if="index+1 < currentStep" class="mx-auto my-2.5" src="/assets/icons/check-blue.svg" alt="">
                         <template v-else>
                             {{ index+1 }}
                         </template>
@@ -32,11 +31,14 @@
             </span>
             <p class="ml-4 text-[24px] font-medium color-666">{{step}}</p>
         </div>
-
     </div>
 </template>
-<script setup>
-import { ref } from 'vue'
 
-const current = ref(1)
+<script setup>
+defineProps({
+  currentStep: {
+    type: Number,
+    required: true
+  }
+});
 </script>
