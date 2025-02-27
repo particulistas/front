@@ -59,6 +59,7 @@
         <div class="pt-10 mt-10 text-center">
             <button 
                 class="bg-07ACB4 hover:text-[#07ACB4] hover:bg-white text-white font-bold text-[20px] py-4 px-3 rounded-[6px] shadow-md"
+                @click="saveAndContinue"
             >
                 Guardar y continuar
             </button>
@@ -67,17 +68,31 @@
     
 </template>
 <script setup>
-import { ref, provide } from 'vue';
-import UploadPlane from './UploadPlane.vue'
+    import { ref, provide, inject } from 'vue';
+    import UploadPlane from './UploadPlane.vue'
 
-const energyCertificate = ref(null);
-const energyObject = ref([
-        {title:'A',consumption:false,emission:false},
-        {title:'B',consumption:false,emission:false},
-        {title:'C',consumption:false,emission:false},
-        {title:'D',consumption:false,emission:false},
-        {title:'E',consumption:false,emission:false},
-        {title:'F',consumption:false,emission:false},
-        {title:'G',consumption:false,emission:false},
-    ]);
+    const energyCertificate = ref(null);
+    const energyObject = ref([
+            {title:'A',consumption:false,emission:false},
+            {title:'B',consumption:false,emission:false},
+            {title:'C',consumption:false,emission:false},
+            {title:'D',consumption:false,emission:false},
+            {title:'E',consumption:false,emission:false},
+            {title:'F',consumption:false,emission:false},
+            {title:'G',consumption:false,emission:false},
+        ]);
+
+    const formData = inject('formData');
+    const emit = defineEmits(['next-step']);
+    const saveAndContinue = () => {
+        // Guardar los datos del formulario en formData
+        /*   formData.value.firstStep = {
+            type: type.value,
+            antiquity: antiquity.value,
+            // otros campos...
+        }; */
+
+        // Emitir el evento para pasar al siguiente paso
+        emit('next-step');
+    };
 </script>

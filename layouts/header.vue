@@ -23,19 +23,19 @@
 
         <!-- icons desktop -->
         <div class="ml-auto hidden lg:flex">
-            <button class="flex items-center gap-2 color-07ACB4 hover-bg-07ACB4 hover-chield-icon-white hover:text-white font-medium text-[20px] pt-5 pb-2 px-2 rounded-b-[6px]">
+            <button @click="mySpace" class="flex items-center gap-2 color-07ACB4 hover-bg-07ACB4 hover-chield-icon-white hover:text-white font-medium text-[20px] pt-5 pb-2 px-2 rounded-b-[6px]">
                 <img  class="" src="/assets/icons/cuadrado.svg" alt="Mi espacio"/>
                 Mi espacio
             </button>
-            <button class="flex items-center gap-2 color-07ACB4 hover-bg-07ACB4 hover-chield-icon-white hover:text-white font-medium text-[20px] pt-5 pb-2 px-2 rounded-b-[6px]">
+            <button @click="myChat" class="flex items-center gap-2 color-07ACB4 hover-bg-07ACB4 hover-chield-icon-white hover:text-white font-medium text-[20px] pt-5 pb-2 px-2 rounded-b-[6px]">
                 <img  class="" src="/assets/icons/Chat.svg" alt="Chat"/>
                 Chat
             </button>
-            <button class="flex items-center gap-2 color-07ACB4 hover-bg-07ACB4 hover-chield-icon-white hover:text-white font-medium text-[20px] pt-5 pb-2 px-2 rounded-b-[6px]">
+            <button @click="myVisit" class="flex items-center gap-2 color-07ACB4 hover-bg-07ACB4 hover-chield-icon-white hover:text-white font-medium text-[20px] pt-5 pb-2 px-2 rounded-b-[6px]">
                 <img  class="" src="/assets/icons/Calendario.svg" alt="Mis visitas"/>
                 Mis visitas
             </button>
-            <button class="flex items-center gap-2 color-07ACB4 hover-bg-07ACB4 hover-chield-icon-white hover:text-white font-medium text-[20px] pt-5 pb-2 px-2 rounded-b-[6px]">
+            <button @click="myNotification" class="flex items-center gap-2 color-07ACB4 hover-bg-07ACB4 hover-chield-icon-white hover:text-white font-medium text-[20px] pt-5 pb-2 px-2 rounded-b-[6px]">
                 <img  class="" src="/assets/icons/Notificaciones.svg" alt="Avisos"/>
                 Avisos
             </button>
@@ -137,4 +137,41 @@
         authId.value = localStorage.getItem('authId');
 
     });
+
+    function mySpace() {
+        if (authId.value){
+            router.push('/miespacio/Space')
+        }
+        else{
+           router.push('/ingresar')
+        }
+    }
+
+    function myChat() {
+        if (authId.value){
+            router.push('/miespacio/Chat')
+        }
+        else{
+           router.push('/ingresar')
+        }
+    }
+
+    function myVisit() {
+        if (authId.value){
+            router.push('/miespacio/Visits')
+        }
+        else{
+           router.push('/ingresar')
+        }
+    }
+
+    function myNotification() {
+        if (authId.value){
+            router.push('/miespacio/Notifications')
+        }
+        else{
+           router.push('/ingresar')
+        }
+    }
+
 </script>

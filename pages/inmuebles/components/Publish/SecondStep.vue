@@ -70,14 +70,15 @@
         </div>
 
         <!-- questions -->
-        <div class="mt-10 bg-[#F7F9F9] h-[84px] w-full p-7 cursor-pointer flex justify-between hidden lg:block" @click="openModal = true">
+        <!-- <div class="mt-10 bg-[#F7F9F9] h-[84px] w-full p-7 cursor-pointer flex justify-between hidden lg:block" @click="openModal = true">
             <h1 class="text-[20px] font-medium text-[#27ABB1]">¿Problemas? ¡Te ayudamos!</h1>
             <img class="w-6 h-6" src="/assets/icons/simbolo-mas.svg" alt="icon seccion">
-        </div>
+        </div> -->
 
         <div class="pt-10 mt-10 text-center">
             <button 
                 class="bg-07ACB4 hover:text-[#07ACB4] hover:bg-white text-white font-bold text-[20px] py-4 px-3 rounded-[6px] shadow-md"
+                @click="saveAndContinue"
             >
                 Guardar y continuar
             </button>
@@ -85,11 +86,27 @@
     </div>
     <ModalQuestions />
 </template>
-<script setup>
-import { ref, provide } from 'vue';
-import ModalQuestions from './ModalQuestions.vue'
-import UploadFiles from './UploadFiles.vue'
 
-const openModal = ref(false)
-provide('openModal',openModal)
+<script setup>
+    import { ref, provide, inject } from 'vue';
+    import ModalQuestions from './ModalQuestions.vue'
+    import UploadFiles from './UploadFiles.vue'
+
+    const openModal = ref(false)
+    provide('openModal',openModal)
+
+    const formData = inject('formData');
+    const emit = defineEmits(['next-step']);
+    const saveAndContinue = () => {
+    // Guardar los datos del formulario en formData
+    /*   formData.value.firstStep = {
+        type: type.value,
+        antiquity: antiquity.value,
+        // otros campos...
+    }; */
+
+    // Emitir el evento para pasar al siguiente paso
+    emit('next-step');
+    };
+
 </script>

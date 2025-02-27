@@ -4,15 +4,15 @@
         :class="{'close': !openMenu, 'open': openMenu}"
     >
         <div class="border-y-2 border-[#27ABB1] bg-white flex items-center h-full rounded-l-[16px]">
-            <div class="px-2">
+            <div class="px-2" @click="mySpace">
                 <img class="mx-auto w-[48px] h-[48px]" src="/assets/icons/nav-mi-espacio.svg" alt="nav icon mi espacio">
                 <p class="text-base font-semibold text-[#27ABB1] text-center">Mi espacio</p>
             </div>
-            <div class="px-3.5">
+            <div class="px-3.5" @click="myVisit">
                 <img class="mx-auto w-[48px] h-[48px]" src="/assets/icons/nav-citas.svg" alt="nav icon citas">
                 <p class="text-base font-semibold text-[#27ABB1] text-center">Mis citas</p>
             </div>
-            <div class="px-3.5">
+            <div class="px-3.5" @click="myChat">
                 <img class="mx-auto w-[48px] h-[48px]" src="/assets/icons/nav-chat.svg" alt="nav icon chat">
                 <p class="text-base font-semibold text-[#27ABB1] text-center">Chat</p>
             </div>
@@ -37,10 +37,51 @@
     </transition>
 </template>
 <script setup>
-import { ref } from 'vue'
-//270
+    import { ref } from 'vue'
+    import { useRouter } from 'vue-router'
+    //270
 
-const openMenu = ref(false)
+    const router = useRouter()
+    const openMenu = ref(false)
+    const authToken = ref('');
+    const authEmail = ref('');
+    const authName = ref('');
+    const authId = ref('');
+
+    onMounted(() => {
+        authToken.value = localStorage.getItem('authToken');
+        authEmail.value = localStorage.getItem('authEmail');
+        authName.value = localStorage.getItem('authName');
+        authId.value = localStorage.getItem('authId');
+
+    });
+
+    function mySpace() {
+        if (authId.value){
+            router.push('/miespacio/Space')
+        }
+        else{
+           router.push('/ingresar')
+        }
+    }
+
+    function myVisit() {
+            if (authId.value){
+                router.push('/miespacio/Visits')
+            }
+            else{
+            router.push('/ingresar')
+            }
+    }
+
+    function myChat() {
+        if (authId.value){
+            router.push('/miespacio/Chat')
+        }
+        else{
+           router.push('/ingresar')
+        }
+    }
 </script>
 <style scoped>
 .open{
