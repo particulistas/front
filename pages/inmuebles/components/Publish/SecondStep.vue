@@ -99,14 +99,14 @@
     const emit = defineEmits(['next-step']);
     const saveAndContinue = () => {
     // Guardar los datos del formulario en formData
-    /*   formData.value.firstStep = {
+       /* formData.value.secondStep = {
         type: type.value,
         antiquity: antiquity.value,
         // otros campos...
-    }; */
+        };  */
 
-    // Emitir el evento para pasar al siguiente paso
-    emit('next-step');
+        // Emitir el evento para pasar al siguiente paso
+        emit('next-step');
     };
 
 </script>
