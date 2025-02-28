@@ -2,6 +2,7 @@
     <Layout>
         <div class="px-4 lg:px-20 py-10">
             <div class="lg:flex">
+                <StepsSidebarMobile :currentStep="currentStep" />
                 <StepsSidebar :currentStep="currentStep" />
                 <FirstStep v-if="currentStep === 1" @next-step="handleNextStep" />
                 <SecondStep v-if="currentStep === 2" @next-step="handleNextStep" />
@@ -16,6 +17,7 @@
     import { ref, provide } from 'vue';
     import Layout from '~/layouts/default.vue'
     import StepsSidebar from './components/Publish/StepsSidebarDesktop.vue'
+    import StepsSidebarMobile from './components/Publish/StepsSidebarMobile.vue'
     import FirstStep from './components/Publish/FirstStep.vue'
     import SecondStep from './components/Publish/SecondStep.vue'
     import ThirdStep from './components/Publish/ThirdStep.vue'

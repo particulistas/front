@@ -47,7 +47,7 @@
                         <button 
                             class="border border-[#27ABB1] color-666 text-base font-medium rounded-[8px] px-3 py-0.5 hover:bg-[#27ABB1] hover:text-white"
                             :class="{ 'bg-[#27ABB1] text-white': transaccion === tag }" 
-                            v-for="tag in ['Vendo', 'Alquilo', 'Ambos']" 
+                            v-for="tag in ['sale', 'rental', 'both']"
                             :key="tag"
                             @click="transaccion = tag" 
                         >
@@ -182,17 +182,17 @@
                     <div class="flex flex-wrap gap-4 mt-6">
                         <button 
                             class="border border-[#27ABB1] color-666 text-base font-medium rounded-[8px] px-1.5 hover:bg-[#27ABB1] hover:text-white"
-                            :class="{ 'bg-[#27ABB1] text-white': characteristics === tag }" 
+                            :class="{ 'bg-[#27ABB1] text-white': caracteristics_optionals === tag }" 
                             v-for="tag in ['Exterior', 'Semi-exterior', 'Interior']" 
                             :key="tag"
-                            @click="characteristics = tag" 
+                            @click="caracteristics_optionals = tag" 
                         >
                             {{ tag }}
                         </button>
                     </div>
                 </div>
                 <div class="border-b border-gray-300 mt-6"></div>
-                <div class="flex flex-wrap gap-2 mt-6">
+                <!-- <div class="flex flex-wrap gap-2 mt-6">
                     <button 
                         class="border border-[#27ABB1] color-666 text-base font-medium rounded-[8px] px-1.5 hover:bg-[#27ABB1] hover:text-white"
                         :class="{ 'bg-[#27ABB1] text-white': caracteristicsOptionals === opcion.value }" 
@@ -202,7 +202,21 @@
                     >
                         {{ opcion.label }}
                     </button>
-                </div>
+                </div> -->
+
+                <div class="flex flex-wrap gap-2 mt-6">
+    <button 
+        class="border border-[#27ABB1] color-666 text-base font-medium rounded-[8px] px-1.5 hover:bg-[#27ABB1] hover:text-white"
+        :class="{ 'bg-[#27ABB1] text-white': selectedCharacteristics.includes(opcion.value) }" 
+        v-for="opcion in opcionesCaracteristicas"
+        :key="opcion.value"
+        @click="toggleCharacteristic(opcion.value)" 
+    >
+        {{ opcion.label }}
+    </button>
+</div>
+
+
                 <div class="border-b mt-8 border-gray-300 lg:hidden"></div>
                 <!-- antiquity -->
                 <div class="mt-10 flex">
@@ -239,130 +253,200 @@
     </div>
 </template>
 <script setup>
-import { ref, provide, onMounted } from 'vue';
-import Dropdown from '~/pages/components/dropdown.vue'
-import { inject } from 'vue';
+    import { ref, provide, onMounted } from 'vue';
+    import Dropdown from '~/pages/components/dropdown.vue'
+    import { inject } from 'vue';
 
-const openDropdownType = ref(false)
-//const type = ref('Habitacion')
+    const authToken = ref('');
+    const authEmail = ref('');
+    const authName = ref('');
+    const authId = ref('');
 
-const openAntiquity = ref(false)
-const antiquity  = ref(null)
+    const openDropdownType = ref(false)
+    //const type = ref('Habitacion')
 
-const optionsType = ref([]); // Almacena las categorías principales
-const tags = ref([]); // Almacena las subcategorías (tipo de vivienda)
-const type = ref(null); // Almacena la categoría seleccionada en el Dropdown
+    const openAntiquity = ref(false)
 
-const selectedTag = ref(null); // Almacena la opción seleccionada
-const transaccion = ref(null); // Almacena la opción seleccionada
-const state = ref(null); // Almacena la opción seleccionada
-const equipment = ref(null); // Almacena la opción seleccionada
-const characteristics = ref(null); // Almacena la opción seleccionada
-const caracteristicsOptionals  = ref(null); // Almacena la opción seleccionada
-const number_habs = ref(1); // Valor inicial de 1
-const bathrooms = ref(1); // Valor inicial de 1
+    const optionsType = ref([]); // Almacena las categorías principales
+    const tags = ref([]); // Almacena las subcategorías (tipo de vivienda)
+    const type = ref(null); // Almacena la categoría seleccionada en el Dropdown
 
-const opcionesCaracteristicas = ref([
-    { value: 'ascensor', label: 'Ascensor' },
-    { value: 'jardin', label: 'Jardín' },
-    { value: 'piscina', label: 'Piscina' },
-    { value: 'garaje', label: 'Garaje' },
-    { value: 'terraza', label: 'Terraza' },
-    { value: 'trastero', label: 'Trastero' },
-    // { value: 'aire', label: 'Aire acondicionado' }, 
-]);
+    const selectedTag = ref(null); // Almacena la opción seleccionada
+    const transaccion = ref(null); // Almacena la opción seleccionada
+    const sale_price = ref(null); // Almacena la opción seleccionada
+    const rental_price = ref(null); // Almacena la opción seleccionada
+    const state = ref(null); // Almacena la opción seleccionada
+    const equipment = ref(null); // Almacena la opción seleccionada
+    const characteristics = ref(null); // Almacena la opción seleccionada
+    const caracteristics_optionals  = ref(null); // Almacena la opción seleccionada
+    const number_habs = ref(1); // Valor inicial de 1
+    const bathrooms = ref(1); // Valor inicial de 1
+    const antiquity  = ref(null)
+    const m_built = ref(null); // Valor inicial
+    const m_usefull = ref(null); // Valor inicial
+    
 
 
-/*  const optionsType = ref([
-    {value: 'Garage', label: 'Garage'}, 
-    {value: 'Habitacion', label: 'Habitación'},
-    {value: 'Local y nave', label: 'Local y nave'}, 
-    {value: 'Oficinas', label: 'Oficinas'},
-    {value: 'Trastero', label: 'Trastero'},  
-    {value: 'Vivienda', label: 'Vivienda'}
-])  */
+    const opcionesCaracteristicas = ref([
+        { value: 'ascensor', label: 'Ascensor' },
+        { value: 'jardin', label: 'Jardín' },
+        { value: 'piscina', label: 'Piscina' },
+        { value: 'garaje', label: 'Garaje' },
+        { value: 'terraza', label: 'Terraza' },
+        { value: 'trastero', label: 'Trastero' },
+        // { value: 'aire', label: 'Aire acondicionado' }, 
+    ]);
 
-const antiquityOptions = ref([
-    {value: '10', label: '10'},   
-    {value: '20', label: '20'},
-    {value: '30', label: '30'}
-])
 
-// Llamar a la función al cargar el componente
-onMounted(async () => {
-    fetchMainCategories();
-});
+    /*  const optionsType = ref([
+        {value: 'Garage', label: 'Garage'}, 
+        {value: 'Habitacion', label: 'Habitación'},
+        {value: 'Local y nave', label: 'Local y nave'}, 
+        {value: 'Oficinas', label: 'Oficinas'},
+        {value: 'Trastero', label: 'Trastero'},  
+        {value: 'Vivienda', label: 'Vivienda'}
+    ])  */
 
-// Función para obtener las categorías principales
-async function fetchMainCategories() {
-//const fetchMainCategories = async () => {
-    const url = useRuntimeConfig().public.BASE_URL
-    try {
-        const response = await $fetch(`${url}/categories/main`);
-        optionsType.value = response.map(category => ({
-            value: category.id,
-            label: category.name,
-        })); 
+    const antiquityOptions = ref([
+        {value: '10', label: '10'},   
+        {value: '20', label: '20'},
+        {value: '30', label: '30'}
+    ])
 
-    } catch (error) {
-        console.error('Error fetching main categories:', error);
-    }
-};
+    // Llamar a la función al cargar el componente
+    onMounted(async () => {
+        authToken.value = localStorage.getItem('authToken');
+        authEmail.value = localStorage.getItem('authEmail');
+        authName.value = localStorage.getItem('authName');
+        authId.value = localStorage.getItem('authId');
+        fetchMainCategories();
+    });
 
-// Función para obtener las subcategorías
-const fetchChildCategories = async (parentId) => {
-    const url = useRuntimeConfig().public.BASE_URL
-    try {
-        const response = await $fetch(`${url}/categories/children/${parentId}`);
-        tags.value = response.map(category => category.name);
-    } catch (error) {
-        console.error('Error fetching child categories:', error);
-    }
-};
+    // Función para obtener las categorías principales
+    async function fetchMainCategories() {
+    //const fetchMainCategories = async () => {
+        const url = useRuntimeConfig().public.BASE_URL
+        try {
+            const response = await $fetch(`${url}/categories/main`);
+            optionsType.value = response.map(category => ({
+                value: category.id,
+                label: category.name,
+            })); 
 
-// Escuchar cambios en la selección del Dropdown
-watch(type, (newValue) => {
-    if (newValue) { // Solo obtener subcategorías si se selecciona una categoría válida
-        fetchChildCategories(newValue);
-    } else {
-        tags.value = []; // Limpiar las subcategorías si no hay selección
-        selectedTag.value = null; // Reinicia la selección
-    }
-});
+        } catch (error) {
+            console.error('Error fetching main categories:', error);
+        }
+    };
 
-const incrementarHabs = () => {
-    number_habs.value += 1; // Incrementa en 1
-};
+    // Función para obtener las subcategorías
+    const fetchChildCategories = async (parentId) => {
+        const url = useRuntimeConfig().public.BASE_URL
+        try {
+            const response = await $fetch(`${url}/categories/children/${parentId}`);
+            tags.value = response.map(category => category.name);
+        } catch (error) {
+            console.error('Error fetching child categories:', error);
+        }
+    };
 
-const decrementarHabs = () => {
-    if (number_habs.value > 1) { // Asegura que no sea menor que 1
-        number_habs.value -= 1; // Decrementa en 1
-    }
-};
+    // Escuchar cambios en la selección del Dropdown
+    watch(type, (newValue) => {
+        if (newValue) { // Solo obtener subcategorías si se selecciona una categoría válida
+            fetchChildCategories(newValue);
+        } else {
+            tags.value = []; // Limpiar las subcategorías si no hay selección
+            selectedTag.value = null; // Reinicia la selección
+        }
+    });
 
-const incrementarBathrooms = () => {
-    bathrooms.value += 1; // Incrementa en 1
-};
+    const incrementarHabs = () => {
+        number_habs.value += 1; // Incrementa en 1
+    };
 
-const decrementarBathrooms = () => {
-    if (bathrooms.value > 1) { // Asegura que no sea menor que 1
-        bathrooms.value -= 1; // Decrementa en 1
-    }
-};
+    const decrementarHabs = () => {
+        if (number_habs.value > 1) { // Asegura que no sea menor que 1
+            number_habs.value -= 1; // Decrementa en 1
+        }
+    };
 
-const formData = inject('formData');
-const emit = defineEmits(['next-step']);
-const saveAndContinue = () => {
-  // Guardar los datos del formulario en formData
-/*   formData.value.firstStep = {
-    type: type.value,
-    antiquity: antiquity.value,
-    // otros campos...
-  }; */
+    const incrementarBathrooms = () => {
+        bathrooms.value += 1; // Incrementa en 1
+    };
 
-  // Emitir el evento para pasar al siguiente paso
-  emit('next-step');
-};
+    const decrementarBathrooms = () => {
+        if (bathrooms.value > 1) { // Asegura que no sea menor que 1
+            bathrooms.value -= 1; // Decrementa en 1
+        }
+    };
+
+    const selectedCharacteristics = ref([]); // Almacena las características seleccionadas
+
+    // Función para agregar o quitar una característica
+    const toggleCharacteristic = (value) => {
+        if (selectedCharacteristics.value.includes(value)) {
+            // Si ya está seleccionada, la quitamos
+            selectedCharacteristics.value = selectedCharacteristics.value.filter(item => item !== value);
+        } else {
+            // Si no está seleccionada, la agregamos
+            selectedCharacteristics.value.push(value);
+        }
+    };
+
+    const formData = inject('formData');
+    const emit = defineEmits(['next-step']);
+    /* const saveAndContinue = () => {
+    // Guardar los datos del formulario en formData
+    formData.value.firstStep = {
+        type: type.value,
+        antiquity: antiquity.value,
+        // otros campos...
+    }; 
+
+    // Emitir el evento para pasar al siguiente paso
+    emit('next-step');
+    }; */
+
+    const saveAndContinue = async () => {
+        const url = useRuntimeConfig().public.BASE_URL;
+
+        try {
+alert(selectedCharacteristics.value);
+            const response = await $fetch(`${url}/properties/first-step`, {
+                method: 'POST',
+                body: {
+                
+                    user_id: authId.value,
+                    category_id: type.value,
+                    transaction: transaccion.value,
+                    //$table->enum('transaction', ['sale', 'rental', 'both'])->default('sale');
+                    sale_price: sale_price.value,
+                    rental_price: rental_price.value,
+                    m_built: m_built.value,
+                    m_usefull: m_usefull.value,
+                    number_habs: number_habs.value,
+                    bathrooms: bathrooms.value,
+                    state: state.value,
+                    equipment: equipment.value,
+                   // characteristics: characteristics.value, 
+                   characteristics: JSON.stringify(selectedCharacteristics.value),  // Envía las características seleccionadas
+                    antique: antiquity.value,
+                    caracteristics_optionals: caracteristics_optionals.value
+           
+          
+           // $table->json('characteristics')->nullable();
+
+                },
+            });
+
+            // Guardar el ID del property en formData
+            formData.value.propertyId = response.property_id;
+
+            // Emitir el evento para pasar al siguiente paso
+            emit('next-step');
+        } catch (error) {
+            console.error('Error saving first step:', error);
+        }
+    };
 
 </script>
 

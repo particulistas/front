@@ -51,7 +51,7 @@
                     </button>
                     <button class="py-6 px-4 rounded-[8px] button-gradient group shadow-par icon-container">
                         <img class="mx-auto w-10 h-10 hover-icon-27ABB1" src="/assets/icons/adver-house.svg" alt="adver-house icon">
-                        <p class="text-base font-bold text-white mt-2 group-hover:text-[#27ABB1]">Guardar borrador</p>
+                        <p class="text-base font-bold text-white mt-2 group-hover:text-[#27ABB1]">Publicar anuncio</p>
                     </button>
                 </div>
             </div>

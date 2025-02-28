@@ -35,10 +35,10 @@
 </template>
 
 <script setup>
-defineProps({
-  currentStep: {
-    type: Number,
-    required: true
-  }
-});
+    defineProps({
+        currentStep: {
+            type: Number,
+            required: true
+        }
+    });
 </script>
