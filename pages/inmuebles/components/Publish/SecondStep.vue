@@ -3,13 +3,14 @@
         <!-- address -->
         <div>
             <h2 class="text-[20px] font-medium color-666">Dirección exacta del inmueble*</h2>
+            
             <p class="text-base font-light color-666">Una vez publicado, no podrás modicarla</p>
-            <div class="flex lg:w-[340px] mt-4">
+            <!-- <div class="flex lg:w-[340px] mt-4">
                 <input type="text" class="h-8 p-2 rounded-l-[8px] border border-black border-r-white w-[220px]">
                 <button class="rounded-r-[8px] bg-[#27ABB1] text-base font-medium text-white py-2 px-2 text-right flex-grow leading-4">
                     Comprobar
                 </button>
-            </div>
+            </div> -->
         </div>        
 
         <!-- map -->
@@ -22,30 +23,30 @@
             <div class="lg:w-[340px]">
                 <p class="text-base font-medium color-666 mb-1">La dirección es:</p>
                 <div>
-                    <textarea class="border border-gray-400 rounded-[6px] h-[72px] w-full"></textarea>
+                    <textarea v-model="address"  class="border border-gray-400 rounded-[6px] h-[72px] w-full"></textarea>
                 </div>
-                <div class="text-right mt-3">
+                <!-- <div class="text-right mt-3">
                     <button class="bg-[#27ABB1] rounded-[8px] h-7 text-base text-white py-1 px-1.5 leading-[90%]">
                         Confirmar dirección
                     </button>
-                </div>
+                </div> -->
                 <div class="mt-4 flex items-center">
-                    <input class="w-5 h-5 border border-[#27ABB1] rounded-none" type="checkbox">
+                    <input v-model="hide_address" class="w-5 h-5 border border-[#27ABB1] rounded-none" type="checkbox">
                     <p class="ml-2 text-base font-medium color-666">Ocultar el número de la vía en el anuncio</p>
                 </div>
             </div>
             <div class="mt-8 lg:mt-0">
                 <div class="flex items-center">
                     <p class="text-base font-medium mr-2 color-666">N° de planta</p>
-                    <input class="h-7 rounded-[8px] border border-black p-2 w-[131px]" type="text">
+                    <input v-model="number_plants"  class="h-7 rounded-[8px] border border-black p-2 w-[131px]" type="number">
                 </div>
                 <div class="mt-4 flex items-center">
-                    <input class="w-5 h-5 border border-[#27ABB1] rounded-none" type="checkbox">
+                    <input v-model="top_floor"  class="w-5 h-5 border border-[#27ABB1] rounded-none" type="checkbox">
                     <p class="ml-2 text-base font-medium color-666">Es la última planta del edificio</p>
                 </div>
                 <div class="mt-14">
                     <p class="text-base font-medium color-666 mb-2">Puerta</p>
-                    <input class="h-7 rounded-[8px] border border-[#27ABB1] p-2 w-[332px]" type="text">
+                    <input v-model="door" class="h-7 rounded-[8px] border border-[#27ABB1] p-2 w-[332px]" type="text">
                 </div>
             </div>
         </div>
@@ -55,13 +56,13 @@
         <!-- description -->
         <div class="lg:px-6 mt-6">
             <p class="text-[20px] font-medium color-666 mb-2">Descripción del inmueble*</p>
-            <textarea class="border border-gray-300 p-3 h-[144px] w-full rounded-[8px] text-base"></textarea>
+            <textarea v-model="description" class="border border-gray-300 p-3 h-[144px] w-full rounded-[8px] text-base"></textarea>
             <p class="text-sm font-light italic text-right">0 / X000 Caracteres</p>
         </div>
 
         <!-- images -->
          <div class="lg:px-6 mt-6 flex lg:gap-x-20 flex-wrap">
-            <UploadFiles />
+            <UploadFiles @files-selected="handleSelectedFiles" />
             <div class="w-[316px] pt-10 hidden lg:inline-block">
                 <p class="text-base text-center color-666">Sube <b>hasta 35 fotos</b>  y <b>4 videos</b> </p>
                 <p class="text-base color-666 mt-4"><b>Fotos</b> de 32 megas cada una en formato gif, jpeg o png</p>
@@ -88,22 +89,51 @@
 </template>
 
 <script setup>
-    import { ref, provide, inject } from 'vue';
+    import { ref, provide, inject, onMounted } from 'vue';
     import ModalQuestions from './ModalQuestions.vue'
     import UploadFiles from './UploadFiles.vue'
+    import Swal from 'sweetalert2';
 
     const openModal = ref(false)
     provide('openModal',openModal)
 
+    const authToken = ref('');
+    const authEmail = ref('');
+    const authName = ref('');
+    const authId = ref('');
+
+    const number_plants = ref(0);
+    const address = ref(null);
+    const latitude = ref(null);
+    const longitude = ref(null);
+    const hide_address = ref(0);
+    const top_floor = ref(0);
+    const door = ref(null);
+    const description = ref(null);
+
+    const uploadedImages = ref([]);
+
+const handleSelectedFiles = (files) => {
+    uploadedImages.value = files;
+    //this.uploadedImages.value = Array.from(files);
+};
+
+
+    // Acceder a formData usando inject
     const formData = inject('formData');
     const emit = defineEmits(['next-step']);
-    const saveAndContinue = () => {
-    // Guardar los datos del formulario en formData
-       /* formData.value.secondStep = {
-        type: type.value,
-        antiquity: antiquity.value,
-        // otros campos...
-        };  */
+
+     onMounted(async () => {
+        authToken.value = localStorage.getItem('authToken');
+        authEmail.value = localStorage.getItem('authEmail');
+        authName.value = localStorage.getItem('authName');
+        authId.value = localStorage.getItem('authId');
+    });
+
+    const saveAndContinue = async () => {
+        const store = usePropertieData() 
+        const response = await store.createPropertieSecondStep(formData.value.propertyId , number_plants.value, address.value , hide_address.value, top_floor.value, door.value, description.value, uploadedImages)
+   
 
         // Emitir el evento para pasar al siguiente paso
         emit('next-step');

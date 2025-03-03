@@ -105,7 +105,11 @@ const openDropdown = ref(false);
 const limitVideos = ref(4);
 const limitImages = ref(4);
 
-function handleFiles(event) {
+
+const emit = defineEmits(['files-selected']);//// garegue para probar
+
+
+/* function handleFiles(event) {
     const uploadedFiles = Array.from(event.target.files);
     for (let file of uploadedFiles) {
         const reader = new FileReader();
@@ -118,6 +122,30 @@ function handleFiles(event) {
                 editable: false,
                 customName: ""
             });
+        };
+        reader.readAsDataURL(file);
+    }
+} */
+
+function handleFiles(event) {
+    const uploadedFiles = Array.from(event.target.files);
+    const uploadedData = [];
+
+    for (let file of uploadedFiles) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const fileData = {
+                file,
+                url: e.target.result,
+                name: file.name,
+                type: file.type,
+            };
+            files.value.push(fileData);
+            uploadedData.push(fileData);
+
+            if (uploadedData.length === uploadedFiles.length) {
+                emit('files-selected', uploadedData);
+            }
         };
         reader.readAsDataURL(file);
     }
