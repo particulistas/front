@@ -19,7 +19,7 @@
         <div class="border-b mt-8 border-gray-300 lg:hidden"></div>
 
         <!-- living place type -->
-        <div class="mt-8">
+       <!--  <div class="mt-8">
             <p class="text-[20px] font-medium color-666 mb-2">Tipo de vivienda*</p>
             <div class="flex flex-wrap gap-6 lg:gap-8">
                 <button 
@@ -32,6 +32,20 @@
                     {{ tag }}
                 </button>
             </div>
+        </div> -->
+        <div class="mt-8">
+            <p class="text-[20px] font-medium color-666 mb-2">Tipo de vivienda*</p>
+            <div class="flex flex-wrap gap-6 lg:gap-8">
+                <button 
+                    class="border border-[#27ABB1] text-[#27ABB1] text-base font-medium rounded-[8px] px-3 py-0.5 hover:bg-[#27ABB1] hover:text-white"
+                    :class="{ 'bg-[#27ABB1] text-white': selectedTag === tag.id }" 
+                    v-for="tag in tags"
+                    :key="tag.id"
+                    @click="selectedTag = tag.id" 
+                >
+                    {{ tag.name }}
+                </button>
+            </div>
         </div>
 
         <div class="border-b border-gray-300 mt-8"></div>
@@ -41,7 +55,7 @@
             <div class="lg:w-[309px]">
 
                 <!-- type of transaction -->
-                <div>
+              <!--   <div>
                     <p class="text-[20px] font-medium color-666 mb-2">Tipo de transacción*</p>
                     <div class="flex flex-wrap gap-4">
                         <button 
@@ -55,7 +69,21 @@
                         </button>
 
                     </div>
-                </div>
+                </div> -->
+                <div>
+                    <p class="text-[20px] font-medium color-666 mb-2">Tipo de transacción*</p>
+                    <div class="flex flex-wrap gap-4">
+                        <button 
+                            class="border border-[#27ABB1] color-666 text-base font-medium rounded-[8px] px-3 py-0.5 hover:bg-[#27ABB1] hover:text-white"
+                            :class="{ 'bg-[#27ABB1] text-white': transaccion === option.value }" 
+                            v-for="option in transactionOptions"
+                            :key="option.value"
+                            @click="transaccion = option.value" 
+                        >
+                            {{ option.label }}
+                        </button>
+                    </div>
+                </div>  
                 <div class="border-b mt-8 border-gray-300 lg:hidden"></div>
 
                 <!-- price -->
@@ -256,6 +284,7 @@
     import { ref, provide, onMounted } from 'vue';
     import Dropdown from '~/pages/components/dropdown.vue'
     import { inject } from 'vue';
+    import Swal from 'sweetalert2';
 
     const authToken = ref('');
     const authEmail = ref('');
@@ -279,13 +308,17 @@
     const equipment = ref(null); // Almacena la opción seleccionada
     const characteristics = ref(null); // Almacena la opción seleccionada
     const caracteristics_optionals  = ref(null); // Almacena la opción seleccionada
-    const number_habs = ref(1); // Valor inicial de 1
-    const bathrooms = ref(1); // Valor inicial de 1
+    const number_habs = ref(0); // Valor inicial de 1
+    const bathrooms = ref(0); // Valor inicial de 1
     const antiquity  = ref(null)
     const m_built = ref(null); // Valor inicial
     const m_usefull = ref(null); // Valor inicial
     
-
+    const transactionOptions = ref([
+        { label: 'Vendo', value: 'sale' },
+        { label: 'Alquilo', value: 'rental' },
+        { label: 'Ambos', value: 'both' },
+    ]);
 
     const opcionesCaracteristicas = ref([
         { value: 'ascensor', label: 'Ascensor' },
@@ -343,7 +376,11 @@
         const url = useRuntimeConfig().public.BASE_URL
         try {
             const response = await $fetch(`${url}/categories/children/${parentId}`);
-            tags.value = response.map(category => category.name);
+           // tags.value = response.map(category => category.name);
+            tags.value = response.map(category => ({
+                id: category.id,
+                name: category.name
+            }));
         } catch (error) {
             console.error('Error fetching child categories:', error);
         }
@@ -407,18 +444,46 @@
     }; */
 
     const saveAndContinue = async () => {
-        const url = useRuntimeConfig().public.BASE_URL;
+        //const url = useRuntimeConfig().public.BASE_URL;
+        const store = usePropertieData() 
+
+        if (!type.value) {
+            Swal.fire({
+                text: 'Seleccione el Tipo de Inmueble',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+        if (!selectedTag.value) {
+            Swal.fire({
+                text: 'Seleccione el Tipo de Vivienda',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+        if (!transaccion.value) {
+            Swal.fire({
+                text: 'Seleccione el Tipo de Transaccion',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
 
         try {
-alert(selectedCharacteristics.value);
-            const response = await $fetch(`${url}/properties/first-step`, {
+
+          
+
+            const response = await store.createPropertieFirstStep( authId.value, selectedTag.value, transaccion.value, sale_price.value, rental_price.value, m_built.value, m_usefull.value, number_habs.value, bathrooms.value, state.value, equipment.value, JSON.stringify(selectedCharacteristics.value), antiquity.value, caracteristics_optionals.value)
+            /* const response = await $fetch(`${url}/properties/first-step`, {
                 method: 'POST',
                 body: {
                 
                     user_id: authId.value,
-                    category_id: type.value,
+                    category_id: selectedTag.value,
                     transaction: transaccion.value,
-                    //$table->enum('transaction', ['sale', 'rental', 'both'])->default('sale');
                     sale_price: sale_price.value,
                     rental_price: rental_price.value,
                     m_built: m_built.value,
@@ -427,17 +492,17 @@ alert(selectedCharacteristics.value);
                     bathrooms: bathrooms.value,
                     state: state.value,
                     equipment: equipment.value,
-                   // characteristics: characteristics.value, 
-                   characteristics: JSON.stringify(selectedCharacteristics.value),  // Envía las características seleccionadas
+                    characteristics: JSON.stringify(selectedCharacteristics.value),  
                     antique: antiquity.value,
                     caracteristics_optionals: caracteristics_optionals.value
-           
-          
-           // $table->json('characteristics')->nullable();
 
                 },
-            });
+            }); */
 
+            //alert(response.property_id);
+           
+
+            //const data = await response.json();
             // Guardar el ID del property en formData
             formData.value.propertyId = response.property_id;
 
