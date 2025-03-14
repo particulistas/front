@@ -1,12 +1,14 @@
 <template>
     <Layout>
-      <div class="px-4 lg:px-0 bg-[#F3F3F3]">
+      <div class="px-4 lg:px-0 ">
           <HeroSection />
+      </div>
+      <div class="px-4 lg:px-0 bg-gradient-to-b from-[#E2E1E1] via-[#FFFFFF] to-[#F3F3F3] mt-5 lg:mt-0">
           <SearchSection />
           <WithUsSection />
       </div>
       <div class="px-4 lg:px-0 bg-white">
-        <Services />
+        <!-- <Services /> -->
         <ReviewsSection />
         <NoticesSection />
       </div>

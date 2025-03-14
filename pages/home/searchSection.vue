@@ -1,18 +1,104 @@
 <template>
-    <section class="lg:bg-[#F3F3F3]">
-        <div class="bg-[#155D61] pl-4 lg:pl-[72px] pr-4 lg:pr-10 py-4 lg:rounded-t-[24px] rounded-b-xl lg:rounded-b-[24px] lg:w-[1083px] mx-[-16px] lg:mx-auto mt-5 lg:mt-0">
+    <section >
+          <!-- Action Buttons -->
+        <div class="max-w-7xl mx-auto py-4 flex gap-3 mb-4 justify-center items-center">
+            <button 
+                :class="[
+                    'px-6 py-2 lg:px-8 lg:py-3 transition-colors', // Más grande en desktop
+                    'rounded-md lg:rounded-md', // Redondeado por defecto y en pantallas grandes
+                    'rounded-xl md:rounded-md', // Más redondeado en móviles y tablets
+                    activeButton === 'buy' 
+                        ? 'bg-[rgb(230,130,239)] text-white' 
+                        : 'bg-white text-[rgb(204,55,218)] font-bold shadow-sm',
+                    'text-base lg:text-lg', // Tamaño de fuente más grande en desktop
+                ]"
+                @click="activeButton = 'buy'"
+            >
+                Comprar
+            </button>
+            <button 
+                :class="[
+                    'px-6 py-2 lg:px-8 lg:py-3 transition-colors', // Más grande en desktop
+                    'rounded-md lg:rounded-md', // Redondeado por defecto y en pantallas grandes
+                    'rounded-xl md:rounded-md', // Más redondeado en móviles y tablets
+                    activeButton === 'rent' 
+                        ? 'bg-[rgb(230,130,239)] text-white' 
+                        : 'bg-white text-[rgb(204,55,218)] font-bold shadow-sm',
+                    'text-base lg:text-lg', // Tamaño de fuente más grande en desktop
+                ]"
+                @click="activeButton = 'rent'"
+            >
+                Alquilar
+            </button>
+            <button 
+                :class="[
+                    'px-6 py-2 lg:px-8 lg:py-3 transition-colors', // Más grande en desktop
+                    'rounded-md lg:rounded-md', // Redondeado por defecto y en pantallas grandes
+                    'rounded-xl md:rounded-md', // Más redondeado en móviles y tablets
+                    activeButton === 'comp' 
+                        ? 'bg-[rgb(230,130,239)] text-white' 
+                        : 'bg-white text-[rgb(204,55,218)] font-bold shadow-sm',
+                    'text-base lg:text-lg', // Tamaño de fuente más grande en desktop
+                ]"
+                @click="activeButton = 'comp'"
+            >
+                Compartir
+            </button>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 py-4 bg-gradient-to-r from-[#CB34D9] to-[#E786F0] pl-4 lg:pl-[72px] pr-4 lg:pr-10 py-4 rounded-t-[24px]  rounded-b-[24px] lg:w-[1083px] mx-[-16px] lg:mx-auto mt-5 lg:mt-0">
+            
             <div class="lg:flex lg:items-center">
-                <p class="text-white lg:text-[24px] font-bold mr-6 hidden lg:inline-block">Viviendas</p>
-                <div>
-                    <div class="mx-auto flex gap-[35px] lg:gap-3 justify-center">
-                        <button class="text-white lg:p-2.5 text-base lg:text-[20px] font-bold">Comprar</button>
-                        <button class="text-white lg:p-2.5 text-base lg:text-[20px] font-bold">Alquilar</button>
-                        <button class="text-white lg:p-2.5 text-base lg:text-[20px] font-bold">Compartir</button>
+                <div class=" mr-6 hidden lg:inline-block lg:-mt-7">
+                    <button 
+                        @click="showDropdown = !showDropdown"
+                        class=" text-white flex items-center gap-2 "
+                    >
+                        <span class="text-white lg:text-[24px] font-bold ">Viviendas</span>
+                        <ChevronDownIcon class="h-4 w-4" />
+                    </button>
+                    <!-- Dropdown Menu -->
+                    <div 
+                        v-if="showDropdown"
+                        class="absolute z-10 mt-1 w-48 bg-white rounded-lg shadow-lg py-1"
+                    >
+                        <a 
+                        v-for="option in propertyTypes" 
+                        :key="option"
+                        href="#"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                        >
+                        {{ option }}
+                        </a>
                     </div>
-                    <p class="mt-3 lg:hidden text-base font-medium text-white">Viviendas</p>
+                </div>
+                <div>
+                    
+                    <div class=" mt-3 lg:hidden">
+                        <button 
+                            @click="showDropdown = !showDropdown"
+                            class=" text-white flex items-center gap-2 "
+                        >
+                            <span class="text-base font-medium text-white ">Viviendas</span>
+                            <ChevronDownIcon class="h-4 w-4" />
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div 
+                            v-if="showDropdown"
+                            class="absolute z-10 mt-1 w-48 bg-white rounded-lg shadow-lg py-1"
+                        >
+                            <a 
+                            v-for="option in propertyTypes" 
+                            :key="option"
+                            href="#"
+                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                            >
+                            {{ option }}
+                            </a>
+                        </div>
+                    </div>
                     <div ref="searchContainerRef" class="lg:w-[819px] relative mt-2 lg:mt-0">
                         <img 
-                            class="absolute top-0 bottom-0 my-auto right-2.5 hidden lg:block" 
+                            class="absolute top-0 bottom-0 my-auto right-2.5 hidden lg:block lg:mt-7" 
                             src="/assets/icons/search-07C6CE.svg" alt="home-hero search icon"
                         >
                         <img 
@@ -20,11 +106,12 @@
                             src="/assets/icons/search-888888.svg" alt="home-hero search icon"
                         >
                         <input 
-                            class="w-full h-[37px] lg:h-[62px] bg-white rounded-[12px] lg:rounded-[16px] p-6" 
+                            class="w-full h-[37px] lg:h-[62px] bg-white rounded-[12px] lg:rounded-[16px] p-6 lg:mt-5" 
                             type="text"
                             v-model="inputSearch"
                             @click="openRecent = true"
                             @keyup="search"
+                            placeholder="Busca municipio, barrio, calle, metro..."
                         >
 
                         <!-- recent searches -->
@@ -80,30 +167,43 @@
     </section>
 </template>
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+    import { ref, onMounted, onUnmounted } from 'vue'
+    import { ChevronDownIcon, SearchIcon } from 'lucide-vue-next'
 
-onMounted(() => {
-    document.addEventListener('click', handleClickOutside)
-})
+    onMounted(() => {
+        document.addEventListener('click', handleClickOutside)
+    })
 
-onUnmounted(() => {
-    document.removeEventListener('click', handleClickOutside)
-})
+    onUnmounted(() => {
+        document.removeEventListener('click', handleClickOutside)
+    })
 
-const openRecent = ref(false)
-const openSearchList = ref(false)
-const inputSearch = ref(null)
-const searchContainerRef = ref(null)
+    const openRecent = ref(false)
+    const openSearchList = ref(false)
+    const inputSearch = ref(null)
+    const searchContainerRef = ref(null)
 
-const search = () => {
-    openRecent.value = false;
-    openSearchList.value = !!inputSearch.value;
-}
-
-const handleClickOutside = event => {
-    if (!searchContainerRef.value.contains(event.target)) {
+    const search = () => {
         openRecent.value = false;
-        openSearchList.value = false;
+        openSearchList.value = !!inputSearch.value;
     }
-}
+
+    const handleClickOutside = event => {
+        if (!searchContainerRef.value.contains(event.target)) {
+            openRecent.value = false;
+            openSearchList.value = false;
+        }
+    }
+
+    const activeButton = ref('buy')
+    const showDropdown = ref(false)
+    
+    const propertyTypes = [
+        'Viviendas',
+        'Habitaciones',
+        'Locales',
+        'Garajes',
+        'Oficinas',
+        'Trasteros'
+    ]
 </script>
