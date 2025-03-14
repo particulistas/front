@@ -1,5 +1,5 @@
 <template>
-    <section class="bg-[#F3F3F3]">
+    <section class="bg-[#FFFFFF]">
         <div class="w-[299px] lg:w-[604px] mx-auto py-1 bg-gradient-to-r from-[#CB34D9] to-[#E786F0] rounded-b-xl lg:px-2.5">
             <div class="flex items-center justify-center">
                 <img class="w-6 h-6 lg:w-[34px] lg:h-[35px]" src="/assets/icons/home-hero-property.svg" alt="home-hero-property icon">

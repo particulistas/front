@@ -88,7 +88,7 @@
 <script setup>
 import { ref, provide } from 'vue';
 import Layout from '~/layouts/default.vue'
-import SearchSection from '~/pages/home/searchSection.vue'
+import SearchSection from '~/pages/home/searchSectionOld.vue'
 import Dropdown from '~/pages/components/dropdown.vue'
 import Card from './components/propertyCard.vue'
 import StyleModal from './components/StyleModal.vue'
