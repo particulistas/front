@@ -22,6 +22,7 @@ export default defineNuxtConfig({
       BASE_URL: process.env.BASE_URL,
       IMAGE_URL: process.env.IMAGE_URL,
       IMAGE_URL_AVATARS: process.env.IMAGE_URL_AVATARS,
+      GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
     },
   },
  /*  env: {

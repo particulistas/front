@@ -22,7 +22,8 @@ import {
      createPropertieSecondStepService,
      createPropertieThirdStepService,
      createPropertieFourthStepService,
-     updatePropertieStatusService
+     updatePropertieStatusService,
+     getPropertiesService
 } from '~/api/services/admin.properties.services'
 
 export const usePropertieData = defineStore('propertie', {
@@ -52,17 +53,17 @@ export const usePropertieData = defineStore('propertie', {
         console.error(error.message)
       }
     }, 
-    async createPropertieSecondStep(propertyId , number_plants, address, hide_address, top_floor, door, description, uploadedImages){
+    async createPropertieSecondStep(propertyId , number_plants, address, hide_address, top_floor, door, description, uploadedImages, latitude, longitude){
       try{
-        const response = await createPropertieSecondStepService(this.baseUrl, propertyId , number_plants, address, hide_address, top_floor, door, description, uploadedImages);
+        const response = await createPropertieSecondStepService(this.baseUrl, propertyId , number_plants, address, hide_address, top_floor, door, description, uploadedImages, latitude, longitude);
         return response;
       }catch(error){
         console.error(error.message)
       }
     }, 
-    async createPropertieThirdStep(propertyId, energyCertificate, energyData){
+    async createPropertieThirdStep(propertyId, energyCertificate, energyData, uploadedPlanoImages){
       try{
-        const response = await createPropertieThirdStepService(this.baseUrl, propertyId , energyCertificate, energyData);
+        const response = await createPropertieThirdStepService(this.baseUrl, propertyId , energyCertificate, energyData, uploadedPlanoImages);
         return response;
       }catch(error){
         console.error(error.message)
@@ -86,15 +87,15 @@ export const usePropertieData = defineStore('propertie', {
         console.error(error.message)
       }
     },
-     /* async getVehicle(id){
+      async getProperties(id){
       try{
-        const response = await getVehicleService(this.baseUrl,id)
+        const response = await getPropertiesService(this.baseUrl,id)
         return response;
       }catch(error){
         console.error(error.message)
       }
     }, 
-     async updateVehicle(id,title2, selectedbrandId2, selectedmodelVehicleId2, selectedyearVehicleId2, condition2, transmission2, mileage2, selectedColorId2, basePrice2, priceShipping2, priceTax2,images2){
+   /*  async updateVehicle(id,title2, selectedbrandId2, selectedmodelVehicleId2, selectedyearVehicleId2, condition2, transmission2, mileage2, selectedColorId2, basePrice2, priceShipping2, priceTax2,images2){
       try{
         const response = await updateVehicleService(this.baseUrl,id,title2, selectedbrandId2, selectedmodelVehicleId2, selectedyearVehicleId2, condition2, transmission2, mileage2, selectedColorId2, basePrice2, priceShipping2, priceTax2,images2)
         return response;
