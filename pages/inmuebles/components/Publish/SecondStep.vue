@@ -14,9 +14,20 @@
         </div>        
 
         <!-- map -->
-        <div class="mt-10 bg-red-200 py-40 h-[480px] mx-[-20px] lg:mx-0">
+    <!--     <div class="mt-10 bg-red-200 py-40 h-[480px] mx-[-20px] lg:mx-0">
             <h1 class="text-5xl text-center">Mapa</h1>
-        </div>
+            <div class="mt-10 h-[480px] mx-[-20px] lg:mx-0">
+                <div ref="mapContainer" class="w-full h-full"></div>
+                <input type="hidden" v-model="latitude">
+                <input type="hidden" v-model="longitude">
+            </div>
+        </div> -->
+
+        <div class="mt-10 h-[480px] mx-[-20px] lg:mx-0">
+                <div ref="mapContainer" class="w-full h-full"></div>
+                <input type="hidden" v-model="latitude">
+                <input type="hidden" v-model="longitude">
+            </div>
 
         <!-- address description -->
         <div class="lg:px-6 mt-10 lg:grid lg:gap-20 lg:grid-cols-2">
@@ -94,6 +105,12 @@
     import UploadFiles from './UploadFiles.vue'
     import Swal from 'sweetalert2';
 
+   
+    const mapContainer = ref(null);
+    const latitude = ref(null);
+    const longitude = ref(null);
+    const address = ref('');
+
     const openModal = ref(false)
     provide('openModal',openModal)
 
@@ -103,9 +120,9 @@
     const authId = ref('');
 
     const number_plants = ref(0);
-    const address = ref(null);
-    const latitude = ref(null);
-    const longitude = ref(null);
+   // const address = ref(null);
+   // const latitude = ref(null);
+   // const longitude = ref(null);
     const hide_address = ref(0);
     const top_floor = ref(0);
     const door = ref(null);
@@ -128,15 +145,90 @@ const handleSelectedFiles = (files) => {
         authEmail.value = localStorage.getItem('authEmail');
         authName.value = localStorage.getItem('authName');
         authId.value = localStorage.getItem('authId');
+
+        loadGoogleMaps();
     });
 
     const saveAndContinue = async () => {
+        if (!latitude.value || !longitude.value) {
+            Swal.fire({
+                text: 'Por favor, seleccione una ubicación en el mapa',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
         const store = usePropertieData() 
-        const response = await store.createPropertieSecondStep(formData.value.propertyId , number_plants.value, address.value , hide_address.value, top_floor.value, door.value, description.value, uploadedImages)
+        const response = await store.createPropertieSecondStep(formData.value.propertyId , number_plants.value, address.value , hide_address.value, top_floor.value, door.value, description.value, uploadedImages, latitude.value, longitude.value)
    
 
         // Emitir el evento para pasar al siguiente paso
         emit('next-step');
+    };
+
+    const loadGoogleMaps = async () => {
+        if (!window.google) {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${useRuntimeConfig().public.GOOGLE_MAPS_API_KEY}&libraries=places`;
+            script.onload = initMap;
+            document.head.appendChild(script);
+        } else {
+            initMap();
+        }
+    };
+
+    const initMap = () => {
+        const map = new google.maps.Map(mapContainer.value, {
+            center: { lat: 40.4168, lng: -3.7038 }, // Centro en Madrid por defecto
+            zoom: 12
+        });
+
+        const marker = new google.maps.Marker({
+            map: map,
+            draggable: true
+        });
+
+        const geocoder = new google.maps.Geocoder();
+        const autocomplete = new google.maps.places.Autocomplete(
+            document.createElement('input'),
+            { types: ['geocode'] }
+        );
+
+        autocomplete.bindTo('bounds', map);
+        autocomplete.addListener('place_changed', () => {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) return;
+            
+            map.setCenter(place.geometry.location);
+            marker.setPosition(place.geometry.location);
+            
+            latitude.value = place.geometry.location.lat();
+            longitude.value = place.geometry.location.lng();
+            address.value = place.formatted_address;
+        });
+
+        map.addListener('click', (e) => {
+            marker.setPosition(e.latLng);
+            latitude.value = e.latLng.lat();
+            longitude.value = e.latLng.lng();
+            
+            geocoder.geocode({ location: e.latLng }, (results, status) => {
+                if (status === 'OK' && results[0]) {
+                    address.value = results[0].formatted_address;
+                }
+            });
+        });
+
+        marker.addListener('dragend', (e) => {
+            latitude.value = e.latLng.lat();
+            longitude.value = e.latLng.lng();
+            
+            geocoder.geocode({ location: e.latLng }, (results, status) => {
+                if (status === 'OK' && results[0]) {
+                    address.value = results[0].formatted_address;
+                }
+            });
+        });
     };
 
 </script>

@@ -5,7 +5,7 @@
         <!-- images -->
          <!-- <div class="mt-10 flex lg:gap-x-20 flex-wrap"> -->
             <div class="mt-10 flex flex-col items-center justify-center w-full space-y-4">
-            <UploadPlane />
+            <UploadPlane @files-selected="handleSelectedFilesPlano" />
             <div class="mt-8 lg:mt-0 lg:w-[421px] lg:bg-[#F5F5F5] rounded-[12px] pt-8 lg:pt-4 pb-16 border-t border-gray-400 lg:border-t-none">
                 <h2 class="text-[20px] font-medium color-666 text-center">Certificado energético</h2>
                 <div class="mt-6 flex gap-4 px-8">
@@ -113,6 +113,7 @@
     import UploadPlane from './UploadPlane.vue'
     import Swal from 'sweetalert2';
 
+
     const energyCertificate = ref(null);
    /*  const energyObject = ref([
         {title:'A',consumption:false,emission:false},
@@ -156,6 +157,15 @@
     const authName = ref('');
     const authId = ref('');
 
+    const uploadedPlanoImages = ref([]);
+
+    const handleSelectedFilesPlano = (files) => {
+        alert('entro');
+        uploadedPlanoImages.value = files;
+        //this.uploadedImages.value = Array.from(files);
+    };
+    
+
     onMounted(async () => {
         authToken.value = localStorage.getItem('authToken');
         authEmail.value = localStorage.getItem('authEmail');
@@ -167,6 +177,14 @@
     const emit = defineEmits(['next-step']);
 
     const saveAndContinue = async () => {
+        if (!energyCertificate.value ) {
+            Swal.fire({
+                text: 'Por favor, seleccione el tipo Certificado energético',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
        // alert(formData.value.propertyId );
         const store = usePropertieData() 
           // Crear JSON con los valores seleccionados
@@ -175,9 +193,10 @@
             emission: selectedEmission.value
         });
 
-        const response = await store.createPropertieThirdStep(formData.value.propertyId , energyCertificate.value, energyData)
+        const response = await store.createPropertieThirdStep(formData.value.propertyId , energyCertificate.value, energyData, uploadedPlanoImages)
 
         // Emitir el evento para pasar al siguiente paso
         emit('next-step');
     };
+
 </script>

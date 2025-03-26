@@ -103,8 +103,10 @@
   const openDropdown = ref(false);
   const limitVideos = ref(4);
   const limitImages = ref(4);
+
+  const emit = defineEmits(['files-selected']);//// garegue para probar
   
-  function handleFiles(event) {
+  /*function handleFiles(event) {
       const uploadedFiles = Array.from(event.target.files);
       for (let file of uploadedFiles) {
           const reader = new FileReader();
@@ -120,7 +122,34 @@
           };
           reader.readAsDataURL(file);
       }
-  }
+  }*/
+
+  function handleFiles(event) {
+    const uploadedFiles = Array.from(event.target.files);
+    const uploadedData = [];
+
+    for (let file of uploadedFiles) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const fileData = {
+                file, // Mantenemos el objeto File original para enviarlo
+                url: e.target.result,
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                editable: false,
+                customName: ""
+            };
+            files.value.push(fileData);
+            uploadedData.push(fileData);
+
+             if (uploadedData.length === uploadedFiles.length) {
+                emit('files-selected', uploadedData);
+            } 
+        };
+        reader.readAsDataURL(file);
+    }
+}
   
   
   function triggerFileInput() {

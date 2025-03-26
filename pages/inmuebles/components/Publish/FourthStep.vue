@@ -38,7 +38,7 @@
             <div class="lg:w-[326px] border-t border-gray-400 lg:border-t-none mt-8 lg-mt-0 pt-8 lg:pt-0">
                 <h2 class="text-[20px] font-medium color-666 text-center">¿Tu anuncio está listo?</h2>
                 <div class="text-center mt-6">
-                    <button class="flex items-center gap-2 text-base font-medium text-white w-[206px] h-[70px] rounded-[8px] bg-[#27ABB1] hover:text-[#27ABB1] justify-center icon-container hover:bg-white shadow-par mx-auto">
+                    <button @click="previewProperty" class="flex items-center gap-2 text-base font-medium text-white w-[206px] h-[70px] rounded-[8px] bg-[#27ABB1] hover:text-[#27ABB1] justify-center icon-container hover:bg-white shadow-par mx-auto">
                         <img class="hover-icon-27ABB1" src="/assets/icons/eye-house.svg" alt="eye-house icon">
                         Previsualizar
                     </button>
@@ -131,6 +131,16 @@
             });
         }
     }
+
+    const previewProperty = () => {
+        const propertyId = formData.value.propertyId;
+        //const previewUrl = `preview/${propertyId}`;
+       // this.$router.push('/preview?id='+propertyId);
+        const previewUrl = `preview?id=${propertyId}`;
+        
+        // Abrir en una nueva pestaña
+        window.open(previewUrl, '_blank');
+    };
 
 </script>
 <style scoped>

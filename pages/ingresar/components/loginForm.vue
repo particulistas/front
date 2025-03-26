@@ -60,8 +60,8 @@
     }
 
     const login = async () =>{
-        //const response = await store.login(email.value, password.value);
-        const response = await store.login('alejandrojchacon@gmail.com', 'usuario12345');
+        const response = await store.login(email.value, password.value);
+       // const response = await store.login('alejandrojchacon@gmail.com', 'usuario12345');
         if (response) {
             if (response.role == 'admin') {
                 router.push('https://www.youadmin.com/');

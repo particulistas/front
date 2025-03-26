@@ -92,7 +92,7 @@ export const createPropertieFirstStepService = async (baseUrl,authId, selectedTa
     //return data; // Retorna los datos de la respuesta
 }; 
 
-export const createPropertieSecondStepService = async (baseUrl, propertyId , number_plants, address, hide_address, top_floor, door, description, uploadedImages) => {
+export const createPropertieSecondStepService = async (baseUrl, propertyId , number_plants, address, hide_address, top_floor, door, description, uploadedImages, latitude, longitude) => {
 
     /* const response = await $fetch(`${baseUrl}/properties/second-step`, {
         method: 'POST',
@@ -121,6 +121,8 @@ export const createPropertieSecondStepService = async (baseUrl, propertyId , num
     formData.append('top_floor', top_floor2);
     formData.append('door', door);
     formData.append('description', description); 
+    formData.append('latitude', latitude); 
+    formData.append('longitude', longitude); 
 
     // Adjuntar imágenes al FormData
     uploadedImages.value.forEach((image, index) => {
@@ -146,9 +148,30 @@ export const createPropertieSecondStepService = async (baseUrl, propertyId , num
       
 }; 
 
-export const createPropertieThirdStepService = async (baseUrl, propertyId , energyCertificate, energyData) => {
+export const createPropertieThirdStepService = async (baseUrl, propertyId , energyCertificate, energyData, uploadedPlanoImages) => {
 
-    const response = await $fetch(`${baseUrl}/properties/third-step`, {
+
+   
+ 
+     // Crear FormData para enviar imágenes
+    const formData = new FormData();
+     formData.append('id', propertyId);
+     formData.append('energy_certificate', energyCertificate);
+     formData.append('energy_certificate_yes', energyData);
+    
+ 
+     // Adjuntar imágenes al FormData
+     uploadedPlanoImages.value.forEach((file, index) => {
+        formData.append(`images[${index}]`, file.file);
+    });
+
+      const response = await $fetch(`${baseUrl}/properties/third-step`, {
+        method: 'POST', // Utiliza POST en lugar de PUT
+        body: formData,
+        headers: headers,
+      });
+
+    /* const response = await $fetch(`${baseUrl}/properties/third-step`, {
         method: 'POST',
         body: {
             id: propertyId,
@@ -156,7 +179,7 @@ export const createPropertieThirdStepService = async (baseUrl, propertyId , ener
             energy_certificate_yes: energyData,
         },
         headers: headers,
-    });
+    }); */
 
     return response;
       
@@ -194,8 +217,8 @@ export const updatePropertieStatusService = async (baseUrl, propertyId, status) 
       
 };
 
- /* export const getVehicleService = async (url,id) => {
-    const response = await fetch(`${url}/vehicles/`+id, {
+  export const getPropertiesService = async (baseUrl,id) => {
+    const response = await fetch(`${baseUrl}/properties/`+id, {
         method: 'GET',
         headers: headers,
     });
@@ -208,7 +231,7 @@ export const updatePropertieStatusService = async (baseUrl, propertyId, status) 
     return data; // Retorna los datos de la respuesta
 }; 
 
-
+/*
  export const updateVehicleService = async (url,id,title2, selectedbrandId2, selectedmodelVehicleId2, selectedyearVehicleId2, condition2, transmission2, mileage2, selectedColorId2, basePrice2, priceShipping2, priceTax2, images2) => {
     
         const formData = new FormData();

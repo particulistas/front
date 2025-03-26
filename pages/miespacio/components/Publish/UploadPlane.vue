@@ -88,7 +88,7 @@
           </template>
         </draggable>
       </div>
-      <input type="file" multiple @change="handleFiles" hidden ref="fileInput"/>
+      <input type="file" multiple @change="handleFilesPlano" hidden ref="fileInput"/>
     </div>
   </template>
   
@@ -104,9 +104,9 @@
   const limitVideos = ref(4);
   const limitImages = ref(4);
   
-  function handleFiles(event) {
-      const uploadedFiles = Array.from(event.target.files);
-      for (let file of uploadedFiles) {
+  function handleFilesPlano(event) {
+      const uploadedFilesPlano = Array.from(event.target.files);
+      for (let file of uploadedFilesPlano) {
           const reader = new FileReader();
           reader.onload = (e) => {
               files.value.push({
@@ -121,7 +121,7 @@
           reader.readAsDataURL(file);
       }
   }
-  
+
   
   function triggerFileInput() {
       fileInput.value.click();
