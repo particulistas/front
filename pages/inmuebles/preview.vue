@@ -7,7 +7,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                     <h2 class="text-xl font-semibold mb-4">Información Básica</h2>
-                    <p><span class="font-medium">Tipo:</span> {{ property.id }}</p>
+                    <p><span class="font-medium">Tipo:</span> {{  property.category.name  }}</p>
                     <p><span class="font-medium">Transacción:</span> {{ property.transaction }}</p>
                     <p><span class="font-medium">Precio:</span> {{ property.sale_price }} €</p>
                     <p><span class="font-medium">Habitaciones:</span> {{ property.number_habs }}</p>
@@ -17,14 +17,20 @@
                 <div>
                     <h2 class="text-xl font-semibold mb-4">Ubicación</h2>
                     <p>{{ property.address }}</p>
-                    <div class="mt-4 h-64 bg-gray-200">
-                        <!-- Mapa estático o dinámico -->
+                    
+                    <div class="mt-4 h-64 bg-gray-200 rounded-lg overflow-hidden">
+                        <!-- Mapa estático con fallback -->
                         <img 
                             v-if="property.latitude && property.longitude"
-                            :src="`https://maps.googleapis.com/maps/api/staticmap?center=${property.latitude},${property.longitude}&zoom=15&size=600x300&markers=color:red%7C${property.latitude},${property.longitude}&key=TU_API_KEY`" 
+                            :src="`https://maps.googleapis.com/maps/api/staticmap?center=${property.latitude},${property.longitude}&zoom=16&size=800x400&markers=color:red%7C${property.latitude},${property.longitude}&key=AIzaSyCAaKZ3GlSfKzsNm2-1eqBPfweUWuVydBg`" 
                             alt="Mapa de ubicación"
                             class="w-full h-full object-cover"
+                            @error="handleMapError"
                         >
+                        <!-- Fallback visual -->
+                        <div v-else class="w-full h-full flex items-center justify-center bg-gray-100">
+                            <p class="text-gray-500">Mapa no disponible</p>
+                        </div>
                     </div>
                 </div>
                 
@@ -74,6 +80,12 @@
       //  alert(property.value);
         
         
+    };
+
+    const handleMapError = (event) => {
+    event.target.src = 'https://maps.googleapis.com/maps/api/staticmap?center=40.43545015171254,-3.692607879638672&zoom=16&size=800x400&markers=color:red%7C40.43545015171254,-3.692607879638672&key=AIzaSyCAaKZ3GlSfKzsNm2-1eqBPfweUWuVydBg';
+    // O usa una imagen de respaldo alternativa
+    // event.target.src = '/placeholder-map.png';
     };
 
 </script>
