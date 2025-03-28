@@ -160,7 +160,6 @@
     const uploadedPlanoImages = ref([]);
 
     const handleSelectedFilesPlano = (files) => {
-        alert('entro');
         uploadedPlanoImages.value = files;
         //this.uploadedImages.value = Array.from(files);
     };

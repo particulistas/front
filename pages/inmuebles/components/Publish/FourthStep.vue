@@ -62,6 +62,9 @@
     import { ref, provide, inject, onMounted } from 'vue';
     import ToggleButton from './ToggleButton.vue'
     import Swal from 'sweetalert2';
+    import { useRouter } from 'vue-router';
+
+    const router = useRouter();
 
     const varbutton = ref(false);
     const serviceMovil = ref('Ambos');
@@ -134,12 +137,19 @@
 
     const previewProperty = () => {
         const propertyId = formData.value.propertyId;
+        alert('entro aca');
+        alert(propertyId);
         //const previewUrl = `preview/${propertyId}`;
        // this.$router.push('/preview?id='+propertyId);
-        const previewUrl = `preview?id=${propertyId}`;
+        const previewUrl = `/inmuebles/preview2?id=${propertyId}`;
         
         // Abrir en una nueva pestaña
-        window.open(previewUrl, '_blank');
+       // window.open(previewUrl, '_blank');
+       // window.location.assign(previewUrl);
+        // Navegación en la misma ventana usando Vue Router
+        router.push(`/inmuebles/preview2?id=${propertyId}`);
+        //router.push('/inmuebles/publicar')
+        //router.push('miespacio/Space');
     };
 
 </script>
