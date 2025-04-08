@@ -23,7 +23,8 @@ import {
      createPropertieThirdStepService,
      createPropertieFourthStepService,
      updatePropertieStatusService,
-     getPropertiesService
+     getPropertiesService,
+     updatePropertieFirstStepService
 } from '~/api/services/admin.properties.services'
 
 export const usePropertieData = defineStore('propertie', {
@@ -53,17 +54,17 @@ export const usePropertieData = defineStore('propertie', {
         console.error(error.message)
       }
     }, 
-    async createPropertieSecondStep(propertyId , number_plants, address, hide_address, top_floor, door, description, uploadedImages, latitude, longitude){
+    async createPropertieSecondStep(propertyId , number_plants, address, hide_address, top_floor, door, description, uploadedImages, latitude, longitude, imagesChanged, imagesToDelete){
       try{
-        const response = await createPropertieSecondStepService(this.baseUrl, propertyId , number_plants, address, hide_address, top_floor, door, description, uploadedImages, latitude, longitude);
+        const response = await createPropertieSecondStepService(this.baseUrl, propertyId , number_plants, address, hide_address, top_floor, door, description, uploadedImages, latitude, longitude, imagesChanged, imagesToDelete);
         return response;
       }catch(error){
         console.error(error.message)
       }
     }, 
-    async createPropertieThirdStep(propertyId, energyCertificate, energyData, uploadedPlanoImages){
+    async createPropertieThirdStep(propertyId, energyCertificate, energyData, uploadedPlanoImages, imagesChangedPlano, imagesToDeletePlano){
       try{
-        const response = await createPropertieThirdStepService(this.baseUrl, propertyId , energyCertificate, energyData, uploadedPlanoImages);
+        const response = await createPropertieThirdStepService(this.baseUrl, propertyId , energyCertificate, energyData, uploadedPlanoImages, imagesChangedPlano, imagesToDeletePlano);
         return response;
       }catch(error){
         console.error(error.message)
@@ -87,7 +88,8 @@ export const usePropertieData = defineStore('propertie', {
         console.error(error.message)
       }
     },
-      async getProperties(id){
+
+    async getProperties(id){
       try{
         const response = await getPropertiesService(this.baseUrl,id)
         return response;
@@ -95,6 +97,15 @@ export const usePropertieData = defineStore('propertie', {
         console.error(error.message)
       }
     }, 
+
+    async updatePropertieFirstStep(id, selectedTag, transaccion, sale_price, rental_price, m_built, m_usefull, number_habs, bathrooms, state, equipment, selectedCharacteristics, antiquity, caracteristics_optionals){
+      try{
+        const response = await updatePropertieFirstStepService(this.baseUrl,id, selectedTag, transaccion, sale_price, rental_price, m_built, m_usefull, number_habs, bathrooms, state, equipment, selectedCharacteristics, antiquity, caracteristics_optionals);
+        return response;
+      }catch(error){
+        console.error(error.message)
+      }
+    },
    /*  async updateVehicle(id,title2, selectedbrandId2, selectedmodelVehicleId2, selectedyearVehicleId2, condition2, transmission2, mileage2, selectedColorId2, basePrice2, priceShipping2, priceTax2,images2){
       try{
         const response = await updateVehicleService(this.baseUrl,id,title2, selectedbrandId2, selectedmodelVehicleId2, selectedyearVehicleId2, condition2, transmission2, mileage2, selectedColorId2, basePrice2, priceShipping2, priceTax2,images2)

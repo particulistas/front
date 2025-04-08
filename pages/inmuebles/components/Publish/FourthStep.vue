@@ -54,15 +54,21 @@
                         <p class="text-base font-bold text-white mt-2 group-hover:text-[#27ABB1]">Publicar anuncio</p>
                     </button>
                 </div>
+
+                <ConfirmationModal v-if="showConfirmationModal" @close="showConfirmationModal = false" />
+
             </div>
         </div>
     </div>
 </template>
 <script setup>
-    import { ref, provide, inject, onMounted } from 'vue';
+    import { ref, provide, inject, onMounted, watch } from 'vue';
     import ToggleButton from './ToggleButton.vue'
     import Swal from 'sweetalert2';
     import { useRouter } from 'vue-router';
+
+    import ConfirmationModal from './ConfirmationModal.vue'
+    const showConfirmationModal = ref(false)
 
     const router = useRouter();
 
@@ -84,11 +90,25 @@
     const authName = ref('');
     const authId = ref('');
 
+    const props = defineProps({
+        propertyId: {
+            type: String,
+            default: null
+        }
+    });
+
     onMounted(async () => {
         authToken.value = localStorage.getItem('authToken');
         authEmail.value = localStorage.getItem('authEmail');
         authName.value = localStorage.getItem('authName');
         authId.value = localStorage.getItem('authId');
+
+        // Cargar datos del inmueble al montar el componente
+        await loadPropertyData();
+    });
+
+    watch(() => props.propertyId, async () => {
+        await loadPropertyData(); // Recargar si el ID cambia
     });
 
     const saveAndContinue = async () => {
@@ -118,12 +138,19 @@
             const store = usePropertieData() 
             const response = await store.updatePropertieStatus(formData.value.propertyId , status)
             const mensaje = status === 'Draft' ? 'Anunció actualizado como Borrador.' : 'Anunció publicado con éxito.';
-            Swal.fire({
-                title: '¡Éxito!',
-                text: mensaje,
-                icon: 'success',
-                confirmButtonText: 'OK',
-            });
+
+            if (status === 'Publish') {
+                showConfirmationModal.value = true; // Mostrar modal
+                return; // No continuar con la función
+            }
+            else {
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: mensaje,
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                });
+            }
         } 
         catch (error) {
            // console.error('Error updating avatar:', error);
@@ -137,19 +164,42 @@
 
     const previewProperty = () => {
         const propertyId = formData.value.propertyId;
-        alert('entro aca');
-        alert(propertyId);
-        //const previewUrl = `preview/${propertyId}`;
-       // this.$router.push('/preview?id='+propertyId);
-        const previewUrl = `/inmuebles/preview2?id=${propertyId}`;
-        
-        // Abrir en una nueva pestaña
-       // window.open(previewUrl, '_blank');
-       // window.location.assign(previewUrl);
+        const previewUrl = `/inmuebles/preview?id=${propertyId}`;
+       
         // Navegación en la misma ventana usando Vue Router
-        router.push(`/inmuebles/preview2?id=${propertyId}`);
-        //router.push('/inmuebles/publicar')
-        //router.push('miespacio/Space');
+        router.push(`/inmuebles/preview?id=${propertyId}`);
+    };
+
+    
+    // Función para cargar los datos del inmueble
+    const loadPropertyData = async () => {
+       
+        if (!props.propertyId) return;
+        
+        try {
+            const store = usePropertieData();
+            const response = await store.getProperties(props.propertyId);
+            
+            // Establecer los valores de los campos según la respuesta
+            if (response) {
+                varbutton.value = Boolean(response.publish_phone || false);
+                // Separar el código y número de teléfono si existe
+                if (response.phone) {
+                    const phoneParts = response.phone.split(' ');
+                    phone_codi.value = phoneParts[0] || '';
+                    phone.value = phoneParts[1] || '';
+                }
+                
+                serviceMovil.value = response.phone_characteristics || 'both';
+            }
+        } catch (error) {
+            console.error('Error loading property data:', error);
+            Swal.fire({
+            title: 'Error',
+            text: 'No se pudieron cargar los datos del inmueble',
+            icon: 'error'
+            });
+        }
     };
 
 </script>

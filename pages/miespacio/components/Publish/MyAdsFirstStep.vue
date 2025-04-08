@@ -13,7 +13,7 @@
       <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
         <!-- Create new ad card -->
         <!-- <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow"> -->
-        <button>
+        <button @click="goToPublicar">
           <div class="h-64 relative mb-6">
             <img  src="/assets/imgs/Group1.svg" alt="Ilustración de creación de anuncio" >
           </div>
@@ -30,7 +30,13 @@
   </template>
   
   <script setup>
-  // Component logic can be added here if needed
+    import { useRouter } from 'vue-router'
+
+    const router = useRouter()
+
+    const goToPublicar = () => {
+      router.push('/inmuebles/publicar')
+    }
   </script>
   
   <style scoped>
