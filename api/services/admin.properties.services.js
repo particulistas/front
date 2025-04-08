@@ -92,7 +92,38 @@ export const createPropertieFirstStepService = async (baseUrl,authId, selectedTa
     //return data; // Retorna los datos de la respuesta
 }; 
 
-export const createPropertieSecondStepService = async (baseUrl, propertyId , number_plants, address, hide_address, top_floor, door, description, uploadedImages, latitude, longitude) => {
+export const updatePropertieFirstStepService = async (baseUrl,id, selectedTag, transaccion, sale_price, rental_price, m_built, m_usefull, number_habs, bathrooms, state, equipment, selectedCharacteristics, antiquity, caracteristics_optionals) => {
+
+    const response = await $fetch(`${baseUrl}/properties/update-first-step`, {
+        method: 'POST',
+        body: {
+        
+            id: id,
+            category_id: selectedTag,
+            transaction: transaccion,
+            sale_price: sale_price,
+            rental_price: rental_price,
+            m_built: m_built,
+            m_usefull: m_usefull,
+            number_habs: number_habs,
+            bathrooms: bathrooms,
+            state: state,
+            equipment: equipment,
+            characteristics: selectedCharacteristics,  
+            antique: antiquity,
+            caracteristics_optionals: caracteristics_optionals
+
+        },
+        headers: headers,
+    });
+
+    return response;
+      
+    //const data = await response.json();
+    //return data; // Retorna los datos de la respuesta
+};
+
+export const createPropertieSecondStepService = async (baseUrl, propertyId , number_plants, address, hide_address, top_floor, door, description, uploadedImages, latitude, longitude, imagesChanged, imagesToDelete) => {
 
     /* const response = await $fetch(`${baseUrl}/properties/second-step`, {
         method: 'POST',
@@ -123,11 +154,20 @@ export const createPropertieSecondStepService = async (baseUrl, propertyId , num
     formData.append('description', description); 
     formData.append('latitude', latitude); 
     formData.append('longitude', longitude); 
-
+    formData.append('imagesChanged', imagesChanged); 
+    formData.append('imagesToDelete', imagesToDelete.value); 
     // Adjuntar imágenes al FormData
     uploadedImages.value.forEach((image, index) => {
          formData.append(`images[${index}]`, image.file);
      });
+
+      
+      // Agregar IDs de imágenes a eliminar
+     /*   if (imagesToDelete && imagesToDelete.length > 0) {
+        imagesToDelete.value.forEach((id, index) => {
+          formData.append(`images_to_delete[${index}]`, id.file);
+        });
+      }  */
 
     // Agregar imágenes
     /* if (uploadedImages) {
@@ -148,16 +188,18 @@ export const createPropertieSecondStepService = async (baseUrl, propertyId , num
       
 }; 
 
-export const createPropertieThirdStepService = async (baseUrl, propertyId , energyCertificate, energyData, uploadedPlanoImages) => {
+export const createPropertieThirdStepService = async (baseUrl, propertyId , energyCertificate, energyData, uploadedPlanoImages, imagesChangedPlano, imagesToDeletePlano) => {
 
 
    
  
      // Crear FormData para enviar imágenes
     const formData = new FormData();
-     formData.append('id', propertyId);
-     formData.append('energy_certificate', energyCertificate);
-     formData.append('energy_certificate_yes', energyData);
+    formData.append('id', propertyId);
+    formData.append('energy_certificate', energyCertificate);
+    formData.append('energy_certificate_yes', energyData);
+    formData.append('imagesChanged', imagesChangedPlano); 
+    formData.append('imagesToDelete', imagesToDeletePlano.value); 
     
  
      // Adjuntar imágenes al FormData

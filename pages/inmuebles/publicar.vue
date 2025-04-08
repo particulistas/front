@@ -4,10 +4,10 @@
             <div class="lg:flex">
                 <StepsSidebarMobile :currentStep="currentStep" />
                 <StepsSidebar :currentStep="currentStep" />
-                <FirstStep v-if="currentStep === 1" @next-step="handleNextStep" />
-                <SecondStep v-if="currentStep === 2" @next-step="handleNextStep" />
-                <ThirdStep v-if="currentStep === 3" @next-step="handleNextStep" />
-                <FourthStep v-if="currentStep === 4" @next-step="handleNextStep" />
+                <FirstStep v-if="currentStep === 1" @next-step="handleNextStep" :propertyId="$route.query.id" />
+                <SecondStep v-if="currentStep === 2" @next-step="handleNextStep" :propertyId="$route.query.id"  />
+                <ThirdStep v-if="currentStep === 3" @next-step="handleNextStep" :propertyId="$route.query.id"  />
+                <FourthStep v-if="currentStep === 4" @next-step="handleNextStep" :propertyId="$route.query.id"  />
             </div>
         </div>
     </Layout>

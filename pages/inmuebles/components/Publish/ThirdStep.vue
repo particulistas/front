@@ -5,7 +5,7 @@
         <!-- images -->
          <!-- <div class="mt-10 flex lg:gap-x-20 flex-wrap"> -->
             <div class="mt-10 flex flex-col items-center justify-center w-full space-y-4">
-            <UploadPlane @files-selected="handleSelectedFilesPlano" />
+            <UploadPlane @files-selected="handleSelectedFilesPlano" @files-deleted="handleDeletedFilesPlano" :existing-media-plano="existingMediaPlano" />
             <div class="mt-8 lg:mt-0 lg:w-[421px] lg:bg-[#F5F5F5] rounded-[12px] pt-8 lg:pt-4 pb-16 border-t border-gray-400 lg:border-t-none">
                 <h2 class="text-[20px] font-medium color-666 text-center">Certificado energético</h2>
                 <div class="mt-6 flex gap-4 px-8">
@@ -19,6 +19,7 @@
                     </button>
                 </div>
                 <p class="text-base text-center px-6 mt-6 color-666">Selecciona los perfiles de consumo (kW) y emisiones (CO2) que correspondan con el certificado del inmueble.</p>
+                   
                 <div class="mt-6 mx-[-20px] lg:mx-0">
                     <table>
                         <thead>
@@ -95,7 +96,7 @@
             </div>
         </div>
 
-        
+
 
         <div class="pt-10 mt-10 text-center">
             <button 
@@ -109,22 +110,13 @@
     
 </template>
 <script setup>
-    import { ref, provide, inject, onMounted } from 'vue';
+    import { ref, watch, provide, inject, onMounted } from 'vue';
     import UploadPlane from './UploadPlane.vue'
     import Swal from 'sweetalert2';
 
 
     const energyCertificate = ref(null);
-   /*  const energyObject = ref([
-        {title:'A',consumption:false,emission:false},
-        {title:'B',consumption:false,emission:false},
-        {title:'C',consumption:false,emission:false},
-        {title:'D',consumption:false,emission:false},
-        {title:'E',consumption:false,emission:false},
-        {title:'F',consumption:false,emission:false},
-        {title:'G',consumption:false,emission:false},
-    ]); */
-
+   
     const energyObject = ref([
         { title: 'A' },
         { title: 'B' },
@@ -156,13 +148,37 @@
     const authEmail = ref('');
     const authName = ref('');
     const authId = ref('');
+    const imageUrl = ref('');
 
-    const uploadedPlanoImages = ref([]);
+    const uploadedImagesPlano = ref([]);
+    const existingMediaPlano = ref([]); // Para almacenar las imágenes existentes
+    const imagesChangedPlano = ref([]); 
+    const imagesToDeletePlano = ref([]); // Nuevo ref para almacenar IDs a eliminar
+
 
     const handleSelectedFilesPlano = (files) => {
-        uploadedPlanoImages.value = files;
+        uploadedImagesPlano.value = files;
+        imagesChangedPlano.value = true;
         //this.uploadedImages.value = Array.from(files);
     };
+
+    const handleDeletedFilesPlano = (fileId) => {
+        // Verifica si el ID ya existe en el arreglo para evitar duplicados
+        if (!imagesToDeletePlano.value.includes(fileId)) {
+            // Crea un nuevo arreglo con los valores existentes más el nuevo fileId
+            imagesToDeletePlano.value = [...imagesToDeletePlano.value, fileId];
+            imagesChangedPlano.value = true;
+            
+            // Opcional: puedes verificar el contenido del arreglo
+        }
+    };
+
+    const props = defineProps({
+        propertyId: {
+            type: String,
+            default: null
+        }
+    });
     
 
     onMounted(async () => {
@@ -170,6 +186,12 @@
         authEmail.value = localStorage.getItem('authEmail');
         authName.value = localStorage.getItem('authName');
         authId.value = localStorage.getItem('authId');
+        imageUrl.value = useRuntimeConfig().public.IMAGE_URL; 
+        await loadPropertyData();
+    });
+
+    watch(() => props.propertyId, async () => {
+        await loadPropertyData(); // Recargar si el ID cambia
     });
 
     const formData = inject('formData');
@@ -192,10 +214,91 @@
             emission: selectedEmission.value
         });
 
-        const response = await store.createPropertieThirdStep(formData.value.propertyId , energyCertificate.value, energyData, uploadedPlanoImages)
+        const response = await store.createPropertieThirdStep(formData.value.propertyId , energyCertificate.value, energyData, uploadedImagesPlano, imagesChangedPlano.value, imagesToDeletePlano)
 
         // Emitir el evento para pasar al siguiente paso
         emit('next-step');
+    };
+
+    const loadPropertyData = async () => {
+        if (!props.propertyId) return;
+        
+        try {
+            const store = usePropertieData();
+            const response = await store.getProperties(props.propertyId);
+            
+            // Cargar certificado energético
+            energyCertificate.value = response.energy_certificate || null;
+            
+            // Cargar datos de consumo/emisiones si existen
+          /*   if (response.energy_data) {
+                const energyData = JSON.parse(response.energy_data);
+                selectedConsumption.value = energyData.consumption || null;
+                selectedEmission.value = energyData.emission || null;
+            } */
+            // Cargar datos de consumo/emisiones
+            if (response.energy_certificate_yes) {
+                try {
+                    const energyData = typeof response.energy_certificate_yes === 'string' 
+                    ? JSON.parse(response.energy_certificate_yes) 
+                    : response.energy_certificate_yes;
+                    
+                    // Debug: verifica los valores cargados
+                    console.log('Datos de energía cargados:', {
+                    consumption: energyData.consumption,
+                    emission: energyData.emission
+                    });
+                    
+                    selectedConsumption.value = energyData.consumption || null;
+                    selectedEmission.value = energyData.emission || null;
+                    
+                } catch (e) {
+                    console.error('Error parsing energy_data:', e);
+                }
+            }
+
+            // Verifica profundamente la estructura de response
+            if (!response?.media) {
+                console.warn('No media found in response:', response);
+                existingMediaPlano.value = [];
+                return;
+            }
+            
+            // Cargar planos existentes (filtrando donde media.object === "plano")
+      /*       if (response.media && response.media.length > 0) {
+                const planos = response.media.filter(media => media.object === "plano");
+                uploadedPlanoImages.value = planos.map(plano => ({
+                    url: imageUrl.value +  plano.path,
+                    name: plano.file_name,
+                    type: plano.type,
+                    isExisting: true,
+                    id: plano.id
+                }));
+            } */
+
+            if (response?.media?.length > 0) {
+                existingMediaPlano.value = response.media
+                    .filter(media => media?.object ===  "plano") // Verifica si media.object existe
+                    .map(media => ({
+                        url: imageUrl.value + (media?.path || ''), // Path con fallback
+                        name: media?.file_name || 'Imagen',
+                        type: media?.type || 'image/jpeg', // Tipo por defecto
+                        size: media?.size || 0,
+                        isExisting: true,
+                        id: media?.id || Math.random().toString(36).substr(2, 9) // ID único si no existe
+                    }));
+            } else {
+                existingMediaPlano.value = []; // Asegura array vacío si no hay media
+            }
+            
+        } catch (error) {
+            console.error('Error loading property data:', error);
+            Swal.fire({
+            title: 'Error',
+            text: 'No se pudo cargar la información del inmueble',
+            icon: 'error'
+            });
+        }
     };
 
 </script>

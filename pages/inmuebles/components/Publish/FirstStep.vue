@@ -19,20 +19,6 @@
         <div class="border-b mt-8 border-gray-300 lg:hidden"></div>
 
         <!-- living place type -->
-       <!--  <div class="mt-8">
-            <p class="text-[20px] font-medium color-666 mb-2">Tipo de vivienda*</p>
-            <div class="flex flex-wrap gap-6 lg:gap-8">
-                <button 
-                    class="border border-[#27ABB1] text-[#27ABB1] text-base font-medium rounded-[8px] px-3 py-0.5 hover:bg-[#27ABB1] hover:text-white"
-                    :class="{ 'bg-[#27ABB1] text-white': selectedTag === tag }" 
-                    v-for="tag in tags"
-                    :key="tag"
-                    @click="selectedTag = tag" 
-                >
-                    {{ tag }}
-                </button>
-            </div>
-        </div> -->
         <div class="mt-8">
             <p class="text-[20px] font-medium color-666 mb-2">Tipo de vivienda*</p>
             <div class="flex flex-wrap gap-6 lg:gap-8">
@@ -51,25 +37,8 @@
         <div class="border-b border-gray-300 mt-8"></div>
 
         <div class="flex flex-col lg:flex-row lg:gap-20 mt-8 lg:px-5">
-            
             <div class="lg:w-[309px]">
-
                 <!-- type of transaction -->
-              <!--   <div>
-                    <p class="text-[20px] font-medium color-666 mb-2">Tipo de transacción*</p>
-                    <div class="flex flex-wrap gap-4">
-                        <button 
-                            class="border border-[#27ABB1] color-666 text-base font-medium rounded-[8px] px-3 py-0.5 hover:bg-[#27ABB1] hover:text-white"
-                            :class="{ 'bg-[#27ABB1] text-white': transaccion === tag }" 
-                            v-for="tag in ['sale', 'rental', 'both']"
-                            :key="tag"
-                            @click="transaccion = tag" 
-                        >
-                            {{ tag }}
-                        </button>
-
-                    </div>
-                </div> -->
                 <div>
                     <p class="text-[20px] font-medium color-666 mb-2">Tipo de transacción*</p>
                     <div class="flex flex-wrap gap-4">
@@ -220,29 +189,18 @@
                     </div>
                 </div>
                 <div class="border-b border-gray-300 mt-6"></div>
-                <!-- <div class="flex flex-wrap gap-2 mt-6">
+
+                <div class="flex flex-wrap gap-2 mt-6">
                     <button 
                         class="border border-[#27ABB1] color-666 text-base font-medium rounded-[8px] px-1.5 hover:bg-[#27ABB1] hover:text-white"
-                        :class="{ 'bg-[#27ABB1] text-white': caracteristicsOptionals === opcion.value }" 
+                        :class="{ 'bg-[#27ABB1] text-white': selectedCharacteristics.includes(opcion.value) }" 
                         v-for="opcion in opcionesCaracteristicas"
                         :key="opcion.value"
-                        @click="caracteristicsOptionals = opcion.value" 
+                        @click="toggleCharacteristic(opcion.value)" 
                     >
                         {{ opcion.label }}
                     </button>
-                </div> -->
-
-                <div class="flex flex-wrap gap-2 mt-6">
-    <button 
-        class="border border-[#27ABB1] color-666 text-base font-medium rounded-[8px] px-1.5 hover:bg-[#27ABB1] hover:text-white"
-        :class="{ 'bg-[#27ABB1] text-white': selectedCharacteristics.includes(opcion.value) }" 
-        v-for="opcion in opcionesCaracteristicas"
-        :key="opcion.value"
-        @click="toggleCharacteristic(opcion.value)" 
-    >
-        {{ opcion.label }}
-    </button>
-</div>
+                </div>
 
 
                 <div class="border-b mt-8 border-gray-300 lg:hidden"></div>
@@ -291,6 +249,13 @@
     const authName = ref('');
     const authId = ref('');
 
+    const props = defineProps({
+        propertyId: {
+            type: String,
+            default: null
+        }
+    });
+
     const openDropdownType = ref(false)
     //const type = ref('Habitacion')
 
@@ -330,16 +295,6 @@
         // { value: 'aire', label: 'Aire acondicionado' }, 
     ]);
 
-
-    /*  const optionsType = ref([
-        {value: 'Garage', label: 'Garage'}, 
-        {value: 'Habitacion', label: 'Habitación'},
-        {value: 'Local y nave', label: 'Local y nave'}, 
-        {value: 'Oficinas', label: 'Oficinas'},
-        {value: 'Trastero', label: 'Trastero'},  
-        {value: 'Vivienda', label: 'Vivienda'}
-    ])  */
-
     const antiquityOptions = ref([
         {value: '10', label: '10'},   
         {value: '20', label: '20'},
@@ -353,6 +308,11 @@
         authName.value = localStorage.getItem('authName');
         authId.value = localStorage.getItem('authId');
         fetchMainCategories();
+        await loadPropertyData(); // Cargar datos si hay ID
+    });
+
+    watch(() => props.propertyId, async () => {
+        await loadPropertyData(); // Recargar si el ID cambia
     });
 
     // Función para obtener las categorías principales
@@ -431,19 +391,53 @@
 
     const formData = inject('formData');
     const emit = defineEmits(['next-step']);
-    /* const saveAndContinue = () => {
-    // Guardar los datos del formulario en formData
-    formData.value.firstStep = {
-        type: type.value,
-        antiquity: antiquity.value,
-        // otros campos...
-    }; 
+    
+    // Función para cargar los datos del inmueble
+    const loadPropertyData = async () => {
+        if (!props.propertyId) return;
+      
+        try {
+            
+            const store = usePropertieData();
+            const response = await store.getProperties(props.propertyId);
+            
+            // Rellenar los campos con los datos del inmueble
+            type.value = response.category?.parent_id; // Asumiendo que category.parent_id es el tipo principal
+            selectedTag.value = response.category_id;
+            transaccion.value = response.transaction;
+            sale_price.value = response.sale_price;
+            rental_price.value = response.rental_price;
+            m_built.value = response.m_built;
+            m_usefull.value = response.m_usefull;
+            number_habs.value = response.number_habs;
+            bathrooms.value = response.bathrooms;
+            state.value = response.state;
+            equipment.value = response.equipment;
+            
+            // Para características (asumiendo que vienen como string JSON)
+            if (response.characteristics) {
+            selectedCharacteristics.value = JSON.parse(response.characteristics);
+            }
 
-    // Emitir el evento para pasar al siguiente paso
-    emit('next-step');
-    }; */
+            antiquity.value = response.antique ? response.antique.toString() : null;
+            caracteristics_optionals.value = response.caracteristics_optionals;
+            
+            // Cargar las subcategorías basadas en el tipo seleccionado
+            if (type.value) {
+            await fetchChildCategories(type.value); 
+            }
+            
+        } catch (error) {
+            console.error('Error loading property data:', error);
+            Swal.fire({
+            title: 'Error',
+            text: 'No se pudo cargar la información del inmueble',
+            icon: 'error'
+            });
+        }
+    };
 
-    const saveAndContinue = async () => {
+ /*    const saveAndContinue = async () => {
         //const url = useRuntimeConfig().public.BASE_URL;
         const store = usePropertieData() 
 
@@ -477,28 +471,6 @@
           
 
             const response = await store.createPropertieFirstStep( authId.value, selectedTag.value, transaccion.value, sale_price.value, rental_price.value, m_built.value, m_usefull.value, number_habs.value, bathrooms.value, state.value, equipment.value, JSON.stringify(selectedCharacteristics.value), antiquity.value, caracteristics_optionals.value)
-            /* const response = await $fetch(`${url}/properties/first-step`, {
-                method: 'POST',
-                body: {
-                
-                    user_id: authId.value,
-                    category_id: selectedTag.value,
-                    transaction: transaccion.value,
-                    sale_price: sale_price.value,
-                    rental_price: rental_price.value,
-                    m_built: m_built.value,
-                    m_usefull: m_usefull.value,
-                    number_habs: number_habs.value,
-                    bathrooms: bathrooms.value,
-                    state: state.value,
-                    equipment: equipment.value,
-                    characteristics: JSON.stringify(selectedCharacteristics.value),  
-                    antique: antiquity.value,
-                    caracteristics_optionals: caracteristics_optionals.value
-
-                },
-            }); */
-
             //alert(response.property_id);
            
 
@@ -510,6 +482,94 @@
             emit('next-step');
         } catch (error) {
             console.error('Error saving first step:', error);
+        }
+    }; */
+
+    // Modificar saveAndContinue para manejar tanto creación como actualización
+    const saveAndContinue = async () => {
+        // Validaciones (igual que antes)
+        if (!type.value) {
+            Swal.fire({
+                text: 'Seleccione el Tipo de Inmueble',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+        if (!selectedTag.value) {
+            Swal.fire({
+                text: 'Seleccione el Tipo de Vivienda',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+        if (!transaccion.value) {
+            Swal.fire({
+                text: 'Seleccione el Tipo de Transaccion',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+        
+        try {
+            const store = usePropertieData();
+            let response;
+            
+            if (props.propertyId) {
+            // Modo edición - actualizar
+                response = await store.updatePropertieFirstStep( 
+                    props.propertyId,
+                    selectedTag.value,
+                    transaccion.value,
+                    sale_price.value,
+                    rental_price.value,
+                    m_built.value,
+                    m_usefull.value,
+                    number_habs.value,
+                    bathrooms.value,
+                    state.value,
+                    equipment.value,
+                    JSON.stringify(selectedCharacteristics.value),
+                    antiquity.value,
+                    caracteristics_optionals.value
+                );
+                formData.value.propertyId = response.property_id;
+                emit('next-step');
+
+            } else {
+            // Modo creación - nuevo
+                response = await store.createPropertieFirstStep(
+                    authId.value,
+                    selectedTag.value,
+                    transaccion.value,
+                    sale_price.value,
+                    rental_price.value,
+                    m_built.value,
+                    m_usefull.value,
+                    number_habs.value,
+                    bathrooms.value,
+                    state.value,
+                    equipment.value,
+                    JSON.stringify(selectedCharacteristics.value),
+                    antiquity.value,
+                    caracteristics_optionals.value
+                );
+                formData.value.propertyId = response.property_id;
+                emit('next-step');
+            }
+
+            /* formData.value.propertyId = response.property_id;
+            emit('next-step');
+             */
+        } catch (error) {
+            console.error('Error saving property:', error);
+            Swal.fire({
+            title: 'Error',
+            text: 'No se pudo guardar la información',
+            icon: 'error'
+            });
         }
     };
 

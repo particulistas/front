@@ -95,7 +95,7 @@
 
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, watch, onMounted, computed, watchEffect } from 'vue';
 import draggable from 'vuedraggable';
 import Dropdown from '~/pages/components/dropdown.vue'
 
@@ -105,27 +105,45 @@ const openDropdown = ref(false);
 const limitVideos = ref(4);
 const limitImages = ref(4);
 
+const hasChanges = ref(false);
+// Agrega estas propiedades y métodos
+const filesToDelete = ref([]);
 
-const emit = defineEmits(['files-selected']);//// garegue para probar
+//const emit = defineEmits(['files-selected']);//// garegue para probar
+const emit = defineEmits(['files-selected', 'files-deleted']); // Agregar nuevo evento
 
+// En el script setup de UploadFiles.vue
+const props = defineProps({
+  existingMedia: {
+    type: Array,
+    default: () => []
+  }
+});
 
-/* function handleFiles(event) {
-    const uploadedFiles = Array.from(event.target.files);
-    for (let file of uploadedFiles) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            files.value.push({
-                url: e.target.result,
-                name: file.name,
-                type: file.type,
-                size: file.size,  // Asegúrate de añadir esta línea
-                editable: false,
-                customName: ""
-            });
-        };
-        reader.readAsDataURL(file);
-    }
-} */
+// Carga inicial y reactividad para existingMedia
+watchEffect(() => {
+  // Verifica profundamente la estructura de response
+  if (!props.existingMedia || !Array.isArray(props.existingMedia)) {
+    console.warn('Invalid existingMedia prop:', props.existingMedia);
+    return;
+  }
+
+  if (props.existingMedia && props.existingMedia.length > 0) {
+    // Filtra para evitar duplicados
+    const existingIds = new Set(files.value.filter(f => f.isExisting).map(f => f.id));
+    const newExisting = props.existingMedia.filter(media => !existingIds.has(media.id));
+    
+    files.value = [
+      ...newExisting.map(media => ({
+        ...media,
+        editable: false,
+        customName: ""
+      })),
+      ...files.value.filter(file => !file.isExisting)
+    ];
+  }
+});
+
 
 function handleFiles(event) {
     const uploadedFiles = Array.from(event.target.files);
@@ -149,8 +167,31 @@ function handleFiles(event) {
         };
         reader.readAsDataURL(file);
     }
-}
 
+    
+}
+/* 
+const handleFiles = (event) => {
+  const newFiles = Array.from(event.target.files).map(file => {
+    const fileData = {
+      file,
+      url: URL.createObjectURL(file),
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      isNew: true
+    };
+    return fileData;
+  });
+  
+  files.value = [...files.value, ...newFiles];
+  hasChanges.value = true;
+  emit('files-changed', {
+    newFiles: files.value.filter(f => f.isNew),
+    filesToDelete: filesToDelete.value,
+    hasChanges: true
+  });
+}; */
 
 function triggerFileInput() {
     fileInput.value.click();
@@ -162,7 +203,21 @@ function toggleEdit(index) {
 }
 
 function removeFile(index) {
-    files.value.splice(index, 1);
+   // files.value.splice(index, 1);
+
+   const fileToRemove = files.value[index];
+  // const uploadedRemoveData = [];
+  // uploadedRemoveData.push(fileToRemove);
+  if (fileToRemove.isExisting) {
+    // Emitir evento con el ID del archivo a eliminar
+    emit('files-deleted', fileToRemove.id);
+   //emit('files-deleted', uploadedRemoveData);
+  }
+  
+  files.value.splice(index, 1);
+  
+  // Emitir también los archivos actualizados
+  emit('files-selected', files.value.filter(f => !f.isExisting));
 }
 
 const links = ref([

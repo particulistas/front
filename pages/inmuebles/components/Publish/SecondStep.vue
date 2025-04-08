@@ -24,10 +24,10 @@
         </div> -->
 
         <div class="mt-10 h-[480px] mx-[-20px] lg:mx-0">
-                <div ref="mapContainer" class="w-full h-full"></div>
-                <input type="hidden" v-model="latitude">
-                <input type="hidden" v-model="longitude">
-            </div>
+            <div ref="mapContainer" class="w-full h-full"></div>
+            <input type="hidden" v-model="latitude">
+            <input type="hidden" v-model="longitude">
+        </div>
 
         <!-- address description -->
         <div class="lg:px-6 mt-10 lg:grid lg:gap-20 lg:grid-cols-2">
@@ -73,7 +73,10 @@
 
         <!-- images -->
          <div class="lg:px-6 mt-6 flex lg:gap-x-20 flex-wrap">
-            <UploadFiles @files-selected="handleSelectedFiles" />
+            <!-- <UploadFiles @files-selected="handleSelectedFiles" /> -->
+            <!-- <UploadFiles @files-selected="handleSelectedFiles" :existing-media="existingMedia"/> -->
+            <UploadFiles @files-selected="handleSelectedFiles" @files-deleted="handleDeletedFiles" :existing-media="existingMedia"
+  />
             <div class="w-[316px] pt-10 hidden lg:inline-block">
                 <p class="text-base text-center color-666">Sube <b>hasta 35 fotos</b>  y <b>4 videos</b> </p>
                 <p class="text-base color-666 mt-4"><b>Fotos</b> de 32 megas cada una en formato gif, jpeg o png</p>
@@ -127,13 +130,44 @@
     const top_floor = ref(0);
     const door = ref(null);
     const description = ref(null);
+    const imageUrl = ref('');
 
     const uploadedImages = ref([]);
+    const existingMedia = ref([]); // Para almacenar las imágenes existentes
+    const imagesChanged = ref([]); 
+    const imagesToDelete = ref([]); // Nuevo ref para almacenar IDs a eliminar
 
-const handleSelectedFiles = (files) => {
-    uploadedImages.value = files;
-    //this.uploadedImages.value = Array.from(files);
-};
+    const handleSelectedFiles = (files) => {
+        uploadedImages.value = files;
+        imagesChanged.value = true;
+        //this.uploadedImages.value = Array.from(files);
+        //alert(hasChanges.value);
+    };
+
+    // Nuevo manejador para archivos eliminados
+   /*  const handleDeletedFiles = (fileId) => {
+        imagesToDelete.value = fileId;// Crea un nuevo arreglo con los valores existentes más el nuevo fileId
+        imagesChanged.value = true;
+    }; */
+
+    const handleDeletedFiles = (fileId) => {
+        // Verifica si el ID ya existe en el arreglo para evitar duplicados
+        if (!imagesToDelete.value.includes(fileId)) {
+            // Crea un nuevo arreglo con los valores existentes más el nuevo fileId
+            imagesToDelete.value = [...imagesToDelete.value, fileId];
+            imagesChanged.value = true;
+            
+            // Opcional: puedes verificar el contenido del arreglo
+        }
+    };
+
+    
+    const props = defineProps({
+        propertyId: {
+            type: String,
+            default: null
+        }
+    });
 
 
     // Acceder a formData usando inject
@@ -145,8 +179,14 @@ const handleSelectedFiles = (files) => {
         authEmail.value = localStorage.getItem('authEmail');
         authName.value = localStorage.getItem('authName');
         authId.value = localStorage.getItem('authId');
-
+        imageUrl.value = useRuntimeConfig().public.IMAGE_URL; 
         loadGoogleMaps();
+        //alert(formData.value.propertyId)
+        await loadPropertyData();
+    });
+
+    watch(() => props.propertyId, async () => {
+        await loadPropertyData(); // Recargar si el ID cambia
     });
 
     const saveAndContinue = async () => {
@@ -159,7 +199,7 @@ const handleSelectedFiles = (files) => {
             return;
         }
         const store = usePropertieData() 
-        const response = await store.createPropertieSecondStep(formData.value.propertyId , number_plants.value, address.value , hide_address.value, top_floor.value, door.value, description.value, uploadedImages, latitude.value, longitude.value)
+        const response = await store.createPropertieSecondStep(formData.value.propertyId , number_plants.value, address.value , hide_address.value, top_floor.value, door.value, description.value, uploadedImages, latitude.value, longitude.value, imagesChanged.value, imagesToDelete)
    
 
         // Emitir el evento para pasar al siguiente paso
@@ -229,6 +269,78 @@ const handleSelectedFiles = (files) => {
                 }
             });
         });
+    };
+
+    // Función para cargar los datos del inmueble
+    const loadPropertyData = async () => {
+        if (!props.propertyId) return;
+        
+        try {
+            const store = usePropertieData();
+            const response = await store.getProperties(props.propertyId);
+
+            // Rellenar los campos con los datos del inmueble
+            number_plants.value = response.number_plants || 0;
+            address.value = response.address || '';
+            // Convertir valores numéricos/string a booleanos para los checkboxes
+            hide_address.value = Boolean(Number(response.hide_address)) || false;
+            top_floor.value = Boolean(Number(response.top_floor)) || false;
+            door.value = response.door || '';
+            description.value = response.description || '';
+            latitude.value = response.latitude || null;
+            longitude.value = response.longitude || null;
+            
+            // Si hay coordenadas, centrar el mapa
+            if (latitude.value && longitude.value) {
+                initMapWithCoordinates();
+            }
+
+            // Verifica profundamente la estructura de response
+            if (!response?.media) {
+                console.warn('No media found in response:', response);
+                existingMedia.value = [];
+                return;
+            }
+
+            if (response?.media?.length > 0) {
+                existingMedia.value = response.media
+                    .filter(media => media?.object !== "plano") // Verifica si media.object existe
+                    .map(media => ({
+                        url: imageUrl.value + (media?.path || ''), // Path con fallback
+                        name: media?.file_name || 'Imagen',
+                        type: media?.type || 'image/jpeg', // Tipo por defecto
+                        size: media?.size || 0,
+                        isExisting: true,
+                        id: media?.id || Math.random().toString(36).substr(2, 9) // ID único si no existe
+                    }));
+            } else {
+                existingMedia.value = []; // Asegura array vacío si no hay media
+            }
+            
+        } catch (error) {
+            console.error('Error loading property data:', error);
+            Swal.fire({
+            title: 'Error',
+            text: 'No se pudo cargar la información del inmueble',
+            icon: 'error'
+            });
+        }
+    };
+
+        // Función para inicializar el mapa con coordenadas existentes
+    const initMapWithCoordinates = () => {
+        const map = new google.maps.Map(mapContainer.value, {
+            center: { lat: parseFloat(latitude.value), lng: parseFloat(longitude.value) },
+            zoom: 16
+        });
+
+        const marker = new google.maps.Marker({
+            map: map,
+            position: { lat: parseFloat(latitude.value), lng: parseFloat(longitude.value) },
+            draggable: true
+        });
+
+        // ... (resto del código de initMap)
     };
 
 </script>

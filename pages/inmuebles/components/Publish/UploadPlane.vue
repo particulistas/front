@@ -94,7 +94,7 @@
   
   
   <script setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, watchEffect } from 'vue';
   import draggable from 'vuedraggable';
   import Dropdown from '~/pages/components/dropdown.vue'
   
@@ -104,7 +104,42 @@
   const limitVideos = ref(4);
   const limitImages = ref(4);
 
-  const emit = defineEmits(['files-selected']);//// garegue para probar
+  //const emit = defineEmits(['files-selected']);//// garegue para probar
+  const emit = defineEmits(['files-selected', 'files-deleted']); // Agregar nuevo evento
+
+  const props = defineProps({
+    existingMediaPlano: {
+      type: Array,
+      default: () => []
+    }
+  });
+
+  // Carga inicial y reactividad para existingMedia
+  watchEffect(() => {
+    // Verifica profundamente la estructura de response
+    if (!props.existingMediaPlano || !Array.isArray(props.existingMediaPlano)) {
+      console.warn('Invalid existingMediaPlano prop:', props.existingMediaPlano);
+      return;
+    }
+
+    if (props.existingMediaPlano && props.existingMediaPlano.length > 0) {
+      // Filtra para evitar duplicados
+      const existingIds = new Set(files.value.filter(f => f.isExisting).map(f => f.id));
+      const newExisting = props.existingMediaPlano.filter(media => !existingIds.has(media.id));
+      
+      files.value = [
+        ...newExisting.map(media => ({
+          ...media,
+          editable: false,
+          customName: ""
+        })),
+        ...files.value.filter(file => !file.isExisting)
+      ];
+    }
+  });
+
+  // Carga inicial y reactividad para existingMedia
+
   
   /*function handleFiles(event) {
       const uploadedFiles = Array.from(event.target.files);
@@ -125,31 +160,49 @@
   }*/
 
   function handleFiles(event) {
-    const uploadedFiles = Array.from(event.target.files);
-    const uploadedData = [];
+      const uploadedFiles = Array.from(event.target.files);
+      const uploadedData = [];
 
-    for (let file of uploadedFiles) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const fileData = {
-                file, // Mantenemos el objeto File original para enviarlo
-                url: e.target.result,
-                name: file.name,
-                type: file.type,
-                size: file.size,
-                editable: false,
-                customName: ""
-            };
-            files.value.push(fileData);
-            uploadedData.push(fileData);
+      for (let file of uploadedFiles) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+              const fileData = {
+                  file, // Mantenemos el objeto File original para enviarlo
+                  url: e.target.result,
+                  name: file.name,
+                  type: file.type,
+                  size: file.size,
+                  editable: false,
+                  customName: ""
+              };
+              files.value.push(fileData);
+              uploadedData.push(fileData);
 
-             if (uploadedData.length === uploadedFiles.length) {
-                emit('files-selected', uploadedData);
-            } 
-        };
-        reader.readAsDataURL(file);
+              if (uploadedData.length === uploadedFiles.length) {
+                  emit('files-selected', uploadedData);
+              } 
+          };
+          reader.readAsDataURL(file);
+      }
+  }
+
+  function removeFile(index) {
+    // files.value.splice(index, 1);
+
+    const fileToRemove = files.value[index];
+    // const uploadedRemoveData = [];
+    // uploadedRemoveData.push(fileToRemove);
+    if (fileToRemove.isExisting) {
+      // Emitir evento con el ID del archivo a eliminar
+      emit('files-deleted', fileToRemove.id);
+    //emit('files-deleted', uploadedRemoveData);
     }
-}
+    
+    files.value.splice(index, 1);
+    
+    // Emitir también los archivos actualizados
+    emit('files-selected', files.value.filter(f => !f.isExisting));
+  }
   
   
   function triggerFileInput() {
@@ -159,10 +212,6 @@
   // Agrega funcionalidad para mostrar/ocultar la sección de edición
   function toggleEdit(index) {
       files.value[index].editable = !files.value[index].editable;
-  }
-  
-  function removeFile(index) {
-      files.value.splice(index, 1);
   }
   
   const links = ref([
