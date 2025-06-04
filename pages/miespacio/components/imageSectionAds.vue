@@ -4,13 +4,14 @@
         :class="{
             'lg:w-full': openMap,
             'lg:w-[310px]': !openMap && styleCard == 'expandido',
+            'lg:w-[200px]': !openMap && styleCard == 'expandido' && origin == 'favorite',
             'w-[82px]': styleCard == 'contraido',
         }"
     >
         
-        <imageSlider />
+        <imageSlider :images="images" />
 
-        <div v-if="styleCard == 'expandido'" class="mt-[14px] flex items-center justify-between">
+       <!--  <div v-if="styleCard == 'expandido'" class="mt-[14px] flex items-center justify-between">
             <div class="flex gap-1">
                 <button 
                     class="rounded-[4px] from-[#07ACB4] to-[#08CCD3] box-border w-[47px] h-[47px]"
@@ -41,7 +42,7 @@
                     <img class="w-[28px] h-[30px] icon-white m-auto" src="/assets/icons/point-house.svg" alt="point-house icon">
                 </button>
             </div>
-            <div class="flex gap-4 items-center">
+             <div class="flex gap-4 items-center">
                 <img class="w-[25px] h-[26px] cursor-pointer" src="/assets/icons/share.svg" alt="share icon">
                 <img 
                     class="w-[30px] h-[26px] cursor-pointer" 
@@ -51,18 +52,29 @@
                     :src="`/assets/icons/i-like-${ likeCard || likeHover ? 'full' : 'null' }.svg`" 
                     alt="i-like icon"
                 >
-            </div>
-        </div>
+            </div> 
+        </div> -->
     </div>
 </template>
 <script setup>
-import { ref, inject } from 'vue'
-import imageSlider from './imageSlider.vue'
+    import { ref, inject, defineProps } from 'vue'
+    import imageSlider from './imageSliderAds.vue'
 
-const sectionSelected = ref('images')
-const likeCard = ref(false)
-const likeHover = ref(false)
+    /* const sectionSelected = ref('images')
+    const likeCard = ref(false)
+    const likeHover = ref(false) */
 
-const openMap = inject('openMap')
-const styleCard = inject('styleCard')
+    const openMap = inject('openMap')
+    const styleCard = inject('styleCard')
+
+    defineProps({
+        images: {
+            type: Array,
+            default: () => []
+        },
+        origin: {
+            type: String, // Ahora es String
+            default: "" // Valor por defecto vacío
+        }
+    })
 </script>

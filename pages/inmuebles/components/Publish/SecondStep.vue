@@ -4,7 +4,7 @@
         <div>
             <h2 class="text-[20px] font-medium color-666">Dirección exacta del inmueble*</h2>
             
-            <p class="text-base font-light color-666">Una vez publicado, no podrás modicarla</p>
+            <p class="text-base font-bold text-red-600">Una vez completado este paso, no podrás modificarla</p>
             <!-- <div class="flex lg:w-[340px] mt-4">
                 <input type="text" class="h-8 p-2 rounded-l-[8px] border border-black border-r-white w-[220px]">
                 <button class="rounded-r-[8px] bg-[#27ABB1] text-base font-medium text-white py-2 px-2 text-right flex-grow leading-4">

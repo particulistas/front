@@ -259,8 +259,22 @@ export const updatePropertieStatusService = async (baseUrl, propertyId, status) 
       
 };
 
-  export const getPropertiesService = async (baseUrl,id) => {
+export const getPropertiesService = async (baseUrl,id) => {
     const response = await fetch(`${baseUrl}/properties/`+id, {
+        method: 'GET',
+        headers: headers,
+    });
+
+    if (!response.ok) {
+        throw new Error('Error al obtener el vehiculo');
+      }
+
+    const data = await response.json();
+    return data; // Retorna los datos de la respuesta
+}; 
+
+export const getFetchPropertiesService = async (baseUrl,userId) => {
+    const response = await fetch(`${baseUrl}/properties/user/`+userId, {
         method: 'GET',
         headers: headers,
     });

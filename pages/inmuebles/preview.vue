@@ -13,7 +13,7 @@
                     <!-- Main Content -->
                     <main class="max-w-6xl mx-auto px-4 py-4">
                         <div class="flex justify-between items-center px-4 py-2 bg-white">
-                            <a href="#" class="text-blue-500 text-sm flex items-center">
+                            <a href="/miespacio/Ads" class="text-blue-500 text-sm flex items-center">
                                 <ChevronLeftIcon class="h-4 w-4 mr-1" />
                                 Volver a anuncios
                             </a>
@@ -190,89 +190,89 @@
                                         <div class="info-card">
                                             <img class="w-[48px] h-[40px] mx-auto" src="/assets/icons/info-tamano.svg" alt="Tamaño">
                                             <p class="mt-1 text-base color-666 text-center font-light">Tamaño</p>
-                                            <p class="mt-1 text-base font-semibold color-666 text-center">180m2</p>
+                                            <p class="mt-1 text-base font-semibold color-666 text-center">{{ property.m_built }}m2</p>
                                         </div>
 
                                         <!-- Card 2 - Planta -->
                                         <div class="info-card">
                                             <img class="w-[40px] h-[40px]  mx-auto" src="/assets/icons/info-planta.svg" alt="Planta">
                                             <p class="mt-1 text-base color-666 text-center font-light">Planta</p>
-                                            <p class="mt-1 text-base font-semibold color-666 text-center">4</p>
+                                            <p class="mt-1 text-base font-semibold color-666 text-center">{{ property.number_plants }}</p>
                                         </div>
 
                                         <!-- Card 3 - Ascensor -->
                                         <div class="info-card">
                                             <img class="w-[40px] h-[40px] mx-auto" src="/assets/icons/info-ascensor.svg" alt="Ascensor">
                                             <p class="mt-1 text-base color-666 text-center font-light">Ascensor</p>
-                                            <p class="mt-1 text-base font-semibold color-666 text-center">Si</p>
+                                            <p class="mt-1 text-base font-semibold color-666 text-center">N/A</p>
                                         </div>
 
                                         <!-- Card 4 - Distribución  -->
                                         <div class="info-card ">
                                             <img class="w-[40px] h-[40px]  mx-auto" src="/assets/icons/info-distribucion.svg" alt="Distribución">
                                             <p class="mt-1 text-base color-666 text-center font-light">Distribución</p>
-                                            <p class="mt-1 text-base font-semibold color-666 text-center">Diáfana</p>
+                                            <p class="mt-1 text-base font-semibold color-666 text-center">N/A</p>
                                         </div>
 
                                         <!-- Card 5 - Baños  -->
                                         <div class="info-card ">
                                             <img class="w-[40px] h-[40px] mx-auto" src="/assets/icons/info-banos.svg" alt="Baños">
                                             <p class="mt-1 text-base color-666 text-center font-light">N° de baños</p>
-                                            <p class="mt-1 text-base font-semibold color-666 text-center">1</p>
+                                            <p class="mt-1 text-base font-semibold color-666 text-center">{{ property.bathrooms }}</p>
                                         </div>
 
                                         <!-- Card 6 móvil - Iluminación -->
                                         <div class="info-card ">
                                             <img class="w-[36px] h-[40px] mx-auto" src="/assets/icons/info-iluminacion.svg" alt="Iluminación">
                                             <p class="mt-1 text-base color-666 text-center font-light">Iluminación</p>
-                                            <p class="mt-1 text-base font-semibold color-666 text-center">Exterior</p>
+                                            <p class="mt-1 text-base font-semibold color-666 text-center">{{ property.caracteristics_optionals  }}</p>
                                         </div>
 
                                         <div class="info-card">
                                             <img class="w-[48px] h-[40px] mx-auto" src="/assets/icons/info-tamano.svg" alt="Tamaño">
                                             <p class="mt-1 text-base color-666 text-center font-light">A / A</p>
-                                            <p class="mt-1 text-base font-semibold color-666 text-center">Si</p>
+                                            <p class="mt-1 text-base font-semibold color-666 text-center">N/A</p>
                                         </div>
 
                                         
                                         <div class="info-card">
                                             <img class="w-[40px] h-[40px]  mx-auto" src="/assets/icons/info-planta.svg" alt="Planta">
                                             <p class="mt-1 text-base color-666 text-center font-light">Garaje</p>
-                                            <p class="mt-1 text-base font-semibold color-666 text-center">Si</p>
+                                            <p class="mt-1 text-base font-semibold color-666 text-center">{{ property.characteristics && property.characteristics.includes('garaje') ? 'Sí' : 'No' }}</p>
                                         </div>
 
                                     
                                         <div class="info-card">
                                             <img class="w-[40px] h-[40px] mx-auto" src="/assets/icons/info-ascensor.svg" alt="Ascensor">
                                             <p class="mt-1 text-base color-666 text-center font-light">Edif. accesible</p>
-                                            <p class="mt-1 text-base font-semibold color-666 text-center">Si</p>
+                                            <p class="mt-1 text-base font-semibold color-666 text-center">N/A</p>
                                         </div>
 
                                     
                                         <div class="info-card ">
                                             <img class="w-[40px] h-[40px]  mx-auto" src="/assets/icons/info-distribucion.svg" alt="Distribución">
                                             <p class="mt-1 text-base color-666 text-center font-light">Baño accesible</p>
-                                            <p class="mt-1 text-base font-semibold color-666 text-center">Si</p>
+                                            <p class="mt-1 text-base font-semibold color-666 text-center">N/A</p>
                                         </div>
 
                                         
                                         <div class="info-card ">
                                             <img class="w-[40px] h-[40px] mx-auto" src="/assets/icons/info-banos.svg" alt="Baños">
                                             <p class="mt-1 text-base color-666 text-center font-light">Calefacción</p>
-                                            <p class="mt-1 text-base font-semibold color-666 text-center">Si</p>
+                                            <p class="mt-1 text-base font-semibold color-666 text-center">N/A</p>
                                         </div>
 
                                         
                                         <div class="info-card ">
                                             <img class="w-[36px] h-[40px] mx-auto" src="/assets/icons/info-iluminacion.svg" alt="Iluminación">
                                             <p class="mt-1 text-base color-666 text-center font-light">m2 utiles</p>
-                                            <p class="mt-1 text-base font-semibold color-666 text-center">180m2</p>
+                                            <p class="mt-1 text-base font-semibold color-666 text-center">{{ property.m_usefull }}m2</p>
                                         </div>
 
                                         <div class="info-card ">
                                             <img class="w-[36px] h-[40px] mx-auto" src="/assets/icons/info-iluminacion.svg" alt="Iluminación">
                                             <p class="mt-1 text-base color-666 text-center font-light">Antiguedad</p>
-                                            <p class="mt-1 text-base font-semibold color-666 text-center">30 Años</p>
+                                            <p class="mt-1 text-base font-semibold color-666 text-center">{{ property.antique }} Años</p>
                                         </div>
 
                                     </div>
