@@ -19,7 +19,7 @@
 
         <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
         <!-- Create new ad card -->
-        <button>
+        <button @click="navigateToProfileRoom">
             <div class="h-64 relative mb-6">
                 <!-- Imagen de fondo -->
                 <img :src="rectanguloPerfilHabitacion" alt="Fondo"  />
@@ -94,4 +94,20 @@
     import perfilVivienda from '/assets/imgs/perfilVivienda.svg'
     import perfilHabitacion from '/assets/imgs/perfilHabitacion.svg'
     import rectanguloPerfilHabitacion from '/assets/imgs/rectanguloPerfilHabitacion.svg'
+
+    import { useRouter } from 'vue-router';
+
+    const router = useRouter();
+
+    /* const navigateToProfileRoom = () => {
+      router.push('/MyTenantProfiles'); // Ajusta la ruta según tu configuración
+      //router.push('/miespacio/Inquilino')
+    }; */
+
+    const emit = defineEmits(['show-profile-room']);
+
+    const navigateToProfileRoom = () => {
+      emit('show-profile-room');
+    };
+
   </script>

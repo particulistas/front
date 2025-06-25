@@ -266,7 +266,7 @@ export const getPropertiesService = async (baseUrl,id) => {
     });
 
     if (!response.ok) {
-        throw new Error('Error al obtener el vehiculo');
+        throw new Error('Error al obtener la Propiedad');
       }
 
     const data = await response.json();
@@ -280,7 +280,21 @@ export const getFetchPropertiesService = async (baseUrl,userId) => {
     });
 
     if (!response.ok) {
-        throw new Error('Error al obtener el vehiculo');
+        throw new Error('Error al obtener la Propiedad');
+      }
+
+    const data = await response.json();
+    return data; // Retorna los datos de la respuesta
+}; 
+
+export const getAllPropertiesService = async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/properties/all/all`, {
+        method: 'GET',
+        headers: headers,
+    });
+
+    if (!response.ok) {
+        throw new Error('Error al obtener la Propiedad');
       }
 
     const data = await response.json();

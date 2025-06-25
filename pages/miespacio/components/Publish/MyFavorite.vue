@@ -1,17 +1,17 @@
 <template>
-    <div class="max-w-6xl mx-auto px-4 py-5   min-h-screen bg-gray-100 rounded-lg">
+    <div class="max-w-6xl mx-auto px-4 py-5 min-h-screen bg-white md:bg-gray-100 rounded-lg">
       <!-- <section class="max-w-6xl mx-auto px-4 py-5"></section> -->
       <!-- Top Navigation -->
       <nav >
         <div class="max-w-7xl mx-auto px-4">
           <div class="flex items-center justify-between h-16">
             <!-- Left side -->
-            <button class="text-gray-600 hover:text-gray-800">
+            <button class="hidden md:block text-gray-600 hover:text-gray-800">
               <img :src="navigation_left_blue" alt="Ilustración de favoritos" class=" right-0 bottom-0 h-16 w-16"/>
             </button>
   
             <!-- Center tabs -->
-            <div class="relative inline-flex p-0.5   border border-pink-400 rounded-md" >
+            <div class="hidden md:block relative inline-flex p-0.5   border border-pink-400 rounded-md" >
               <button 
                 class="relative px-6 py-1.5  transition-all duration-200 focus:outline-none"
                 :class="[
@@ -38,20 +38,36 @@
   
             <!-- Right side -->
             <div class="flex items-center space-x-4">
-              <button class="text-gray-600 hover:text-gray-800">
+              <button class="hidden md:block text-gray-600 hover:text-gray-800">
                 <img :src="ordenar" alt="Ilustración de favoritos" class="bottom-0 h-16 w-16"/>
               </button>
               <!-- <button class="text-gray-600 hover:text-gray-800">
                 <img :src="mapa" alt="Ilustración de favoritos" class="bottom-0 h-16 w-16"/>
               </button> -->
-
-              <button class="text-gray-600 hover:text-gray-800" @click="toggleMap">
-                <img :src="mapa" alt="Mostrar mapa" class="bottom-0 h-16 w-16" :class="{ 'opacity-50': showMap }"
-                />
+              <button class="hidden md:block text-gray-600 hover:text-gray-800" @click="toggleMap">
+                <img :src="showMap ? mapaAzul : mapa" alt="Mostrar mapa" class="h-16 w-16" />
               </button>
-
-
             </div>
+
+            <div class="lg:hidden flex justify-end space-x-2 lg:space-x-3"> 
+              <button 
+                class="flex items-center py-2.5 px-2 lg:px-3  btn-primary-inverse shadow-none rounded-[8px]"
+                @click="showMap = true"
+              >
+                <img class="primary-icon w-[33px] h-[36px] lg:w-[45px] lg:h-[48px]" :src="`/assets/icons/point-house.svg`">
+                <p class="primary-text ml-1.5 lg:ml-3 color-07ACB4 text-[20px] lg:text-[24px] font-bold">Mapa</p>
+              </button>
+              <button 
+                class="flex items-center py-2.5 px-2 lg:px-3  btn-primary-inverse shadow-none rounded-[8px]"
+                @click="showMap = false"
+              >
+                <img class="primary-icon w-[33px] h-[36px] lg:w-[45px] lg:h-[48px]" :src="`/assets/icons/lista-house.svg`">
+                <p class="primary-text ml-1.5 lg:ml-3 color-07ACB4 text-[20px] lg:text-[24px] font-bold">Vista</p>
+              </button>
+            </div>
+
+
+            
           </div>
         </div>
       </nav>
@@ -170,50 +186,61 @@
       </div>
 
       <!-- Mapa de Google -->
-    <div v-if="showMap" class="h-[600px] w-full rounded-lg overflow-hidden shadow-lg">
-      <GoogleMap
-        :center="mapCenter"
-        :zoom="12"
-        style="width: 100%; height: 100%"
-      >
-        <Marker
-          v-for="property in favoritesWithCoordinates"
-          :key="property.id"
-          :position="{ lat: parseFloat(property.latitude), lng: parseFloat(property.longitude) }"
-          :clickable="true"
-          @click="openInfoWindow(property)"
+       <!-- <div 
+                v-if="openMap" 
+                class="bg-gray-200 flex-grow rounded-[12px] py-24 h-[660px] sticky top-0 left-0"
+            >
+                <h1 class="text-center text-5xl font-bold">MAPA</h1>
+            </div> -->
+            
+      <div v-if="showMap" class="h-[600px] w-full md:w-[880px] rounded-lg overflow-hidden shadow-lg pt-2">
+        <GoogleMap
+          :api-key="googleMapsApiKey"
+          :center="mapCenter"
+          :zoom="12"
+          style="width: 100%; height: 100%"
+          map-type-id="roadmap"
         >
+          <Marker
+            v-for="(property, index) in favoritesWithCoordinates"
+            :key="`marker-${index}`"
+            :options="{
+              position: {
+                lat: parseFloat(property.latitude),
+                lng: parseFloat(property.longitude)
+              },
+              clickable: true
+            }"
+            @click="openInfoWindow(property)"
+          />
+          
           <InfoWindow
-            v-if="selectedProperty && selectedProperty.id === property.id"
-            :position="{ lat: parseFloat(property.latitude), lng: parseFloat(property.longitude) }"
+            v-if="selectedProperty"
+            :options="{
+              position: {
+                lat: parseFloat(selectedProperty.latitude),
+                lng: parseFloat(selectedProperty.longitude)
+              },
+              pixelOffset: { width: 0, height: -40 }
+            }"
             @closeclick="selectedProperty = null"
           >
-            <div class="p-2">
-              <h3 class="font-bold">{{ property.address }}</h3>
-              <p>{{ formatTransaction(property.transaction) }}: 
-                {{ property.rental_price ? `${property.rental_price} €/mes` : `${property.sale_price} €` }}
+            <div class="p-2 bg-white max-w-xs">
+              <h3 class="font-bold text-sm">{{ selectedProperty.address }}</h3>
+              <p class="text-xs">
+                {{ formatTransaction(selectedProperty.transaction) }}: 
+                {{ selectedProperty.rental_price ? `${selectedProperty.rental_price} €/mes` : `${selectedProperty.sale_price} €` }}
               </p>
               <button 
-                @click="goToProperty(property.id)"
-                class="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                @click.stop="goToProperty(selectedProperty.id)"
+                class="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
               >
                 Ver detalles
               </button>
             </div>
           </InfoWindow>
-        </Marker>
-      </GoogleMap>
-    </div>
-
-
-
-      
-
-
-
-      
-
-
+        </GoogleMap>
+      </div>
       
 
     </div>
@@ -221,29 +248,26 @@
   
   <script setup>
     import { 
-      ChevronLeftIcon, 
-      ArrowDownWideNarrowIcon,
-      MapIcon,
-      FilterIcon,
-      MapPinIcon,
-      HeartIcon,
-      BellIcon,
-      PencilIcon,
-      ShareIcon
+      ChevronLeftIcon, ArrowDownWideNarrowIcon, MapIcon, FilterIcon, MapPinIcon,
+      HeartIcon, BellIcon, PencilIcon,  ShareIcon
     } from 'lucide-vue-next'
     import vacio from '/assets/imgs/myFavoriteVacio.svg'
     import navigation_left_blue from '/assets/icons/navigation_left_blue.svg'
     import ordenar from '/assets/icons/ordenar.svg'
     import mapa from '/assets/icons/mapa.svg'
+    import mapaAzul from '/assets/icons/mapaAzul.svg'
 
     import { GoogleMap, Marker, InfoWindow } from 'vue3-google-map'
+    
 
-    import { ref, onMounted, computed } from 'vue';
+    import { ref, onMounted, computed,createApp } from 'vue';
     //import { useAuthStore } from '@/stores/auth';
     import { useFavoriteData } from '@/stores/favorite'
     import imageSection from '../imageSectionAds.vue'
     import Card from '../propertyCardFavorite.vue'
 
+
+    const googleMapsApiKey = ref('');
     const auth = useAuthStore();
     const favorites = ref([]);
     const loading = ref(true);
@@ -265,16 +289,24 @@
     provide('styleCard',styleCard)
 
     // Filtra propiedades con coordenadas válidas
-    const favoritesWithCoordinates = computed(() => {
+    /* const favoritesWithCoordinates = computed(() => {
       return favorites.value.filter(property => 
         property.latitude && property.longitude &&
         !isNaN(parseFloat(property.latitude)) && 
         !isNaN(parseFloat(property.longitude))
       );
+    }); */
+
+    const favoritesWithCoordinates = computed(() => {
+      return favorites.value.filter(property => {
+        const lat = parseFloat(property.latitude);
+        const lng = parseFloat(property.longitude);
+        return !isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
+      });
     });
 
     // Calcula el centro del mapa basado en las propiedades
-    const mapCenter = computed(() => {
+     /* const mapCenter = computed(() => {
       if (favoritesWithCoordinates.value.length === 0) {
         return { lat: 40.4168, lng: -3.7038 }; // Coordenadas de Madrid por defecto
       }
@@ -288,10 +320,68 @@
         lat: latSum / favoritesWithCoordinates.value.length,
         lng: lngSum / favoritesWithCoordinates.value.length
       };
-    });
+    });  */
+
+
+   /* const mapCenter = computed(() => {
+      if (favoritesWithCoordinates.value.length === 0) {
+        return { lat: 40.4168, lng: -3.7038 }; // Coordenadas de Madrid por defecto
+      }
+      
+      // Filtra coordenadas inválidas
+      const validCoords = favoritesWithCoordinates.value.filter(prop => 
+        !isNaN(parseFloat(prop.latitude)) && 
+        !isNaN(parseFloat(prop.longitude))
+      );
+
+      if (validCoords.length === 0) return { lat: 40.4168, lng: -3.7038 };
+
+      const latSum = validCoords.reduce((sum, property) => 
+        sum + parseFloat(property.latitude), 0);
+      const lngSum = validCoords.reduce((sum, property) => 
+        sum + parseFloat(property.longitude), 0);
+      
+      return {
+        lat: latSum / validCoords.length,
+        lng: lngSum / validCoords.length
+      };
+    });*/
+
+    const mapCenter = ref({ lat: 40.4168, lng: -3.7038 }); // Valores por defecto
+
+    // Función para actualizar el centro
+    const updateMapCenter = () => {
+      if (favoritesWithCoordinates.value.length === 0) {
+        mapCenter.value = { lat: 40.4168, lng: -3.7038 };
+        return;
+      }
+      
+      const validCoords = favoritesWithCoordinates.value.filter(prop => 
+        !isNaN(parseFloat(prop.latitude)) && 
+        !isNaN(parseFloat(prop.longitude))
+      );
+
+      if (validCoords.length === 0) return;
+
+      const latSum = validCoords.reduce((sum, property) => 
+        sum + parseFloat(property.latitude), 0);
+      const lngSum = validCoords.reduce((sum, property) => 
+        sum + parseFloat(property.longitude), 0);
+      
+      mapCenter.value = {
+        lat: latSum / validCoords.length,
+        lng: lngSum / validCoords.length
+      };
+    };
+
+    
 
     const toggleMap = () => {
       showMap.value = !showMap.value;
+      if (showMap.value) {
+        updateMapCenter(); // Actualiza el centro cuando se muestra el mapa
+      }
+      console.log('Map Center:', mapCenter.value);
     };
 
     const openInfoWindow = (property) => {
@@ -299,16 +389,18 @@
     };
 
     const goToProperty = (id) => {
-      router.push(`/propiedades/${id}`);
+      //router.push(`/propiedades/${id}`);
+      router.push(`/inmuebles/preview?id=${id}`);
     };
 
+
     const formatTransaction = (transaction) => {
-  return {
-    rental: 'Alquiler',
-    sale: 'Venta',
-    both: 'Alquiler/Venta'
-  }[transaction] || transaction;
-};
+      return {
+        rental: 'Alquiler',
+        sale: 'Venta',
+        both: 'Alquiler/Venta'
+      }[transaction] || transaction;
+    };
 
     onMounted(async () => {
         authToken.value = localStorage.getItem('authToken');
@@ -316,7 +408,9 @@
         authName.value = localStorage.getItem('authName');
         authId.value = localStorage.getItem('authId');
         
-         await fetchFavorites(authId.value); 
+        googleMapsApiKey.value = useRuntimeConfig().public.GOOGLE_MAPS_API_KEY; // O usa process.env.GOOGLE_MAPS_API_KEY
+        
+        await fetchFavorites(authId.value); 
 
     });
 
@@ -328,6 +422,7 @@
        const response = await store.getUserFavorites(1,userId);
 
         favorites.value = response.data;
+        updateMapCenter(); // Actualiza el centro después de cargar
       } catch (error) {
         console.error('Error fetching favorites:', error);
       } finally {
