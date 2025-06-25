@@ -25,7 +25,8 @@ import {
      updatePropertieStatusService,
      getPropertiesService,
      updatePropertieFirstStepService,
-     getFetchPropertiesService
+     getFetchPropertiesService,
+     getAllPropertiesService
 } from '~/api/services/admin.properties.services'
 
 export const usePropertieData = defineStore('propertie', {
@@ -116,6 +117,16 @@ export const usePropertieData = defineStore('propertie', {
         console.error(error.message)
       }
     }, 
+
+    async getAllProperties(){
+      try{
+        const response = await getAllPropertiesService(this.baseUrl)
+        return response;
+      }catch(error){
+        console.error(error.message)
+      }
+    },
+
    /*  async updateVehicle(id,title2, selectedbrandId2, selectedmodelVehicleId2, selectedyearVehicleId2, condition2, transmission2, mileage2, selectedColorId2, basePrice2, priceShipping2, priceTax2,images2){
       try{
         const response = await updateVehicleService(this.baseUrl,id,title2, selectedbrandId2, selectedmodelVehicleId2, selectedyearVehicleId2, condition2, transmission2, mileage2, selectedColorId2, basePrice2, priceShipping2, priceTax2,images2)

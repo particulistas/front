@@ -8,7 +8,7 @@
         }"
     >
         
-        <imageSlider />
+        <imageSlider :images="images" />
 
         <div v-if="styleCard == 'expandido'" class="mt-[14px] flex items-center justify-between">
             <div class="flex gap-1">
@@ -43,26 +43,46 @@
             </div>
             <div class="flex gap-4 items-center">
                 <img class="w-[25px] h-[26px] cursor-pointer" src="/assets/icons/share.svg" alt="share icon">
-                <img 
+                <!-- <img 
                     class="w-[30px] h-[26px] cursor-pointer" 
                     @mouseover="likeHover = true"
                     @mouseleave="likeHover = false"
                     @click="likeCard = !likeCard"
                     :src="`/assets/icons/i-like-${ likeCard || likeHover ? 'full' : 'null' }.svg`" 
                     alt="i-like icon"
-                >
+                > -->
+                <FavoriteButton :property="property" @favorite-toggled="$emit('refresh-favorites')"/>
             </div>
         </div>
     </div>
 </template>
 <script setup>
-import { ref, inject } from 'vue'
-import imageSlider from './imageSlider.vue'
+    import { ref, inject, defineProps } from 'vue'
+    import imageSlider from './imageSlider.vue'
+    import FavoriteButton from './favoriteButton.vue';
 
-const sectionSelected = ref('images')
-const likeCard = ref(false)
-const likeHover = ref(false)
+    const sectionSelected = ref('images')
+    const likeCard = ref(false)
+    const likeHover = ref(false)
 
-const openMap = inject('openMap')
-const styleCard = inject('styleCard')
+    const openMap = inject('openMap')
+    const styleCard = inject('styleCard')
+
+    defineEmits(['refresh-favorites']); // Añade esta línea
+
+    defineProps({
+            images: {
+                type: Array,
+                default: () => []
+            },
+            origin: {
+                type: String, // Ahora es String
+                default: "" // Valor por defecto vacío
+            },
+            property: {
+            type: Object,
+            required: true
+        }
+    })
+
 </script>

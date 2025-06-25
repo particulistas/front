@@ -8,7 +8,12 @@
     >
         <!-- head -->
         <div class="bg-[#155D61] py-0.5 lg:py-2.5 px-5">
-            <h1 class="text-base lg:text-[24px] font-medium lg:font-semibold text-white text-right">Alquiler apartamento</h1>
+            <h1 class="text-base lg:text-[24px] font-medium lg:font-semibold text-white text-right">
+                {{ property.transaction === 'rental' ? 'Alquiler' : 
+                property.transaction === 'sale' ? 'Venta' : 'Alquiler/Venta' }} 
+                {{ property.category?.name }}
+            </h1>
+            
         </div>
         <!-- body card -->
         <div 
@@ -23,7 +28,7 @@
                 }"
             >
                 <!-- image section -->
-                <imageSection />
+                <imageSection :images="property.media" :property="property" :origin="'index'"/>
 
                 <!-- title & price mobile -->
                 <div class="px-2.5 lg:hidden">
@@ -40,23 +45,24 @@
                                 'text-[20px] font-bold py-2.5 leading-5 ': styleCard == 'expandido',
                                 'text-sm font-semibold h-[58px] overflow-hidden leading-4': styleCard == 'contraido',
                             }"
-                        >Calle Jacinto, Marazuela - El Torreón, Las Rozas de Madrid</h1>
+                        >{{ property.address  }}</h1>
                     </div>
                     <p class="text-base lg:text-[24px] color-666">
-                        <b>600</b> €/mes
+                        {{ property.rental_price ? `${property.rental_price} €/mes` : `${property.sale_price} €` }}
                     </p>
                 </div>
 
                 <!-- i like -->
                 <div v-if="styleCard == 'contraido'" class="ml-2 flex-shrink-0 lg:hidden">
-                    <img 
+                   <!--  <img 
                         class="w-[36px] h-[32px] cursor-pointer" 
                         @mouseover="likeHover = true"
                         @mouseleave="likeHover = false"
                         @click="likeCard = !likeCard"
                         :src="`/assets/icons/i-like-${ likeCard || likeHover ? 'full' : 'null' }.svg`" 
                         alt="i-like icon"
-                    >
+                    > -->
+                    <FavoriteButton :property="property" @favorite-toggled="$emit('refresh-favorites')"/>
                 </div>
             </div>
             <!-- info section -->
@@ -73,10 +79,10 @@
                         :class="{
                             'lg:truncate': !openMap,
                         }"
-                    >Calle Jacinto, Marazuela - El Torreón, Las Rozas de Madrid</h1>
+                    >{{ property.address  }}</h1>
                 </div>
                 <p class="text-base lg:text-[24px] color-666 hidden lg:block">
-                    <b>600</b> €/mes
+                    {{ property.rental_price ? `${property.rental_price} €/mes` : `${property.sale_price} €` }}
                 </p>
                 <div class="border border-gray-300 my-2"></div>
                 <div class="flex justify-between">
@@ -84,62 +90,73 @@
                     <div class="">
                         <img class="w-[48px] h-[40px] hidden lg:block info-tamano mx-auto" src="/assets/icons/info-tamano.svg" alt="tamaño inmueble icono">
                         <p class="mt-1 text-base color-666 text-center leading-4 font-light">Tamaño</p>
-                        <p class="mt-1 text-base font-semibold color-666 text-center leading-4">180m2</p>
+                        <p class="mt-1 text-base font-semibold color-666 text-center leading-4">{{ property.m_built }}m2</p>
                     </div>
                     <div class="flex-grow relative"  v-html="divideHtml"></div>
                     <!--card info-property -->
                     <div class="">
                         <img class="w-[40px] h-[40px] hidden lg:block info-tamano mx-auto" src="/assets/icons/info-planta.svg" alt="Planta inmueble icono">
                         <p class="mt-1 text-base color-666 text-center leading-4 font-light">Planta</p>
-                        <p class="mt-1 text-base font-semibold color-666 text-center leading-4">4</p>
+                        <p class="mt-1 text-base font-semibold color-666 text-center leading-4">{{ property.number_plants }}</p>
                     </div>
                     <div class="flex-grow relative"  v-html="divideHtml"></div>
                     <!--card info-property -->
                     <div class="">
                         <img class="w-[40px] h-[40px] hidden lg:block info-tamano mx-auto" src="/assets/icons/info-ascensor.svg" alt="Ascensor inmueble icono">
                         <p class="mt-1 text-base color-666 text-center leading-4 font-light">Ascensor</p>
-                        <p class="mt-1 text-base font-semibold color-666 text-center leading-4">Si</p>
+                        <p class="mt-1 text-base font-semibold color-666 text-center leading-4">N/A</p>
                     </div>
                     <div class="flex-grow relative"  v-html="divideHtml"></div>
                     <!--card info-property -->
                     <div class="">
                         <img class="w-[40px] h-[40px] hidden lg:block info-tamano mx-auto" src="/assets/icons/info-distribucion.svg" alt="Distribución inmueble icono">
                         <p class="mt-1 text-base color-666 text-center leading-4 font-light">Distribución</p>
-                        <p class="mt-1 text-base font-semibold color-666 text-center leading-4">Diáfana</p>
+                        <p class="mt-1 text-base font-semibold color-666 text-center leading-4">N/A</p>
                     </div>
                     <div v-if="!openMap" class="flex-grow relative hidden lg:inline"  v-html="divideHtml"></div>
                     <!--card info-property -->
                     <div v-if="!openMap" class="hidden lg:inline">
                         <img class="w-[40px] h-[40px] hidden lg:block info-tamano mx-auto" src="/assets/icons/info-banos.svg" alt="N° de baños inmueble icono">
                         <p class="mt-1 text-base color-666 text-center leading-4 font-light">N° de baños</p>
-                        <p class="mt-1 text-base font-semibold color-666 text-center leading-4">1</p>
+                        <p class="mt-1 text-base font-semibold color-666 text-center leading-4">{{ property.bathrooms }}</p>
                     </div>
                     <div v-if="!openMap" class="flex-grow relative hidden lg:inline"  v-html="divideHtml"></div>
                     <!--card info-property -->
                     <div v-if="!openMap" class="hidden lg:inline">
                         <img class="w-[36px] h-[40px] hidden lg:block info-tamano mx-auto" src="/assets/icons/info-iluminacion.svg" alt="Iluminación inmueble icono">
                         <p class="mt-1 text-base color-666 text-center leading-4 font-light">Iluminación</p>
-                        <p class="mt-1 text-base font-semibold color-666 text-center leading-4">Exterior</p>
+                        <p class="mt-1 text-base font-semibold color-666 text-center leading-4">{{ property.caracteristics_optionals }}</p>
                     </div>
                 </div>
                 <p
                     v-if="styleCard == 'expandido'"
                     class="mt-2.5 py-1 text-base color-666 leading-5 h-[68px] overflow-hidden"
                 >
-                    Lorem ipsum dolor sit amet, consectetur adipis elit, sed do eiusmod tempor incididunt ut labores dolor sit amet. Consectetur adipis elit, sed do eiusmod tempor incididunt ut labores dolor sit amet.
+                     {{ property.description  }}
                 </p>
             </div>
         </div>
     </div>
 </template>
 <script setup>
-import { ref, inject } from 'vue'
-import imageSection from './imageSection.vue'
+    import { ref, inject, defineProps } from 'vue'
+    import imageSection from './imageSection.vue'
+    import FavoriteButton from './favoriteButton.vue';
+    
 
-const divideHtml = ref(`<div class="h-3 w-[2px] border-l-2 border-[#666] my-auto absolute inset-0 mx-auto"></div>`)
-const openMap = inject('openMap')
-const styleCard = inject('styleCard')
+    const divideHtml = ref(`<div class="h-3 w-[2px] border-l-2 border-[#666] my-auto absolute inset-0 mx-auto"></div>`)
+    const openMap = inject('openMap')
+    const styleCard = inject('styleCard')
 
-const likeCard = ref(false)
-const likeHover = ref(false)
+    const likeCard = ref(false)
+    const likeHover = ref(false)
+
+    defineEmits(['refresh-favorites']); // Añade esta línea
+    // Define las props que recibe el componente
+    const props = defineProps({
+        property: {
+            type: Object,
+            required: true
+        }
+    })
 </script>
