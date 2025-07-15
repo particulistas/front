@@ -189,9 +189,6 @@ export const createPropertieSecondStepService = async (baseUrl, propertyId , num
 }; 
 
 export const createPropertieThirdStepService = async (baseUrl, propertyId , energyCertificate, energyData, uploadedPlanoImages, imagesChangedPlano, imagesToDeletePlano) => {
-
-
-   
  
      // Crear FormData para enviar imágenes
     const formData = new FormData();

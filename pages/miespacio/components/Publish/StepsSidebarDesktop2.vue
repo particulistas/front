@@ -1,6 +1,6 @@
 <template>
         <!-- <div  class="bg-[#155D61] rounded-r-[24px] w-[311px] py-4 hidden lg:inline max-h-[100vh] md:max-h-auto"> -->
-            <div class="bg-[#155D61] rounded-[24px] w-[311px] py-4 hidden lg:inline max-h-[100vh] md:max-h-auto">
+        <div class="bg-[#155D61] rounded-[24px] w-[311px] py-4 hidden lg:inline max-h-[100vh] md:max-h-auto">
 
             <div class="mt-9 flex items-center px-6">
                 <!-- <img class="w-[52px] h-[52px] rounded-full object-cover" src="https://fundacioncompartir.org/sites/default/files/estos-son-algunos-de-los-edificios-construidos-en-madera.jpg" alt="img usuario"> -->
@@ -59,14 +59,14 @@
                         <path d="M10 16l5-4-5-4v3H3v2h7v3z"/>
                         <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h8a2 2 0 002-2v-4h-2v4H6V4h8v4h2V4a2 2 0 00-2-2z"/>
                     </svg>
-                    <p class="text-base font-medium text-white">Cerrar Sesión</p>
+                    <p class="items-center text-white text-[20px] font-medium">Cerrar Sesión</p>
                 </div>
                 <!-- <ion-button @click="logout" rel="noopener noreferrer" href="/Login">Cerrar Sesión</ion-button> -->
           
 
 
             </div>
-    </div> 
+        </div> 
 </template>
 <script setup>
     import { ref } from 'vue';
