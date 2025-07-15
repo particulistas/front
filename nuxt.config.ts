@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     }
   },
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt','nuxt-swiper'],
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt','nuxt-swiper',],
   postcss: {
     plugins: {
       'postcss-nesting': {}, //
@@ -23,8 +23,20 @@ export default defineNuxtConfig({
       IMAGE_URL: process.env.IMAGE_URL,
       IMAGE_URL_AVATARS: process.env.IMAGE_URL_AVATARS,
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
+
+      PUSHER_APP_ID: process.env.PUSHER_APP_ID,
+      PUSHER_APP_KEY: process.env.PUSHER_APP_KEY,
+      PUSHER_APP_SECRET: process.env.PUSHER_APP_SECRET,
+      PUSHER_APP_CLUSTER: process.env.PUSHER_APP_CLUSTER,
+
+      pusherAppKey: process.env.PUSHER_APP_KEY,
+      pusherAppCluster: process.env.PUSHER_APP_CLUSTER,
+      apiBaseUrl: process.env.API_BASE_URL || 'http://localhost:8000'
+
     },
   },
+
+  
  /*  env: {
     baseUrl: process.env.BASE_URL, // Usar en el lado del cliente
     imageUrl: process.env.IMAGE_URL, // Usar en el lado del cliente
@@ -36,6 +48,6 @@ export default defineNuxtConfig({
     IMAGE_URL_AVATARS: process.env.IMAGE_URL_AVATARS,
   }, */
   plugins: [
-    '~/plugins/windowWidth.js'
-  ],  
+    '~/plugins/windowWidth.js',
+  ],
 })

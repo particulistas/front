@@ -2,7 +2,6 @@
 <Layout>
     <div class="px-4 lg:px-20 py-10">
         <div class="lg:flex">
-            <StepsSidebar2/>
             <Notification/> 
         </div>
     </div>

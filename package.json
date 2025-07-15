@@ -11,13 +11,17 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@capacitor/local-notifications": "^7.0.1",
     "@pinia/nuxt": "^0.5.1",
+    "laravel-echo": "^2.1.6",
     "lucide-vue-next": "^0.476.0",
     "nuxt": "^3.11.1",
     "nuxt-swiper": "^1.2.2",
     "pinia": "^2.1.7",
+    "pusher-js": "^8.4.0",
     "sweetalert2": "^11.17.2",
     "vue": "^3.4.21",
+    "vue-pusher": "^1.1.0",
     "vue-router": "^4.3.0",
     "vuedraggable": "^4.1.0"
   },

@@ -38,12 +38,14 @@
             <button @click="myNotification" class="flex items-center gap-2 color-07ACB4 hover-bg-07ACB4 hover-chield-icon-white hover:text-white font-medium text-[20px] pt-5 pb-2 px-2 rounded-b-[6px]">
                 <img  class="" src="/assets/icons/Notificaciones.svg" alt="Avisos"/>
                 Avisos
+                <NotificationBadge />
             </button>
         </div>
 
         <!-- icons mobile -->
         <div class="flex flex-grow lg:hidden justify-around pt-3 items-center px-1">
-            <img  class="w-4 h-4" src="/assets/icons/message.svg" alt="message icon"/>
+            <!-- <img  class="w-4 h-4" src="/assets/icons/message.svg" alt="message icon"/> -->
+            <NotificationBadge />
             <img  class="w-4 h-4" src="/assets/icons/bell.svg" alt="bell icon"/>
         </div>
         <div class="flex gap-1.5 lg:gap-4 ml-auto lg:ml-[28px] items-center pt-3 lg:pt-5 lg:pb-2">
@@ -104,6 +106,7 @@
     import SecondStep from '~/pages/inmuebles/components/Publish/SecondStep.vue'
     import ThirdStep from '~/pages/inmuebles/components/Publish/ThirdStep.vue'
     import FourthStep from '~/pages/inmuebles/components/Publish/FourthStep.vue'
+    import NotificationBadge from '~/pages/components/NotificationBadge.vue'
 
     const router = useRouter()
     const nuxtApp = useNuxtApp();
