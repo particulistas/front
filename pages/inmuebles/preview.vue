@@ -420,6 +420,22 @@
     // event.target.src = '/placeholder-map.png';
     };
 
+    async function createNotification(payload) {
+        try {
+        const url = useRuntimeConfig().public.BASE_URL
+        await $fetch(`${url}/notifications`, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            }
+        });
+        } catch (error) {
+        console.error('Error creating notification:', error);
+        }
+    }
+
     async function publish() {
         //router.push('/inmuebles/publicar')
         router.push(`/inmuebles/publicar?id=${route.query.id}`);
@@ -432,9 +448,22 @@
             const mensaje = status === 'Draft' ? 'Anunció actualizado como Borrador.' : 'Anunció publicado con éxito.';
             if (status === 'Publish') {
                 showConfirmationModal.value = true; // Mostrar modal
+                // Crear notificación
+                await createNotification({
+                    recipientId: localStorage.getItem('authId'),
+                    message: `Tu anuncio acaba de ser publicado`,
+                    type: 'HomeIcon',
+                });
                 return; // No continuar con la función
             }
             else {
+                // Crear notificación
+                await createNotification({
+                    recipientId: localStorage.getItem('authId'),
+                    message: `Tu anuncio ha pasado a estado de no publicado`,
+                    type: 'HomeIcon',
+                });
+
                 Swal.fire({
                     title: '¡Éxito!',
                     text: mensaje,

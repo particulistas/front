@@ -424,8 +424,6 @@
         
   })
 
- 
-
   async function createNotification(payload) {
     try {
       const url = useRuntimeConfig().public.BASE_URL
@@ -445,19 +443,6 @@
 async function loadTenantData(userId, room) {
   try {
     
-    // Crear notificación
-    await createNotification({
-      recipientId: localStorage.getItem('authId'),
-      message: `Tienes un nuevo mensaje de ${localStorage.getItem('authId')}`,
-      type: 'UserIcon',
-      /* data: {
-        conversation_id: localStorage.getItem('authId'),
-        sender_id: localStorage.getItem('authId')
-      } */
-    });
-    
-
-
     const store = useTenantData();
     const response = await store.getByUserIdTenant(userId, room);
     
@@ -579,6 +564,14 @@ async function loadTenantData(userId, room) {
           },
           body: JSON.stringify(payload)
         });
+
+        // Crear notificación
+        await createNotification({
+          recipientId: localStorage.getItem('authId'),
+          message: `Has modificado tu perfil de inquilino para búsqueda de habitación`,
+          type: 'UserIcon',
+        });
+
       } else {
         // Crear nuevo registro
         response = await fetch(`${url.value}/tenants`, {
@@ -590,6 +583,14 @@ async function loadTenantData(userId, room) {
           },
           body: JSON.stringify(payload)
         });
+
+        // Crear notificación
+        await createNotification({
+          recipientId: localStorage.getItem('authId'),
+          message: `Has creado un perfil de inquilino para búsqueda de habitación`,
+          type: 'UserIcon',
+        });
+
       }
       
       if (response.ok) {
@@ -599,7 +600,6 @@ async function loadTenantData(userId, room) {
         }
         // Recargar los datos para obtener los IDs reales de las personas creadas
         await loadTenantData(authId.value, 1);
-        //alert('Datos guardados correctamente');
         Swal.fire({
               title: '¡Éxito!',
               text: 'Datos guardados correctamente.',

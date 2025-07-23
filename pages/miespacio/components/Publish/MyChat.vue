@@ -15,7 +15,11 @@
     </div> -->
 
     <!-- Chat List Sidebar -->
-    <div class=" w-[311px] max-md:w-[362px] border-r border-gray-200 flex flex-col bg-white md:bg-[#F5F5F5]  rounded-[24px] ">
+    <!-- <div class=" w-[311px] max-md:w-[362px] border-r border-gray-200 flex flex-col bg-white md:bg-[#F5F5F5]  rounded-[24px] "> -->
+    <div 
+      class="w-[311px] max-md:w-[362px] border-r border-gray-200 flex flex-col bg-white md:bg-[#F5F5F5] rounded-[24px]"
+      :class="{'hidden md:flex': !showChatList, 'flex': showChatList}"
+    >
       <!-- Header -->
       <div class="bg-[#F5F5F5] rounded-[24px] w-[311px] max-md:w-[361px] py-4 h-[20px]">
         <img class="-mt-4" src="/assets/icons/rectangle 2908.png" />
@@ -72,15 +76,15 @@
           ]"
         >
           <!-- Property Type Badge -->
-          <div class="mb-2 flex items-center justify-between bg-teal-500 rounded-t px-2 py-1 ">
-            <span class="bg-teal-500 text-white text-xs px-2 py-1 rounded">
+          <div class="mb-2 flex items-center justify-between bg-[#07BEC6] rounded-t px-2 py-1 ">
+            <span class="bg-[#07BEC6] text-white text-xs px-2 py-1 rounded">
               <!-- {{ conversation.properties_id }} {{ conversation.property?.transaction }} -->
                 {{ conversation.property.category?.name }}  en
                {{ conversation.property?.transaction === 'rental' ? 'Alquiler' : 
                 conversation.property?.transaction === 'sale' ? 'Venta' : 'Alquiler/Venta'  }}   
               <!-- {{ conversation.id }} -->
             </span>
-            <span class="bg-teal-500 text-xs text-white">{{ formatTime(conversation.updated_at) }}</span>
+            <span class="bg-[#07BEC6] text-xs text-white">{{ formatTime(conversation.updated_at) }}</span>
           </div>
 
           <div class="flex items-start space-x-3">
@@ -161,12 +165,44 @@
     </div>
 
     <!-- Chat Area -->
-    <div class="flex-1 flex flex-col p-6 bg-white md:bg-[#F5F5F5] w-[811px] rounded-[24px] ml-5 hidden lg:block ">
+    <!-- <div class="flex-1 flex flex-col p-6 bg-white md:bg-[#F5F5F5] w-[811px] rounded-[24px] ml-5 hidden lg:block "> -->
+    <div 
+        class="flex-1 flex flex-col p-0 md:p-6 bg-white md:bg-[#F5F5F5] w-[811px] rounded-[24px] ml-5"
+        :class="{'hidden lg:block': showChatList, 'block': !showChatList}"
+    >
       
       <div v-if="selectedConversation" class="h-full flex flex-col">
         <!-- Chat Header -->
-        <div class="bg-teal-500 text-white p-4 flex items-center justify-between rounded-t">
-          <div class="flex items-center space-x-3">
+        <div class="bg-[#155D61] md:bg-[#07BEC6] text-white p-4 flex items-center justify-between rounded-t">
+
+          <!-- Botón de volver (solo visible en móvil) -->
+          <button 
+            @click="backToChatList"
+            class="md:hidden  flex items-center "
+          >
+            <svg width="22" height="30" viewBox="0 0 22 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 2L4 14.1802L20 28" stroke="white" stroke-width="5"/>
+            </svg>
+          </button>
+
+          <div class="relative md:hidden">
+              <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center">
+                <span class="text-sm font-medium text-white">
+                  {{ selectedConversation.other_user.name.charAt(0).toUpperCase() }}
+                </span>
+              </div>
+              <div 
+                v-if="selectedConversation.other_user.is_online"
+                class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"
+              ></div>
+              
+          </div>
+          <h3 class="text-lg font-medium md:hidden">
+            {{ selectedConversation.other_user.name }}
+          </h3>
+
+
+          <div class="hidden lg:flex flex items-center space-x-3">
             <div class="text-lg font-medium">
               {{ selectedConversation.property.category?.name }}  en
                {{ selectedConversation.property?.transaction === 'rental' ? 'Alquiler' : 
@@ -191,17 +227,28 @@
 
         <!-- Property Info Bar -->
         <div class="bg-gray-100 p-3 flex items-center space-x-3">
-          <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center">
+          <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center hidden lg:flex">
             <span class="text-white text-sm font-medium">
-              {{ selectedConversation.property.owner.name.charAt(0).toUpperCase() }}
+              <!-- {{ selectedConversation.property.owner.name.charAt(0).toUpperCase() }} -->
+              {{ selectedConversation.other_user.name.charAt(0).toUpperCase() }}
             </span>
           </div>
-          <div class="flex-1 flex items-center space-x-3">
+          <div class="flex-1 flex items-center space-x-10">
+            <!-- <img 
+              :src="selectedConversation.property.media || '/assets/icons/default.png'" 
+              alt="Property"
+              class="w-15 h-10 object-cover rounded"
+            /> -->
             <img 
-              :src="selectedConversation.property.image || '/placeholder.svg?height=40&width=60'" 
+              :src="selectedConversation.property.media?.length > 0 ? 
+                    `${imageUrl}${selectedConversation.property.media[0].path}` : 
+                    '/assets/icons/default.png'" 
               alt="Property"
               class="w-15 h-10 object-cover rounded"
             />
+        
+                
+
             <div>
               <p class="text-sm font-medium">
                 {{ selectedConversation.property.category?.name }}  en
@@ -214,11 +261,11 @@
               </p>
             </div>
           </div>
-          <div class="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center">
+          <!-- <div class="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center">
             <span class="text-white text-sm font-medium">
               {{ selectedConversation.other_user.name.charAt(0).toUpperCase() }}
             </span>
-          </div>
+          </div> -->
         </div>
 
         <!-- Messages -->
@@ -333,7 +380,7 @@ const messages = ref([])
 const newMessage = ref('')
 const searchQuery = ref('')
 const blockedUsers = ref([])
-const currentUser = ref({ id: 1, name: 'Usuario Actual' })
+//const currentUser = ref({ id: 1, name: 'Usuario Actual' })
 //const currentUser = ref({ id: authId.value, name: 'Usuario Actual' })
 const messagesContainer = ref(null)
 const isSending = ref(false)
@@ -345,6 +392,9 @@ const authEmail = ref('');
 const authName = ref('');
 const authId = ref('');
 const url = ref('');
+const imageUrl = ref('');
+
+const showChatList = ref(true) // Mostrar lista de chats por defecto en móvil
 
 // Pusher setup
 let pusher = null
@@ -354,8 +404,9 @@ let channel = null
 const filteredConversations = computed(() => {
   if (!searchQuery.value) return conversations.value
   return conversations.value.filter(conv => 
-    conv.other_user.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    conv.property.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+    conv.other_user.name.toLowerCase().includes(searchQuery.value.toLowerCase()) 
+    /* ||
+    conv.property.title.toLowerCase().includes(searchQuery.value.toLowerCase()) */
   )
 })
 
@@ -451,10 +502,25 @@ const loadBlockedUsers = async () => {
   }
 }
 
+/* const selectConversation = async (conversation) => {
+  selectedConversation.value = conversation
+  await loadMessages(conversation.id)
+  markAsRead(conversation.id)
+} */
+
 const selectConversation = async (conversation) => {
   selectedConversation.value = conversation
   await loadMessages(conversation.id)
   markAsRead(conversation.id)
+  
+  // En móvil, ocultar la lista y mostrar el chat
+  if (window.innerWidth < 768) { // 768px es el breakpoint para md en Tailwind
+    showChatList.value = false
+  }
+}
+
+const backToChatList = () => {
+  showChatList.value = true
 }
 
 const loadMessages = async (conversationId) => {
@@ -661,6 +727,20 @@ const getAuthToken = () => {
 }
 
 // Lifecycle
+/* onMounted(() => {
+  authToken.value = localStorage.getItem('authToken');
+  authEmail.value = localStorage.getItem('authEmail');
+  authName.value = localStorage.getItem('authName');
+  authId.value = localStorage.getItem('authId');
+
+  url.value = useRuntimeConfig().public.BASE_URL
+  imageUrl.value = useRuntimeConfig().public.IMAGE_URL; 
+
+  loadConversations()
+  loadBlockedUsers()
+  initializePusher()
+}) */
+
 onMounted(() => {
   authToken.value = localStorage.getItem('authToken');
   authEmail.value = localStorage.getItem('authEmail');
@@ -668,11 +748,23 @@ onMounted(() => {
   authId.value = localStorage.getItem('authId');
 
   url.value = useRuntimeConfig().public.BASE_URL
+  imageUrl.value = useRuntimeConfig().public.IMAGE_URL; 
 
   loadConversations()
   loadBlockedUsers()
   initializePusher()
+  
+  // Resetear a lista de chats si la pantalla se hace grande
+  window.addEventListener('resize', handleResize)
+  handleResize()
 })
+
+
+const handleResize = () => {
+  if (window.innerWidth >= 768) { // md breakpoint
+    showChatList.value = true
+  }
+}
 
 onUnmounted(() => {
   if (channel) {
@@ -686,6 +778,9 @@ onUnmounted(() => {
   if (typingTimeout.value) {
     clearTimeout(typingTimeout.value)
   }
+
+   window.removeEventListener('resize', handleResize)
+
 })
 </script>
 
