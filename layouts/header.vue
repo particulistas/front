@@ -30,6 +30,7 @@
             <button @click="myChat" class="flex items-center gap-2 color-07ACB4 hover-bg-07ACB4 hover-chield-icon-white hover:text-white font-medium text-[20px] pt-5 pb-2 px-2 rounded-b-[6px]">
                 <img  class="" src="/assets/icons/Chat.svg" alt="Chat"/>
                 Chat
+                <ChatBadge />
             </button>
             <button @click="myVisit" class="flex items-center gap-2 color-07ACB4 hover-bg-07ACB4 hover-chield-icon-white hover:text-white font-medium text-[20px] pt-5 pb-2 px-2 rounded-b-[6px]">
                 <img  class="" src="/assets/icons/Calendario.svg" alt="Mis visitas"/>
@@ -46,7 +47,8 @@
         <div class="flex flex-grow lg:hidden justify-around pt-3 items-center px-1">
             <!-- <img  class="w-4 h-4" src="/assets/icons/message.svg" alt="message icon"/> -->
             <NotificationBadge />
-            <img  class="w-4 h-4" src="/assets/icons/bell.svg" alt="bell icon"/>
+            <!-- <img  class="w-4 h-4" src="/assets/icons/bell.svg" alt="bell icon"/> -->
+            <ChatBadge />
         </div>
         <div class="flex gap-1.5 lg:gap-4 ml-auto lg:ml-[28px] items-center pt-3 lg:pt-5 lg:pb-2">
             <button
@@ -107,6 +109,7 @@
     import ThirdStep from '~/pages/inmuebles/components/Publish/ThirdStep.vue'
     import FourthStep from '~/pages/inmuebles/components/Publish/FourthStep.vue'
     import NotificationBadge from '~/pages/components/NotificationBadge.vue'
+    import ChatBadge from '~/pages/components/ChatBadge.vue'
 
     const router = useRouter()
     const nuxtApp = useNuxtApp();

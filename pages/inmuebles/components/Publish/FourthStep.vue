@@ -97,6 +97,22 @@
         }
     });
 
+    async function createNotification(payload) {
+        try {
+        const url = useRuntimeConfig().public.BASE_URL
+        await $fetch(`${url}/notifications`, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            }
+        });
+        } catch (error) {
+        console.error('Error creating notification:', error);
+        }
+    }
+
     onMounted(async () => {
         authToken.value = localStorage.getItem('authToken');
         authEmail.value = localStorage.getItem('authEmail');
@@ -115,6 +131,13 @@
         try {
             const store = usePropertieData() 
             const response = await store.createPropertieFourthStep(formData.value.propertyId , varbutton.value, phone_codi.value +' '+ phone.value, serviceMovil.value)
+
+            // Crear notificación
+            await createNotification({
+                recipientId: localStorage.getItem('authId'),
+                message: `Anuncio pendiente de completar para su publicación`,
+                type: 'HomeIcon',
+            });
 
             Swal.fire({
             title: '¡Éxito!',
@@ -141,9 +164,22 @@
 
             if (status === 'Publish') {
                 showConfirmationModal.value = true; // Mostrar modal
+                // Crear notificación
+                await createNotification({
+                    recipientId: localStorage.getItem('authId'),
+                    message: `Tu anuncio acaba de ser publicado`,
+                    type: 'HomeIcon',
+                });
                 return; // No continuar con la función
             }
             else {
+                // Crear notificación
+                await createNotification({
+                    recipientId: localStorage.getItem('authId'),
+                    message: `Tu anuncio acaba de ser actualizado como Borrador`,
+                    type: 'HomeIcon',
+                });
+
                 Swal.fire({
                     title: '¡Éxito!',
                     text: mensaje,
